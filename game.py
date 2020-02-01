@@ -149,6 +149,7 @@ class Game(object):
 
         went_through = []
         for attack in attacks:
+            print(attack)
             if attack['id'] not in available_units:
                 continue
             went_through.append(attack)
