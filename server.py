@@ -13,6 +13,7 @@ socketio = SocketIO(app)
 server_logger = Logger("server.log", "")
 
 player1_joined = False
+player2_joined = False
 
 @app.route('/')
 def home():
@@ -20,15 +21,20 @@ def home():
 
 @socketio.on('join')
 def join():
-    global player1_joined
+    global player1_joined, player2_joined
     server_logger.log("Client connected")
     if not player1_joined:
         player_id = 0
         player1_joined = True
     else:
         player_id = 1
+        player2_joined = True
 
     emit("connection_received", {'player_id': player_id, 'map': example_json()})
+
+    if player2_joined:
+        emit("game_start")
+
 
 # once both players runs execute, we actually execute the command
 @socketio.on('execute')
