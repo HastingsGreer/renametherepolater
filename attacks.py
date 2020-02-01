@@ -20,8 +20,10 @@ ATTACK_LOOKUP = {
 }
 
 def flower_dmg(x, y, game):
-    if len(game._map[x][y]['unit']) != 0:
-        game._map[x][y]['unit']['happiness'] += 5
+    unit = game._map[x][y]['unit']
+    if len(unit) != 0:
+        if unit['type'] != 'flower_girl':
+            unit['happiness'] += 5
 
 ENVIRONMENT_LOOKUP = {
     'flowers': flower_dmg

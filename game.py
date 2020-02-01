@@ -33,9 +33,9 @@ class Game(object):
             dx = int(dx / abs(dx)) if dx != 0 else 0
 
             dy = move['end'][1] - move['start'][1]
-            dy = int(dy / abs(dy)) if dy != 0 else 0
             if steps == 0:
                 steps = abs(dy)
+            dy = int(dy / abs(dy)) if dy != 0 else 0
 
             assert unit_locs[move['id']][0] == move['start'][0], "%d vs %d" % (
                     unit_locs[move['id']][0], move['start'][0])
@@ -53,6 +53,7 @@ class Game(object):
 
         # execute side-effects on board
         if unit_data['type'] == 'flower_girl':
+            self._map[x][y]['environment']['background'] = "grass"
             self._map[x][y]['environment']['improvements'].append('flowers')
 
     def _execute_moves(self,
@@ -74,6 +75,12 @@ class Game(object):
         full_move_units = set([])
 
         while True:
+            next_step = [[-1 for _ in range(len(self._map[0]))]
+                    for _ in range(len(self._map))]
+
+            for id in static_units:
+                next_step[unit_locs[id][0]][unit_locs[id][1]] = -2
+
             if len(unit_moves) == 0:
                 break
             keys = list(unit_moves.keys())
@@ -85,9 +92,13 @@ class Game(object):
                     full_move_units.add(unit_id)
                     continue
                 
+                print(unit_locs[unit_id])
                 new_x = unit_locs[unit_id][0] + unit_moves[unit_id]['dx']
                 new_y = unit_locs[unit_id][1] + unit_moves[unit_id]['dy']
                 unit_moves[unit_id]['steps'] -= 1
+
+                print(new_x)
+                print(new_y)
 
                 # check for conflict:
                 if next_step[new_x][new_y] != -1:
@@ -102,6 +113,11 @@ class Game(object):
                 else:
                     next_step[new_x][new_y] = unit_id
 
+            print("="*20)
+            for row in next_step:
+                print(row)
+            print("="*20)
+
             for i, row in enumerate(next_step):
                 for j, cell in enumerate(row):
                     if cell >= 0:
@@ -112,6 +128,7 @@ class Game(object):
                         # move the unit
                         unit_locs[cell][0] = i
                         unit_locs[cell][1] = j
+
 
         for i, row in enumerate(self._map):
             for j, cell in enumerate(row):
@@ -171,10 +188,12 @@ class Game(object):
                     self._map[x][y]['unit'] = {}
 
     def execute(self, order66: Dict) -> Dict:
+        print(order66)
         unit_locs, unit_data = self._gather_unit_information()
         # set of units that did not move in the last turn
         static_units = set(list(unit_locs.keys()))
         unit_moves = self._parse_moves(static_units, unit_locs, order66['moves'])
+        print(unit_moves)
         full_move_units, move_anims = self._execute_moves(static_units, unit_locs,
                 unit_data, unit_moves)
 
