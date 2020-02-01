@@ -8,7 +8,7 @@ var jsonMapper = {
     "tree" : 3, 
     "flower" : 4
 }
-
+var maps;
 var socket = io();
 socket.on('connect', function() {
     socket.emit('join');
@@ -17,12 +17,13 @@ socket.on('connect', function() {
 socket.on("connection_received", function(data) {
     console.log(data);
     fill_table(data);
+    maps = parseGameData(data);
 });
 
 socket.on("exec_result", function(data) {
     console.log(data);
     fill_table(data);
-    var maps = parseGameData(data);
+    maps = parseGameData(data);
     console.log(maps);
     document.getElementById("tempMap").innerHTML = data;
 });
@@ -67,3 +68,7 @@ function parseGameData(gameData) {
     }
     return map;
 } 
+
+function updateMapData() {
+
+}
