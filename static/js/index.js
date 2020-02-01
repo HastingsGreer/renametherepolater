@@ -37,6 +37,13 @@ var instanceConfig = {
 
 var engine = TRAVISO.getEngineInstance(instanceConfig);
 
+const DISABLED = -1;
+const SELECT = 0;
+const MOVE = 1;
+const ACTION = 2;
+
+var selectMode = SELECT;
+
 var unitActions = [
     [{},{},{},{},{}],
     [{},{},{},{},{}],
@@ -107,25 +114,20 @@ function onEngineInstanceReady()
 }
 
 function onObjectSelect(obj) {
-    if(obj.type > 0 && obj.type < 4) {
-        var prevUnit = engine.getCurrentControllable();
-        if(prevUnit !== obj) {
-            if(prevUnit) {
-                var prevAction = unitActions[prevUnit.mapPos.r][prevUnit.mapPos.c];
-                if (Object.entries(prevAction).length !== 0 && prevAction.constructor === Object) {
-                    if(prevAction.move) {
-                        engine.getTileAtRowAndColumn(prevAction.move.x, prevAction.move.y).setHighlighted(false, false);
-                    }
-                }
-            }
-
+    if (selectMode === SELECT && obj.type > 0 && obj.type < 4) {
+        var currentUnit = engine.getCurrentControllable();
+        selectMode = MOVE;
+        if (!currentUnit) {
             engine.setCurrentControllable(obj);
-            console.log(obj.mapPos);
             var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
-            console.log(existingAction);
             if (Object.entries(existingAction).length !== 0 && existingAction.constructor === Object) {
+                if(Object.entries(existingAction.move).length !== 0 && existingAction.move.constructor === Object) {
+                    updateUnitMove(obj.mapPos.r, obj.mapPos.c, existingAction.move.x, existingAction.move.y, false);
+                }
+                if(Object.entries(existingAction.action).length !== 0 && existingAction.action.constructor === Object) {
+                    updateUnitAction(obj.mapPos.r, obj.mapPos.c, existingAction.action.x, existingAction.action.y, false);
+                }
             } else {
-                console.log("New action");
                 existingAction = {
                     "move" : {
                         "x": obj.mapPos.r,
@@ -134,30 +136,75 @@ function onObjectSelect(obj) {
                     "action" : {},
                 }
                 unitActions[obj.mapPos.r][obj.mapPos.c] = existingAction;
-                
             }
             
-            console.log(engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y));
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
-        } else {
-            updateUnitMove(prevUnit.mapPos.r, prevUnit.mapPos.c, prevUnit.mapPos.r, prevUnit.mapPos.c);
         }
+    } else if (selectMode === MOVE) {
+        selectMode = ACTION;
+        var currentUnit = engine.getCurrentControllable();
+        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
+    } else if (selectMode === ACTION) {
+        selectMode = DISABLED;
+        var currentUnit = engine.getCurrentControllable();
+        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
+        setTimeout(function() {
+            selectMode = SELECT;
+            deselectUnit();
+            engine.setCurrentControllable(null);
+        }, 1000);
+    }
+}
+
+function deselectUnit() {
+    var currentUnit = engine.getCurrentControllable();
+    if(currentUnit) {
+        var currentAction = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c];
+        if (Object.entries(currentAction).length !== 0 && currentAction.constructor === Object) {
+            if (Object.entries(currentAction.move).length !== 0 && currentAction.move.constructor === Object) {
+                engine.getTileAtRowAndColumn(currentAction.move.x, currentAction.move.y).setHighlighted(false, false);
+            }
+            if (Object.entries(currentAction.action).length !== 0 && currentAction.action.constructor === Object) {
+                engine.getTileAtRowAndColumn(currentAction.action.x, currentAction.action.y).setHighlighted(false, false);
+            }
+        }
+        engine.setCurrentControllable(null);
     }
 }
 
 function onTileSelect(x, y) {
-    console.log(x, y);
-
-    var currentUnit = engine.getCurrentControllable();
-    
-    console.log(currentUnit);
-    if(currentUnit) {
-        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y);
+    if (selectMode === MOVE) {
+        console.log("MOVE");
+        var currentUnit = engine.getCurrentControllable();
+        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+        selectMode = ACTION;
+    } else if (selectMode === ACTION) {
+        console.log("ACTION");
+        var currentUnit = engine.getCurrentControllable();
+        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+        selectMode = DISABLED;
+        setTimeout(function() {
+            selectMode = SELECT;
+            deselectUnit();
+            engine.setCurrentControllable(null);
+        }, 1000);
     }
+    // console.log(x, y);
 
-    console.log(unitActions);
+    // var currentUnit = engine.getCurrentControllable();
+    
+    // console.log(currentUnit);
+    // if(currentUnit) {
+    //     updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y);
+    // }
+
+    // console.log(unitActions);
 
     // engine.getTileAtRowAndColumn(x, y).setHighlighted(true, false);
     // setTimeout(function() {engine.getTileAtRowAndColumn(x, y).setHighlighted(false, false);}, 1000);
@@ -177,12 +224,14 @@ function onTileSelect(x, y) {
     // engine.getTileAtRowAndColumn(x, y);
 }
 
-function updateUnitMove(unitX, unitY, moveX, moveY) {
+function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
     var existingAction = unitActions[unitX][unitY];
-        if (existingAction && Object.entries(existingAction).length !== 0 && existingAction.constructor === Object 
-            && existingAction.move && (existingAction.move.x != moveX || existingAction.move.y != moveY)) {
-            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, false);
-        }
+    if (existingAction && Object.entries(existingAction).length !== 0 && existingAction.constructor === Object 
+        && Object.entries(existingAction.move).length !== 0 && existingAction.move.constructor === Object 
+        && (existingAction.move.x != moveX || existingAction.move.y != moveY)) {
+        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, instant);
+    }
+    if(moveX >= 0 && moveY >= 0) {
         if (!existingAction) existingAction = {};
         existingAction.move = {
             "x" : moveX,
@@ -190,4 +239,33 @@ function updateUnitMove(unitX, unitY, moveX, moveY) {
         }
         unitActions[unitX][unitY] = existingAction;
         engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+        // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
+        // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
+        // console.log(engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor);
+    } else {
+        unitActions[unitX][unitY].move = {};
+    }
+}
+
+function updateUnitAction(unitX, unitY, actX, actY, instant) {
+    var existingAction = unitActions[unitX][unitY];
+    if (existingAction && Object.entries(existingAction).length !== 0 && existingAction.constructor === Object 
+        && Object.entries(existingAction.action).length !== 0 && existingAction.action.constructor === Object 
+        && (existingAction.action.x != actX || existingAction.action.y != actY)) {
+        engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).setHighlighted(false, instant);
+    }
+    if(actX >= 0 && actY >= 0) {
+        if (!existingAction) existingAction = {};
+        existingAction.action = {
+            "x" : actX,
+            "y" : actY,
+        }
+        unitActions[unitX][unitY] = existingAction;
+        engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).setHighlighted(true, false);
+        // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
+        // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
+        // console.log(engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor);
+    } else {
+        unitActions[unitX][unitY].action = {};
+    }
 }
