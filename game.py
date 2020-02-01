@@ -61,6 +61,10 @@ class Game(object):
             unit_data: Dict[int, Dict],
             unit_moves: Dict[int, Dict]) -> Set[int]:
 
+        move_animations = {}
+        for id in unit_locs.keys():
+            move_animations[id] = {"id": id, "start": unit_locs[id][:]}
+
         next_step = [[-1 for _ in range(len(self._map[0]))]
                 for _ in range(len(self._map))]
 
@@ -118,8 +122,9 @@ class Game(object):
             x = unit_locs[unit_id][0]
             y = unit_locs[unit_id][1]
             self._map[x][y]['unit'] = unit
+            move_animations[unit_id]['end': unit_locs[id][:]]
 
-        return full_move_units
+        return full_move_units, list(move_animations.values())
 
     def _prune_attacks(self,
             available_units: Set[int],
@@ -170,19 +175,22 @@ class Game(object):
         # set of units that did not move in the last turn
         static_units = set(list(unit_locs.keys()))
         unit_moves = self._parse_moves(static_units, unit_locs, order66['moves'])
-        full_move_units = self._execute_moves(static_units, unit_locs,
+        full_move_units, move_anims = self._execute_moves(static_units, unit_locs,
                 unit_data, unit_moves)
 
         can_attack = full_move_units | static_units
         attacks = self._prune_attacks(can_attack, order66['attacks'])
 
-        anims_to_play = self._perform_attacks(unit_locs, attacks)
+        attack_anims = self._perform_attacks(unit_locs, attacks)
         self._perform_environment_damage()
         self._check_healing()
 
         rv = {
             'board': self._map, 
-            'animations': anims_to_play
+            'animations': {
+                'moves': move_anims,
+                'attacks': attack_anims
+            }
         }
 
         print(json.dumps(rv))
