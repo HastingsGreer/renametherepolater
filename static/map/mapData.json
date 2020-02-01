@@ -2,7 +2,11 @@
     "tiles": {
         "1":  {
             "movable": true,
-            "path": "/static/assets/t1.png"
+            "path": "/static/assets/ground.png"
+        },
+        "2":  {
+            "movable": true,
+            "path": "/static/assets/grass.png"
         }
     },
     "objects": {
@@ -20,16 +24,19 @@
             }
         }
     },
+    "initialControllableLocation": { "columnIndex": 2, "rowIndex": 2, "controllableId": "1" },
     "groundMap": [
-        { "row": "1 ,1 ,1 ,1" },
-        { "row": "1 ,0 ,0 ,1" },
-        { "row": "1 ,0 ,0 ,1" },
-        { "row": "1 ,1 ,1 ,1" }
+        { "row": "2 ,2 ,1 ,2 ,2 " },
+        { "row": "2 ,2 ,1 ,2 ,2 " },
+        { "row": "2 ,2 ,1 ,2 ,2 " },
+        { "row": "2 ,1 ,1 ,1 ,2 " },
+        { "row": "2 ,1 ,1 ,1, 2 " }
     ],
     "objectsMap": [
-        { "row": "0 ,0 ,0 ,0" },
-        { "row": "0 ,1 ,0 ,0" },
-        { "row": "0 ,0 ,1 ,0" },
-        { "row": "0 ,0 ,0 ,0" }
+        { "row": "0 ,0 ,0 ,0 ,0 " },
+        { "row": "0 ,0 ,0 ,0 ,0 " },
+        { "row": "0 ,0 ,1 ,0 ,0 " },
+        { "row": "0 ,0 ,0 ,0 ,0 " },
+        { "row": "0 ,0 ,0 ,0 ,0 " }
     ]
 }
