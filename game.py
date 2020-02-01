@@ -1,14 +1,14 @@
+from typing import *
 import json
+from attacks import ATTACK_LOOKUP, ENVIRONMENT_LOOKUP
 
 class Game(object):
     def __init__(self, init_map):
         self._map = init_map
 
-    def execute(self, order66):
+    def _gather_unit_information(self) -> Tuple[Dict[int, List[int]], Dict[int, Dict]]:
+
         unit_locs = {}
-        unit_moves = {}
-        # set of units that did not move in the last turn
-        static_units = set([])
         unit_data = {}
 
         for i, row in enumerate(self._map):
@@ -16,10 +16,18 @@ class Game(object):
                 if len(cell['unit']) == 0:
                     continue
                 unit_locs[cell['unit']['id']] = [i, j]
-                static_units.add(cell['unit']['id'])
                 unit_data[cell['unit']['id']] = cell['unit']
 
-        for i, move in enumerate(order66['moves']):
+        return unit_locs, unit_data
+
+    def _parse_moves(self,
+            static_units: Set[int],
+            unit_locs: Dict[int, List[int]],
+            moves: List[Dict]) -> Dict[int, Dict]:
+
+        unit_moves = {}
+
+        for i, move in enumerate(moves):
             dx = move['end'][0] - move['start'][0]
             steps = abs(dx)
             dx = int(dx / abs(dx)) if dx != 0 else 0
@@ -35,6 +43,23 @@ class Game(object):
 
             unit_moves[move['id']] = {'dx': dx, 'dy': dy, 'steps': steps}
             static_units.remove(move['id'])
+
+        return unit_moves
+
+    def _execute_move_side_effects(self,
+            x: int,
+            y: int,
+            unit_data: Dict) -> None:
+
+        # execute side-effects on board
+        if unit_data['type'] == 'flower_girl':
+            self._map[x][y]['environment']['improvements'].append('flowers')
+
+    def _execute_moves(self,
+            static_units: Set[int],
+            unit_locs: Dict[int, List[int]],
+            unit_data: Dict[int, Dict],
+            unit_moves: Dict[int, Dict]) -> Set[int]:
 
         next_step = [[-1 for _ in range(len(self._map[0]))]
                 for _ in range(len(self._map))]
@@ -76,12 +101,10 @@ class Game(object):
             for i, row in enumerate(next_step):
                 for j, cell in enumerate(row):
                     if cell >= 0:
-                        # execute side-effects on board
-                        if unit_data[cell]['type'] == 'flower_girl':
-                            cur_x = unit_locs[unit_id][0]
-                            cur_y = unit_locs[unit_id][1]
-                            self._map[cur_x][cur_y]['environment']['improvements'].append(
-                                    'flower')
+                        cur_x = unit_locs[unit_id][0]
+                        cur_y = unit_locs[unit_id][1]
+                        self._execute_move_side_effects(cur_x, cur_y,
+                                unit_data[cell])
                         # move the unit
                         unit_locs[cell][0] = i
                         unit_locs[cell][1] = j
@@ -96,18 +119,66 @@ class Game(object):
             y = unit_locs[unit_id][1]
             self._map[x][y]['unit'] = unit
 
+        return full_move_units
+
+    def _prune_attacks(self,
+            available_units: Set[int],
+            attacks: List[Dict]):
+
+        went_through = []
+        for attack in attacks:
+            if attack['id'] not in available_units:
+                continue
+            went_through.append(attack)
+        return went_through
+
+    # takes in list of client attacks, returns a list of animation
+    def _perform_attacks(self,
+            unit_locs: Dict[int, List[int]],
+            attacks: List[Dict]) -> List[Dict]:
         anims_to_play = []
 
-        for attack in order66['attacks']:
-            if attack['id'] in full_move_units \
-                or attack['id'] in static_units: # execute
-                anims_to_play.append({
-                    'type': attack['type'],
-                    'start': unit_locs[attack['id']],
-                    'end': attack['target']
-                })
+        for attack in attacks:
+            target = attack['target']
+            anims_to_play.append({
+                'type': attack['type'],
+                'start': unit_locs[attack['id']],
+                'end': attack['target']
+            })
 
-        # TODO compute damage????
+            # of course this should be pretty straightforward
+            ATTACK_LOOKUP[attack['type']]                                               \
+            (target[0], target[1], self)
+
+        return anims_to_play
+
+    def _perform_environment_damage(self):
+        for x, row in enumerate(self._map):
+            for y, cell in enumerate(row):
+                for improvement in self._map[x][y]['environment']['improvements']:
+                    ENVIRONMENT_LOOKUP[improvement]                                     \
+                    (x, y, self)
+
+    def _check_healing(self):
+        for x, row in enumerate(self._map):
+            for y, cell in enumerate(row):
+                if len(cell['unit']) != 0 and cell['unit']['happiness'] > 100:
+                    self._map[x][y]['unit'] = {}
+
+    def execute(self, order66: Dict) -> Dict:
+        unit_locs, unit_data = self._gather_unit_information()
+        # set of units that did not move in the last turn
+        static_units = set(list(unit_locs.keys()))
+        unit_moves = self._parse_moves(static_units, unit_locs, order66['moves'])
+        full_move_units = self._execute_moves(static_units, unit_locs,
+                unit_data, unit_moves)
+
+        can_attack = full_move_units | static_units
+        attacks = self._prune_attacks(can_attack, order66['attacks'])
+
+        anims_to_play = self._perform_attacks(unit_locs, attacks)
+        self._perform_environment_damage()
+        self._check_healing()
 
         rv = {
             'board': self._map, 

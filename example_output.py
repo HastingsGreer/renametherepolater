@@ -5,7 +5,7 @@ def example_json():
             "board":[[
                 {
                 "environment": 
-                    {"background":"grass", "improvements":[]},
+                    {"background":"dirt", "improvements":[]},
                 "unit": {}
                 } for i in range(5)] for j in range(5)],
             "animations": [
