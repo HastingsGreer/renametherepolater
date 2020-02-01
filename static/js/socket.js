@@ -6,7 +6,12 @@ socket.on('connect', function() {
 
 socket.on("connection_received", function(data) {
     console.log(data);
-    document.getElementById("tempMap").innerHTML = data;
+    fill_table(data);
+});
+
+socket.on("exec_result", function(data) {
+    console.log(data);
+    fill_table(data);
 });
 
 function sendAction() {
