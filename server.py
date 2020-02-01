@@ -33,7 +33,7 @@ def join():
     emit("connection_received", {'player_id': player_id, 'map': example_json()})
 
     if player2_joined:
-        emit("game_start")
+        emit("game_start", broadcast=True)
 
 
 # once both players runs execute, we actually execute the command
