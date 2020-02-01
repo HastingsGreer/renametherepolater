@@ -23,6 +23,7 @@ var instanceConfig = {
     tileHeight: 33,
     isoAngle: 27.27676,
     engineInstanceReadyCallback : onEngineInstanceReady,
+    objectSelectCallback: onObjectSelect,
 };
 
 var engine = TRAVISO.getEngineInstance(instanceConfig);
@@ -86,4 +87,8 @@ function onEngineInstanceReady()
     {
         engine.focusMapToObject(engine.getCurrentControllable());
     };
+}
+
+function onObjectSelect(obj) {
+    engine.setCurrentControllable(obj);
 }

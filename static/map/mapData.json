@@ -12,7 +12,7 @@
     "objects": {
         "1": {
             "movable": false,
-            "interactive": false,
+            "interactive": true,
             "rowSpan": 1,
             "columnSpan": 1,
             "visuals": {
@@ -24,13 +24,12 @@
             }
         }
     },
-    "initialControllableLocation": { "columnIndex": 2, "rowIndex": 2, "controllableId": "1" },
     "groundMap": [
-        { "row": "2 ,2 ,1 ,2 ,2 " },
+        { "row": "2 ,2 ,2 ,2 ,2 " },
         { "row": "2 ,2 ,1 ,2 ,2 " },
         { "row": "2 ,2 ,1 ,2 ,2 " },
         { "row": "2 ,1 ,1 ,1 ,2 " },
-        { "row": "2 ,1 ,1 ,1, 2 " }
+        { "row": "2 ,1 ,2 ,1, 2 " }
     ],
     "objectsMap": [
         { "row": "0 ,0 ,0 ,0 ,0 " },
