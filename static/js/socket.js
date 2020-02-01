@@ -27,7 +27,6 @@ socket.on("exec_result", function(data) {
     fill_table(data);
     maps = parseGameData(data);
     console.log(maps);
-    document.getElementById("tempMap").innerHTML = data;
 });
 
 function sendAction() {
