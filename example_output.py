@@ -29,7 +29,7 @@ def example_client_reply():
     return {
         'moves': [
             { 'id': 0, "start": [1, 3], "end": [1, 4] },
-            { 'id': 1, "start": [4, 4], "end": [2, 2] }
+            { 'id': 1, "start": [3, 3], "end": [2, 2] }
         ],
         'attacks': [
             { 'id': 0, 'target': [1, 2], 'type': 'tree_rocket' }

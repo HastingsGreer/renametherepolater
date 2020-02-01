@@ -1,4 +1,4 @@
-import math
+import json
 
 class Game(object):
     def __init__(self, init_map):
@@ -14,24 +14,31 @@ class Game(object):
         for i, row in enumerate(self._map):
             for j, cell in enumerate(row):
                 if len(cell['unit']) == 0:
-                    pass
+                    continue
                 unit_locs[cell['unit']['id']] = [i, j]
                 static_units.add(cell['unit']['id'])
                 unit_data[cell['unit']['id']] = cell['unit']
 
         for i, move in enumerate(order66['moves']):
             dx = move['end'][0] - move['start'][0]
-            steps = math.abs(dx)
-            dx = dx / math.abs(dx)
+            steps = abs(dx)
+            dx = int(dx / abs(dx)) if dx != 0 else 0
 
             dy = move['end'][1] - move['start'][1]
-            dy = dy / math.abs(dy)
+            dy = int(dy / abs(dy)) if dy != 0 else 0
+            if steps == 0:
+                steps = abs(dy)
 
-            assert unit_locs[move['id']][0] == move['start'][0]
+            assert unit_locs[move['id']][0] == move['start'][0], "%d vs %d" % (
+                    unit_locs[move['id']][0], move['start'][0])
             assert unit_locs[move['id']][1] == move['start'][1]
 
             unit_moves[move['id']] = {'dx': dx, 'dy': dy, 'steps': steps}
             static_units.remove(move['id'])
+
+        print(static_units)
+        print(unit_locs)
+        print(unit_moves)
 
         next_step = [[-1 for _ in range(len(self._map[0]))]
                 for _ in range(len(self._map))]
@@ -44,7 +51,10 @@ class Game(object):
         while True:
             if len(unit_moves) == 0:
                 break
-            for unit_id in unit_moves:
+            keys = list(unit_moves.keys())
+            for unit_id in keys:
+                if unit_id not in unit_moves.keys():
+                    continue
                 if unit_moves[unit_id]['steps'] == 0:
                     del unit_moves[unit_id]
                     full_move_units.add(unit_id)
@@ -96,7 +106,11 @@ class Game(object):
 
         # TODO compute damage????
 
-        return {
+        rv = {
             'board': self._map, 
             'animations': anims_to_play
         }
+
+        print(json.dumps(rv))
+
+        return rv
