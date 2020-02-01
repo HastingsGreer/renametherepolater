@@ -46,6 +46,7 @@ def join():
 # once both players runs execute, we actually execute the command
 @socketio.on('execute')
 def execute(data):
+    print(data)
     global game, player1_executed, player2_executed, partial_cmds
     data = json.loads(data)
     if not player1_executed:
@@ -56,9 +57,11 @@ def execute(data):
         partial_cmds['moves'].extend(data['moves'])
         partial_cmds['attacks'].extend(data['attacks'])
 
+
+
     emit("execution_ack")
     if player2_executed:
-        resp = game.execute(data)
+        resp = game.execute(partial_cmds)
         player1_executed = False
         player2_executed = False
         partial_cmds = {}
