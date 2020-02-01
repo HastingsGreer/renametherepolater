@@ -10,7 +10,7 @@ def example_json():
                 } for i in range(5)] for j in range(5)],
 
             "animations": {
-                "moves" :[
+                "moves": [
                    { "id": 0, 'start': [0, 3], "end": [1, 3]},
                    { "id": 1, "start": [4, 4], "end": [3, 3]}
                 ],
