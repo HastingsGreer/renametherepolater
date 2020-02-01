@@ -32,7 +32,7 @@ def example_client_reply():
             { 'id': 1, "start": [4, 4], "end": [2, 2] }
         ],
         'attacks': [
-            { 'id': 0, 'target': [1, 2] }
+            { 'id': 0, 'target': [1, 2], 'type': 'tree_rocket' }
         ]
     }
 
