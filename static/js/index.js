@@ -141,6 +141,8 @@ function onObjectSelect(obj) {
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
+        } else {
+            updateUnitMove(prevUnit.mapPos.r, prevUnit.mapPos.c, prevUnit.mapPos.r, prevUnit.mapPos.c);
         }
     }
 }
@@ -152,18 +154,7 @@ function onTileSelect(x, y) {
     
     console.log(currentUnit);
     if(currentUnit) {
-        var existingAction = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c];
-        if (existingAction && Object.entries(existingAction).length !== 0 && existingAction.constructor === Object 
-            && existingAction.move && (existingAction.move.x != x || existingAction.move.y != y)) {
-            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, false);
-        }
-        if (!existingAction) existingAction = {};
-        existingAction.move = {
-            "x" : x,
-            "y" : y,
-        }
-        unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c] = existingAction;
-        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y);
     }
 
     console.log(unitActions);
@@ -184,4 +175,19 @@ function onTileSelect(x, y) {
     // engine.showHideGroundLayer(true);
 
     // engine.getTileAtRowAndColumn(x, y);
+}
+
+function updateUnitMove(unitX, unitY, moveX, moveY) {
+    var existingAction = unitActions[unitX][unitY];
+        if (existingAction && Object.entries(existingAction).length !== 0 && existingAction.constructor === Object 
+            && existingAction.move && (existingAction.move.x != moveX || existingAction.move.y != moveY)) {
+            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, false);
+        }
+        if (!existingAction) existingAction = {};
+        existingAction.move = {
+            "x" : moveX,
+            "y" : moveY,
+        }
+        unitActions[unitX][unitY] = existingAction;
+        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
 }
