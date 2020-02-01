@@ -34,5 +34,40 @@
         <p id="tempMap"></p>
         <input id="inputAction" />
         <button onclick="sendAction()" > Execute </button>
+
+        <!-- Audio for Happy and Sad Music -->
+        <audio controls id="happy_music">
+            <source src="{{ url_for('static', filename='music/happy_song.mp3') }}" type="audio/mpeg">
+        </audio>
+
+        <audio controls id="sad_music">
+            <source src="{{ url_for('static', filename='music/sad_song.mp3') }}" type="audio/mpeg">
+        </audio>
+
+        <button onclick="playHappy()" type="button">Happy</button>
+        <button onclick="playSad()" type="button">Sad</button>
+
+        <script>
+        var happy= document.getElementById("happy_music");
+        function playHappy() {
+            if(isPlaying(sad)){
+                sad.pause();
+            }
+            happy.play();
+        }
+
+        var sad = document.getElementById("sad_music");
+        function playSad() {
+            if(isPlaying(happy)){
+                happy.pause();
+            }
+            sad.play();
+        }
+
+        function isPlaying(audelem) {
+            return !audelem.paused;
+        }
+        </script>
     </body>
+
 </html>
