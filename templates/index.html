@@ -30,12 +30,10 @@
             var engine = TRAVISO.getEngineInstance(instanceConfig);
             pixiRoot.stage.addChild(engine);
         </script> -->
-        <script type="text/javascript" charset="utf-8">
-            var socket = io();
-            socket.on('connect', function() {
-                socket.emit('join');
-            });
-        </script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/socket.js') }}"></script>
+        <p id="tempMap"></p>
+        <input id="inputAction" />
+        <button onclick="sendAction()" > Execute </button>
 
         <!-- Audio for Happy and Sad Music -->
         <audio controls id="happy_music">

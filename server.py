@@ -39,6 +39,7 @@ def join():
 # once both players runs execute, we actually execute the command
 @socketio.on('execute')
 def execute(data):
+    print(data)
     pass
 
 @socketio.on('disconnect')
