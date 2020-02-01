@@ -19,14 +19,25 @@ var instanceConfig = {
         "/static/assets/btn_centralize.png",
         "/static/assets/btn_centralizeToObject.png",
         "/static/assets/btn_focusToObject.png",
+        "/static/assets/ggj_flowergirl_forward.png",
+        "/static/assets/ggj_flowergirl_backward.png",
+        "/static/assets/ggj_lumberjack_forward.png",
+        "/static/assets/ggj_lumberjack_backward.png",
+        "/static/assets/ggj_therapist_forward.png",
+        "/static/assets/ggj_therapist_backward.png",
     ], 
     tileHeight: 33,
     isoAngle: 27.27676,
     engineInstanceReadyCallback : onEngineInstanceReady,
     objectSelectCallback: onObjectSelect,
+    tileSelectCallback : onTileSelect,
+    dontAutoMoveToTile : true,
+    highlightTargetTile : false,
 };
 
 var engine = TRAVISO.getEngineInstance(instanceConfig);
+
+var unitActions = [[],[]];
 
 // this method will be called when the engine is ready
 function onEngineInstanceReady()
@@ -90,5 +101,57 @@ function onEngineInstanceReady()
 }
 
 function onObjectSelect(obj) {
-    engine.setCurrentControllable(obj);
+    // sprite type
+    if(obj.type > 0 && obj.type < 4) {
+        var prevUnit = engine.getCurrentControllable();
+        if(prevUnit) {
+            var prevAction = unitActions[prevUnit.mapPos.r, prevUnit.mapPos.c];
+            if (prevAction) {
+                if(prevAction.move) {
+                    engine.getTileAtRowAndColumn(prevAction.move.x, prevAction.move.y).setHighlighted(false, false);
+                }
+            }
+        }
+
+        engine.setCurrentControllable(obj);
+        console.log(obj.mapPos);
+        var existingAction = unitActions[obj.mapPos.r, obj.mapPos.c];
+        if (existingAction) {
+            if (existingAction.move) {
+                engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+            }
+        }
+        else {
+            existingAction = {
+                "move" : {
+                    "x": obj.mapPos.r,
+                    "y": obj.mapPos.c,
+                },
+                "action" : {},
+            }
+            unitActions[obj.mapPos.r, obj.mapPos.c] = existingAction;
+            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+        }
+    }
+}
+
+function onTileSelect(x, y) {
+    console.log(x, y);
+    console.log(engine.getTileAtRowAndColumn(x, y).tileGraphics);
+    engine.getTileAtRowAndColumn(x, y).setHighlighted(true, false);
+    setTimeout(function() {engine.getTileAtRowAndColumn(x, y).setHighlighted(false, false);}, 1000);
+
+    // engine.getTileAtRowAndColumn(x, y).type = 1;
+    // console.log(engine.getTileAtRowAndColumn(x, y).type);
+    // console.log(engine.mapSizeC)
+    // engine.mapSizeC += 1;
+    // console.log(engine.mapSizeC)
+    // engine.getTileAtRowAndColumn(0, engine.mapSizeC - 1);
+    // console.log(engine.getTileAtRowAndColumn(0, engine.mapSizeC - 1));
+    // engine.mapSizeC -= 1;
+    // console.log(engine.mapSizeC)
+    // engine.showHideGroundLayer(false);
+    // engine.showHideGroundLayer(true);
+
+    // engine.getTileAtRowAndColumn(x, y);
 }
