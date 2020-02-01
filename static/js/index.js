@@ -104,12 +104,12 @@ function onEngineInstanceReady()
     
     btnCentralizeToObject.click = btnCentralizeToObject.tap = function(data)
     {
-        engine.centralizeToObject(engine.getCurrentControllable());
+        if (engine.getCurrentControllable()) engine.centralizeToObject(engine.getCurrentControllable());
     };
     
     btnFocusMapToObject.click = btnFocusMapToObject.tap = function(data)
     {
-        engine.focusMapToObject(engine.getCurrentControllable());
+        if (engine.getCurrentControllable()) engine.focusMapToObject(engine.getCurrentControllable());
     };
 }
 
