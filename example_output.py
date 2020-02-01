@@ -8,13 +8,20 @@ def example_json():
                     {"background":"dirt", "improvements":[]},
                 "unit": {}
                 } for i in range(5)] for j in range(5)],
-            "animations": [
-                {
-                   "type": "tree_rocket",
-                   "start": [1, 3],
-                   "end": [4, 2]
-                },
-            ]
+
+            "animations": {
+                moves:[
+                   { "id": 0, 'start': [0, 3], "end": [1, 3]},
+                   { "id": 1, "start": [4, 4], "end": [3, 3]}
+                ],
+                attacks: [
+                   {
+                        "type": "tree_rocket",
+                        "start": [1, 3],
+                        "end": [4, 2]
+                    },
+                ]
+            }
     }
 
     example_json["board"][1][3]["unit"] = {"id": 0, "type": "treebuchet",
