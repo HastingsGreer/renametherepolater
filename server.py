@@ -20,6 +20,7 @@ def home():
 
 @socketio.on('join')
 def join():
+    global player1_joined
     server_logger.log("Client connected")
     if not player1_joined:
         player_id = 0
