@@ -1,4 +1,5 @@
 function fill_table(some_json) {
+    console.log("asdf");
 	//body reference 
     var tableParent = document.getElementById("tempMap");
 

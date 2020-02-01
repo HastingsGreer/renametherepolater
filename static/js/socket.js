@@ -15,15 +15,16 @@ socket.on('connect', function() {
 });
 
 socket.on("connection_received", function(data) {
+    console.log("Im in connection_received");
     console.log(data);
     fill_table(data);
 });
 
 socket.on("exec_result", function(data) {
+    console.log("Im in exec_result");
     console.log(data);
     fill_table(data);
     var maps = parseGameData(data);
-    document.getElementById("tempMap").innerHTML = data;
 });
 
 function sendAction() {
