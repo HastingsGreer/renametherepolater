@@ -23,6 +23,7 @@ socket.on("exec_result", function(data) {
     console.log(data);
     fill_table(data);
     var maps = parseGameData(data);
+    console.log(maps);
     document.getElementById("tempMap").innerHTML = data;
 });
 
@@ -46,10 +47,19 @@ function parseGameData(gameData) {
             var curr = board[i][j];
             if(j == board[1].length - 1) {
                 groundRow['row'] += jsonMapper[curr["environment"]["background"]];
-                objectRow['row'] += jsonMapper[curr["unit"].type];
+                if(jsonMapper[curr["unit"].type]) {
+                    objectRow['row'] += jsonMapper[curr["unit"].type];
+                } else {
+                    objectRow['row'] += "0";
+                }
             } else {
                 groundRow['row'] += jsonMapper[curr["environment"]["background"]] + " ,";
-                objectRow['row'] += jsonMapper[curr["unit"].type] + " ,";
+                if(jsonMapper[curr["unit"].type]) {
+                    objectRow['row'] += jsonMapper[curr["unit"].type] + " ,";
+                } else {
+                    objectRow['row'] += "0 ,";
+                }
+                
             }
         }
         map["groundMap"].push(groundRow);
