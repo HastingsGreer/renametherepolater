@@ -47,6 +47,7 @@ def join():
 @socketio.on('execute')
 def execute(data):
     global game, player1_executed, player2_executed, partial_cmds
+    data = json.loads(data)
     if not player1_executed:
         partial_cmds = data
         player1_executed = True
@@ -56,7 +57,6 @@ def execute(data):
         partial_cmds['attacks'].extend(data['attacks'])
 
     emit("execution_ack")
-    data = json.loads(data)
     if player2_executed:
         resp = game.execute(data)
         player1_executed = False
