@@ -36,10 +36,6 @@ class Game(object):
             unit_moves[move['id']] = {'dx': dx, 'dy': dy, 'steps': steps}
             static_units.remove(move['id'])
 
-        print(static_units)
-        print(unit_locs)
-        print(unit_moves)
-
         next_step = [[-1 for _ in range(len(self._map[0]))]
                 for _ in range(len(self._map))]
 
@@ -80,6 +76,13 @@ class Game(object):
             for i, row in enumerate(next_step):
                 for j, cell in enumerate(row):
                     if cell >= 0:
+                        # execute side-effects on board
+                        if unit_data[cell]['type'] == 'flower_girl':
+                            cur_x = unit_locs[unit_id][0]
+                            cur_y = unit_locs[unit_id][1]
+                            self._map[cur_x][cur_y]['environment']['improvements'].append(
+                                    'flower')
+                        # move the unit
                         unit_locs[cell][0] = i
                         unit_locs[cell][1] = j
 

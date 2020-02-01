@@ -15,12 +15,14 @@ socket.on('connect', function() {
 });
 
 socket.on("connection_received", function(data) {
+    console.log("Im in connection_received");
     console.log(data);
     fill_table(data);
     maps = parseGameData(data);
 });
 
 socket.on("exec_result", function(data) {
+    console.log("Im in exec_result");
     console.log(data);
     fill_table(data);
     maps = parseGameData(data);
@@ -68,7 +70,3 @@ function parseGameData(gameData) {
     }
     return map;
 } 
-
-function updateMapData() {
-
-}
