@@ -1,0 +1,35 @@
+{
+    "tiles": {
+        "1":  {
+            "movable": true,
+            "path": "t1.png"
+        }
+    },
+    "objects": {
+        "1": {
+            "movable": false,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "box.png" }
+                    ] 
+                }
+            }
+        }
+    },
+    "groundMap": [
+        { "row": "1 ,1 ,1 ,1" },
+        { "row": "1 ,0 ,0 ,1" },
+        { "row": "1 ,0 ,0 ,1" },
+        { "row": "1 ,1 ,1 ,1" }
+    ],
+    "objectsMap": [
+        { "row": "0 ,0 ,0 ,0" },
+        { "row": "0 ,1 ,0 ,0" },
+        { "row": "0 ,0 ,1 ,0" },
+        { "row": "0 ,0 ,0 ,0" }
+    ]
+}
