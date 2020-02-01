@@ -11,14 +11,14 @@
     },
     "objects": {
         "1": {
-            "movable": false,
+            "movable": true,
             "interactive": true,
             "rowSpan": 1,
             "columnSpan": 1,
             "visuals": {
                 "idle": {
                     "frames": [
-                        { "path": "/static/assets/box.png" }
+                        { "path": "/static/assets/ggj_flowergirl_forward.png" }
                     ] 
                 }
             }
@@ -32,10 +32,10 @@
         { "row": "2 ,1 ,2 ,1, 2 " }
     ],
     "objectsMap": [
-        { "row": "0 ,0 ,0 ,0 ,0 " },
-        { "row": "0 ,0 ,0 ,0 ,0 " },
+        { "row": "1 ,0 ,1 ,0 ,0 " },
+        { "row": "0 ,1 ,0 ,0 ,0 " },
         { "row": "0 ,0 ,1 ,0 ,0 " },
-        { "row": "0 ,0 ,0 ,0 ,0 " },
-        { "row": "0 ,0 ,0 ,0 ,0 " }
+        { "row": "0 ,0 ,0 ,1 ,0 " },
+        { "row": "1 ,0 ,0 ,0 ,0 " }
     ]
 }

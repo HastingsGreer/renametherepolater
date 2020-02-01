@@ -11,7 +11,7 @@ def rocket_attack(x, y, game):
             if yhat < 0 or yhat >= len(game._map):
                 continue
             if len(game._map[xhat][yhat]['unit']) != 0:
-                game._map[xhat][yhat]['unit']['happiness'] + \
+                game._map[xhat][yhat]['unit']['happiness'] += \
                     int(random.normalvariate(rocket_damage, rocket_damage / 5))
             game._map[xhat][yhat]['environment']['background'] = 'grass'
 
