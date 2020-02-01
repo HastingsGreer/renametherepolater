@@ -2,13 +2,13 @@
 
 <html>
     <head>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <meta charset="UTF-8">
         <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
     </head>
     <body>
         <h1>ELLO</h1>
         <!-- <canvas width="800" height="600" id="canvas"></canvas> -->
-        
         <script type="text/javascript" src="{{ url_for('static', filename='js/pixi.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/traviso.dev.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
@@ -35,17 +35,10 @@
             filename='js/socket.js') }}"></script>
         <!-- <script type="module" src="{{ url_for('static', filename='js/socket.js') }}"></script> -->
         <p id="tempMap"></p>
-        <textarea id="inputAction" rows="30" cols="50">
-{
-    "moves": [
-        { "id": 0, "start": [1, 3], "end": [1, 4] },
-        { "id": 1, "start": [3, 3], "end": [2, 2] }
-    ],
-    "attacks": [
-        { "id": 0, "target": [1, 2], "type": "tree_rocket" }
-    ]
-}      
+        <textarea id="inputAction" rows="15" cols="50">
+
         </textarea>
+
         <button onclick="sendAction()" > Execute </button>
 
         <!-- Audio for Happy and Sad Music -->
