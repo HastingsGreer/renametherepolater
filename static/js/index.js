@@ -37,7 +37,13 @@ var instanceConfig = {
 
 var engine = TRAVISO.getEngineInstance(instanceConfig);
 
-var unitActions = [[],[]];
+var unitActions = [
+    [{},{},{},{},{}],
+    [{},{},{},{},{}],
+    [{},{},{},{},{}],
+    [{},{},{},{},{}],
+    [{},{},{},{},{}]
+];
 
 // this method will be called when the engine is ready
 function onEngineInstanceReady()
@@ -103,10 +109,11 @@ function onEngineInstanceReady()
 function onObjectSelect(obj) {
     // sprite type
     if(obj.type > 0 && obj.type < 4) {
+
         var prevUnit = engine.getCurrentControllable();
         if(prevUnit) {
             var prevAction = unitActions[prevUnit.mapPos.r, prevUnit.mapPos.c];
-            if (prevAction) {
+            if (Object.keys(prevAction) !== 0 && prevAction.constructor === Object) {
                 if(prevAction.move) {
                     engine.getTileAtRowAndColumn(prevAction.move.x, prevAction.move.y).setHighlighted(false, false);
                 }
@@ -116,7 +123,7 @@ function onObjectSelect(obj) {
         engine.setCurrentControllable(obj);
         console.log(obj.mapPos);
         var existingAction = unitActions[obj.mapPos.r, obj.mapPos.c];
-        if (existingAction) {
+        if (Object.keys(existingAction) === 0 && existingAction.constructor === Object) {
             if (existingAction.move) {
                 engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
             }
