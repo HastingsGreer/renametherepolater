@@ -19,7 +19,7 @@ def home():
     return render_template("index.html")
 
 @socketio.on('join')
-def join(data):
+def join():
     server_logger.log("Client connected")
     if not player1_joined:
         player_id = 0
