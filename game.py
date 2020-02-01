@@ -122,7 +122,7 @@ class Game(object):
             x = unit_locs[unit_id][0]
             y = unit_locs[unit_id][1]
             self._map[x][y]['unit'] = unit
-            move_animations[unit_id]['end': unit_locs[id][:]]
+            move_animations[unit_id]['end'] = unit_locs[id][:]
 
         return full_move_units, list(move_animations.values())
 
