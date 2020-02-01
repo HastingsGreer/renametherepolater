@@ -2,7 +2,7 @@
     "tiles": {
         "1":  {
             "movable": true,
-            "path": "t1.png"
+            "path": "/static/assets/t1.png"
         }
     },
     "objects": {
@@ -14,7 +14,7 @@
             "visuals": {
                 "idle": {
                     "frames": [
-                        { "path": "box.png" }
+                        { "path": "/static/assets/box.png" }
                     ] 
                 }
             }

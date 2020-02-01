@@ -9,7 +9,7 @@ document.body.appendChild(pixiRoot.view);
 // engine-instance configuration object
 var instanceConfig = {
     mapDataPath: "/static/map/mapData.json", // the path to the json file that defines map data, required
-    assetsToLoad: ["t1.png", "box.png"] // array of paths to the assets that are desired to be loaded by traviso, no need to use if assets are already loaded to PIXI cache, default null
+    assetsToLoad: ["/static/assets/t1.png", "/static/assets/box.png"] // array of paths to the assets that are desired to be loaded by traviso, no need to use if assets are already loaded to PIXI cache, default null
 };
 
 var engine = TRAVISO.getEngineInstance(instanceConfig);
