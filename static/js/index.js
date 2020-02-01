@@ -19,14 +19,31 @@ var instanceConfig = {
         "/static/assets/btn_centralize.png",
         "/static/assets/btn_centralizeToObject.png",
         "/static/assets/btn_focusToObject.png",
+        "/static/assets/ggj_flowergirl_forward.png",
+        "/static/assets/ggj_flowergirl_backward.png",
+        "/static/assets/ggj_lumberjack_forward.png",
+        "/static/assets/ggj_lumberjack_backward.png",
+        "/static/assets/ggj_therapist_forward.png",
+        "/static/assets/ggj_therapist_backward.png",
     ], 
     tileHeight: 33,
     isoAngle: 27.27676,
     engineInstanceReadyCallback : onEngineInstanceReady,
     objectSelectCallback: onObjectSelect,
+    tileSelectCallback : onTileSelect,
+    dontAutoMoveToTile : true,
+    highlightTargetTile : false,
 };
 
 var engine = TRAVISO.getEngineInstance(instanceConfig);
+
+var unitActions = [
+    [{},{},{},{},{}],
+    [{},{},{},{},{}],
+    [{},{},{},{},{}],
+    [{},{},{},{},{}],
+    [{},{},{},{},{}]
+];
 
 // this method will be called when the engine is ready
 function onEngineInstanceReady()
@@ -90,5 +107,81 @@ function onEngineInstanceReady()
 }
 
 function onObjectSelect(obj) {
-    engine.setCurrentControllable(obj);
+    if(obj.type > 0 && obj.type < 4) {
+        var prevUnit = engine.getCurrentControllable();
+        if(prevUnit !== obj) {
+            if(prevUnit) {
+                var prevAction = unitActions[prevUnit.mapPos.r][prevUnit.mapPos.c];
+                if (Object.entries(prevAction).length !== 0 && prevAction.constructor === Object) {
+                    if(prevAction.move) {
+                        engine.getTileAtRowAndColumn(prevAction.move.x, prevAction.move.y).setHighlighted(false, false);
+                    }
+                }
+            }
+
+            engine.setCurrentControllable(obj);
+            console.log(obj.mapPos);
+            var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
+            console.log(existingAction);
+            if (Object.entries(existingAction).length !== 0 && existingAction.constructor === Object) {
+            } else {
+                console.log("New action");
+                existingAction = {
+                    "move" : {
+                        "x": obj.mapPos.r,
+                        "y": obj.mapPos.c,
+                    },
+                    "action" : {},
+                }
+                unitActions[obj.mapPos.r][obj.mapPos.c] = existingAction;
+                
+            }
+            
+            console.log(engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y));
+            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
+            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
+        }
+    }
+}
+
+function onTileSelect(x, y) {
+    console.log(x, y);
+
+    var currentUnit = engine.getCurrentControllable();
+    
+    console.log(currentUnit);
+    if(currentUnit) {
+        var existingAction = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c];
+        if (existingAction && Object.entries(existingAction).length !== 0 && existingAction.constructor === Object 
+            && existingAction.move && (existingAction.move.x != x || existingAction.move.y != y)) {
+            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, false);
+        }
+        if (!existingAction) existingAction = {};
+        existingAction.move = {
+            "x" : x,
+            "y" : y,
+        }
+        unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c] = existingAction;
+        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+    }
+
+    console.log(unitActions);
+
+    // engine.getTileAtRowAndColumn(x, y).setHighlighted(true, false);
+    // setTimeout(function() {engine.getTileAtRowAndColumn(x, y).setHighlighted(false, false);}, 1000);
+
+    // engine.getTileAtRowAndColumn(x, y).type = 1;
+    // console.log(engine.getTileAtRowAndColumn(x, y).type);
+    // console.log(engine.mapSizeC)
+    // engine.mapSizeC += 1;
+    // console.log(engine.mapSizeC)
+    // engine.getTileAtRowAndColumn(0, engine.mapSizeC - 1);
+    // console.log(engine.getTileAtRowAndColumn(0, engine.mapSizeC - 1));
+    // engine.mapSizeC -= 1;
+    // console.log(engine.mapSizeC)
+    // engine.showHideGroundLayer(false);
+    // engine.showHideGroundLayer(true);
+
+    // engine.getTileAtRowAndColumn(x, y);
 }
