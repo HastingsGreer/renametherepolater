@@ -101,6 +101,7 @@ function fill_table(some_json) {
     tableParent.appendChild(tbl);
     // tbl border attribute to 
     tbl.setAttribute("border", "2");
+    actions_changed();
 }
 
 window.action_ready_json = {

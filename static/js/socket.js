@@ -17,6 +17,8 @@ socket.on('connect', function() {
 socket.on("connection_received", function(data) {
     console.log("Im in connection_received");
     console.log(data);
+    window.player_id = data.player_id;
+    document.getElementById("implayer").innerText = JSON.stringify([data.player_id])
     fill_table(data);
     maps = parseGameData(data);
 });
