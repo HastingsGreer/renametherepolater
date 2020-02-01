@@ -116,6 +116,7 @@ function onEngineInstanceReady()
 function onObjectSelect(obj) {
     if (selectMode === SELECT && obj.type > 0 && obj.type < 4) {
         var currentUnit = engine.getCurrentControllable();
+        // window.selected_cell = [obj.mapPos.r, obj.mapPos.c];
         selectMode = MOVE;
         if (!currentUnit) {
             engine.setCurrentControllable(obj);
@@ -242,6 +243,7 @@ function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
         // console.log(engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor);
+        add_move(get_unit(unitX, unitY).id, [unitX, unitY], [moveX, moveY]);
     } else {
         unitActions[unitX][unitY].move = {};
     }
@@ -265,6 +267,7 @@ function updateUnitAction(unitX, unitY, actX, actY, instant) {
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
         // console.log(engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor);
+        add_attack(get_unit(unitX, unitY).id, [actX, actY], "tree_rocket");
     } else {
         unitActions[unitX][unitY].action = {};
     }
