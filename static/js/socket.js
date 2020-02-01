@@ -8,7 +8,7 @@ var jsonMapper = {
     "tree" : 3, 
     "flower" : 4
 }
-
+var maps;
 var socket = io();
 socket.on('connect', function() {
     socket.emit('join');
@@ -18,13 +18,16 @@ socket.on("connection_received", function(data) {
     console.log("Im in connection_received");
     console.log(data);
     fill_table(data);
+    maps = parseGameData(data);
 });
 
 socket.on("exec_result", function(data) {
     console.log("Im in exec_result");
     console.log(data);
     fill_table(data);
-    var maps = parseGameData(data);
+    maps = parseGameData(data);
+    console.log(maps);
+    document.getElementById("tempMap").innerHTML = data;
 });
 
 function sendAction() {
