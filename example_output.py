@@ -6,7 +6,7 @@ def example_json():
                 {
                 "environment": 
                     {"background":"grass", "improvements":[]},
-                "unit": { "type" : "placeholder"}
+                "unit": {}
                 } for i in range(5)] for j in range(5)],
             "animations": [
                 {
