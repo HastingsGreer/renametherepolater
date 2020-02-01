@@ -22,6 +22,9 @@ socket.on("connection_received", function(data) {
 });
 
 socket.on("exec_result", function(data) {
+
+    document.getElementById("waitingIndicator").innerHTML = "";
+
     console.log("Im in exec_result");
     console.log(data);
     fill_table(data);
@@ -30,6 +33,7 @@ socket.on("exec_result", function(data) {
 });
 
 function sendAction() {
+	document.getElementById("waitingIndicator").innerHTML = "<b> WAITING_ON_PLAYER_2 </b>";
     var action = document.getElementById("inputAction").value;
     socket.emit('execute', action);
 }
