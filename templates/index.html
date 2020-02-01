@@ -35,11 +35,13 @@
             filename='js/socket.js') }}"></script>
         <!-- <script type="module" src="{{ url_for('static', filename='js/socket.js') }}"></script> -->
         <p id="tempMap"></p>
+        <button onclick="sendAction(); clear_actions();" > Execute </button>
+        <br/>
         <textarea id="inputAction" rows="15" cols="50">
 
         </textarea>
 
-        <button onclick="sendAction()" > Execute </button>
+        
 
         <!-- Audio for Happy and Sad Music -->
         <audio controls id="happy_music">

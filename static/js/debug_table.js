@@ -30,21 +30,20 @@ function fill_table(some_json) {
             var cellText = document.createTextNode(JSON.stringify(some_json.map.board[i][j])); 
 
             cell.appendChild(cellText);
-            function make_print_my_location(i, j) {      
-	            function print_my_location() {
-                    if(Object.keys(get_unit(i, j)).length == 0){
-                        alert("invalid selection");
-                        return;
-                    }
-	                window.selected_cell = [i, j];
-	            }
-	            return print_my_location;
-	        }
+            if(Object.keys(get_unit(i, j)).length != 0){
+                function make_print_my_location(i, j) {      
+    	            function print_my_location() {
+            
+    	                window.selected_cell = [i, j];
+    	            }
+    	            return print_my_location;
+    	        }
 
-            var btn = document.createElement("BUTTON");   // Create a <button> element
-            btn.innerHTML = "SELECT";
-            btn.onclick = make_print_my_location(i, j);
-            cell.appendChild(btn);
+                var btn = document.createElement("BUTTON");   // Create a <button> element
+                btn.innerHTML = "<b>SELECT</b>";
+                btn.onclick = make_print_my_location(i, j);
+                cell.appendChild(btn);
+            }
 
             function make_move_my_location(i, j) {      
                 function move_my_location() {
@@ -106,7 +105,7 @@ function fill_table(some_json) {
 
 window.action_ready_json = {
     moves : [],
-    actions : []
+    attacks : []
 }
 window.action_set_handlers = [];
 actions_changed = function() {
