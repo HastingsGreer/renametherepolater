@@ -19,7 +19,6 @@ socket.on('connect', function() {
 
 socket.on("client_disconnected", function(){
 	alert("Your opponent disconnected. You win I guess. Please reload to start a new match")
-	window.location.reload(false)
 })
 
 socket.on("connection_received", function(data) {
