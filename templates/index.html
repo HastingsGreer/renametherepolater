@@ -56,20 +56,6 @@
             <source src="{{ url_for('static', filename='music/sad_song.mp3') }}" type="audio/mpeg">
         </audio>
 
-        <button onclick="playMusic(happy_music)" type="button">Happy</button>
-        <button onclick="playMusic(sad_music)" type="button">Sad</button>
-
-        <script>
-        var happy= document.getElementById("happy_music");
-        var sad = document.getElementById("sad_music");
-
-        function playMusic(music){
-            happy.pause();
-            sad.pause();
-            music.play();
-        }
-        </script>
-
         <!-- SFX for actions and selections -->
         <audio controls id="sfx_dodge" hidden>
             <source src="{{ url_for('static', filename='sfx/SFX_Dodge.wav') }}" type="audio/wav">
@@ -118,6 +104,39 @@
         <audio controls id="sfx_treebuchet_throw" hidden>
             <source src="{{ url_for('static', filename='sfx/SFX_Treebuchet_Throw.wav') }}" type="audio/wav">
         </audio> 
+
+        <script>
+        var happy= document.getElementById("happy_music");
+        var sad = document.getElementById("sad_music");
+        
+        function isPlaying(audelem) {
+            return !audelem.paused;
+        }
+
+        function playMusic(music){
+            if(isPlaying(!happy)){
+                happy.pause();
+                sad.pause();                
+            }
+            music.play();
+        }
+        </script>
+
+        <button onclick="playMusic(happy_music)" type="button">Happy</button>
+        <button onclick="playMusic(sad_music)" type="button">Sad</button>
+
+        <button onclick="playMusic(sfx_dodge)" type="button">Dodge</button>
+        <button onclick="playMusic(sfx_drop_long)" type="button">Drop (Long)</button>
+        <button onclick="playMusic(sfx_drop_medium)" type="button">Drop (Medium)</button>
+        <button onclick="playMusic(sfx_drop_short)" type="button">Drop (Short)</button>
+        <button onclick="playMusic(sfx_glissando)" type="button">Glissando</button>
+        <button onclick="playMusic(sfx_hit_long)" type="button">Hit (Long)</button>
+        <button onclick="playMusic(sfx_hit_short)" type="button">Hit (Short)</button>
+        <button onclick="playMusic(sfx_move_space)" type="button">Move Space</button>
+        <button onclick="playMusic(sfx_select_forward)" type="button">Select Forward</button>
+        <button onclick="playMusic(sfx_select_move)" type="button">Select Move</button>
+        <button onclick="playMusic(sfx_thunder_bomb)" type="button">Thunder Bomb</button>
+        <button onclick="playMusic(sfx_treebuchet_throw)" type="button">Treebuchet Throw</button>
     </body>
 
 </html>
