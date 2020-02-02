@@ -20,6 +20,9 @@ def rocket_attack(x, y, game):
 def bench_attack(x, y, game):
     game._map[x][y]["background"] = 'bench'
 
+def _attack(x, y, game):
+    game._map[x][y]["background"] = 'bench'
+
 ATTACK_LOOKUP = {
     'tree_rocket': rocket_attack,
     'place_bench': bench_attack
@@ -42,7 +45,7 @@ ENVIRONMENT_LOOKUP = {
     'grass' : (lambda x, y, game: None),
     'flowers': flower_dmg,
     "bench": bench_dmg,
-    "water": (lambda x, y, game: None)
+    "water": (lambda x, y, game: None),
     "dirt": (lambda x, y, game: None)
 }
 
