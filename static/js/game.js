@@ -21,6 +21,7 @@ let container = document.getElementById("pixiContainer");
 container.appendChild(pixiRoot.view);
 
 let activeObjects = [];
+let yourObjects = [];
 
 let healthObjects = [];
 
@@ -404,9 +405,9 @@ function deselectUnit() {
 
 function onTileSelect(x, y) {
     console.log("Selected tile", x, y);
-    console.log(activeObjects);
+    console.log(yourObjects);
     let objFound = false;
-    activeObjects.forEach(obj => {
+    yourObjects.forEach(obj => {
         if(obj.mapPos.r === x && obj.mapPos.c === y
             && obj.type > 0 && obj.type < 6) {
             console.log(obj);
@@ -556,6 +557,7 @@ function renderServerReply(data) {
         engine.removeObjectFromLocation(obj);
     });
     activeObjects.length = 0;
+    yourObjects.length = 0;
 
     healthObjects.forEach((obj) => {
         engine.removeObjectFromLocation(obj);
@@ -585,8 +587,15 @@ function renderServerReply(data) {
             if (objIsNotEmpty(cell.unit)) {
                 let unitObj = revMapping[cell.unit.type];
                 console.log(unitObj);
-                activeObjects.push(engine.createAndAddObjectToLocation(unitObj,
-                    {'r': i, 'c': j}));
+                let unitView = engine.createAndAddObjectToLocation(unitObj,
+                    {'r': i, 'c': j});
+                console.log("HELLOjadkshfjkadshfjksadf");
+                console.log(cell.unit.owner);
+                console.log(window.player_id);
+                activeObjects.push(unitView);
+                if (cell.unit.owner === window.player_id) {
+                    yourObjects.push(unitView);
+                }
                 toAddHealth.push({
                     'r': i,
                     'c': j,
@@ -599,7 +608,7 @@ function renderServerReply(data) {
     toAddHealth.forEach((unit) => {
         healthObjects.push(engine.createAndAddObjectToLocation(revMapping["empty_healthbar"],
             {'r': unit.r, 'c': unit.c}));
-        for(var k = 0; k < unit.happiness; k++) {
+        for(var k = 0; k < unit.happiness / 10; k++) {
             healthObjects.push(engine.createAndAddObjectToLocation(revMapping["health_segment_01"] + k,
             {'r': unit.r, 'c': unit.c}));
         }

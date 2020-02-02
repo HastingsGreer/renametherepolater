@@ -90,6 +90,20 @@ class BGM {
 
 }
 
-
-
-
+unit_selected_sound = {
+	"austin" 		: "SFX_Units_Austin_1.wav", 
+	"bench_boi"		: "SFX_Units_BenchBoi_1.wav",
+	"therapist" 	: "SFX_Units_Therapist_1.wav",
+	"normie" 		: "SFX_Units_Cynthia_1.wav", 
+	"treebuchet" 	: "SFX_Units_Normie_1.wav", 
+	"flower_girl" 	: "SFX_Units_FlowerGirl_1.wav"
+}
+	
+unit_attack_sound = {
+	"austin" 		: "SFX_Units_Austin_1.wav", 
+	"bench_boi" 	: "SFX_Units_BlankBenchBoi_1.wav", 
+	"therapist" 	: "SFX_Units_Therapist_2.wav", 
+	"normie" 		: "SFX_Units_Cynthia_1.wav", 
+	"treebuchet" 	: "SFX_Units_Treebuchet_2.wav", 
+	"flower_girl" 	: "SFX_Units_FlowerGirl_1.wav"
+}
