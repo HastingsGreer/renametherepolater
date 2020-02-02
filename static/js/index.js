@@ -7,6 +7,8 @@ container.appendChild(pixiRoot.view);
 
 let activeObjects = [];
 
+let serverGameState = undefined;
+
 ////// Here, we create our traviso instance and add on top of pixi
 
 // engine-instance configuration object
@@ -141,6 +143,8 @@ function onEngineInstanceReady()
     {
         if (engine.getCurrentControllable()) engine.focusMapToObject(engine.getCurrentControllable());
     };
+
+    renderServerReply(serverGameState);
 }
 
 function onObjectSelect(obj) {
@@ -324,6 +328,7 @@ console.log("Rev mapping");
 console.log(revMapping);
 
 function renderServerReply(data) {
+    serverGameState = data;
     // destroy everything
     activeObjects.forEach((obj) => {
         engine.removeObjectFromLocation(obj);

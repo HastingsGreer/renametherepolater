@@ -23,6 +23,7 @@ socket.on("connection_received", function(data) {
     document.getElementById("implayer").innerText = JSON.stringify([data.player_id])
     fill_table(data);
     maps = parseGameData(data);
+    serverGameState = data;
 });
 
 socket.on("exec_result", function(data) {
