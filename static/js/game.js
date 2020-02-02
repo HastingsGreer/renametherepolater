@@ -77,6 +77,8 @@ var unitActions = [
     [{},{},{},{},{}],
     [{},{},{},{},{}],
     [{},{},{},{},{}],
+    [{},{},{},{},{}],
+    [{},{},{},{},{}],
     [{},{},{},{},{}]
 ];
 
@@ -144,10 +146,12 @@ function onEngineInstanceReady()
         if (engine.getCurrentControllable()) engine.focusMapToObject(engine.getCurrentControllable());
     };
 
+    renderServerReply(serverGameState);
 }
 
 function onObjectSelect(obj) {
-    if (selectMode === SELECT && obj.type > 0 && obj.type < 4) {
+    console.log("Selected obj", obj.type);
+    if (selectMode === SELECT && obj.type > 0 && obj.type < 6) {
         var currentUnit = engine.getCurrentControllable();
         // window.selected_cell = [obj.mapPos.r, obj.mapPos.c];
         selectMode = MOVE;
@@ -213,23 +217,36 @@ function deselectUnit() {
 }
 
 function onTileSelect(x, y) {
-    if (selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
-        console.log("MOVE");
-        var currentUnit = engine.getCurrentControllable();
-        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-        selectMode = ACTION;
-    } else if (selectMode === ACTION) {
-        console.log("ACTION");
-        var currentUnit = engine.getCurrentControllable();
-        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-        selectMode = DISABLED;
-        setTimeout(function() {
-            selectMode = SELECT;
-            deselectUnit();
-            engine.setCurrentControllable(null);
-        }, 1000);
+    console.log("Selected tile", x, y);
+    console.log(activeObjects);
+    let objFound = false;
+    activeObjects.forEach(obj => {
+        if(obj.mapPos.r === x && obj.mapPos.c === y
+            && obj.type > 0 && obj.type < 6) {
+            console.log(obj);
+            onObjectSelect(obj);
+            objFound = true;
+        }
+    });
+    if (!objFound) {
+        if (selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
+            console.log("TILE MOVE");
+            selectMode = ACTION;
+            var currentUnit = engine.getCurrentControllable();
+            updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+            updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+            updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+        } else if (selectMode === ACTION) {
+            console.log("TILE ACTION");
+            var currentUnit = engine.getCurrentControllable();
+            updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+            selectMode = DISABLED;
+            setTimeout(function() {
+                selectMode = SELECT;
+                deselectUnit();
+                engine.setCurrentControllable(null);
+            }, 1000);
+        }
     }
     // console.log(x, y);
 
@@ -264,7 +281,8 @@ function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
     var existingAction = unitActions[unitX][unitY];
     if (objIsNotEmpty(existingAction) && objIsNotEmpty(existingAction.move)
         && (existingAction.move.x != moveX || existingAction.move.y != moveY)) {
-        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, instant);
+        // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, instant);
+        // engine.getObjectsAtRowAndColumn(existingAction.move.x, existingAction.move.y)
     }
     if(moveX >= 0 && moveY >= 0) {
         if (!existingAction) existingAction = {};
@@ -273,7 +291,8 @@ function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
             "y" : moveY,
         }
         unitActions[unitX][unitY] = existingAction;
-        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+        engine.createAndAddObjectToLocation(10, {"r": existingAction.move.x, "c": existingAction.move.y});
+        // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
         // console.log(engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor);
@@ -288,7 +307,7 @@ function updateUnitAction(unitX, unitY, actX, actY, instant) {
     if (existingAction && objIsNotEmpty(existingAction)
         && objIsNotEmpty(existingAction.action)
         && (existingAction.action.x != actX || existingAction.action.y != actY)) {
-        engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).setHighlighted(false, instant);
+        // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).setHighlighted(false, instant);
     }
     if(actX >= 0 && actY >= 0) {
         if (!existingAction) existingAction = {};
@@ -297,7 +316,8 @@ function updateUnitAction(unitX, unitY, actX, actY, instant) {
             "y" : actY,
         }
         unitActions[unitX][unitY] = existingAction;
-        engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).setHighlighted(true, false);
+        engine.createAndAddObjectToLocation(10, {"r": existingAction.action.x, "c": existingAction.action.y});
+        // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).setHighlighted(true, false);
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
         // console.log(engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor);
@@ -341,6 +361,7 @@ function renderServerReply(data) {
             let cell = data.map.board[i][j];
             let backgroundObj = revMapping[cell.background];
             console.log(cell.background);
+            console.log(backgroundObj);
             if (improvements.includes(cell.background)) {
                 // this is not actually background
                 activeObjects.push(
@@ -353,9 +374,11 @@ function renderServerReply(data) {
 
             if (objIsNotEmpty(cell.unit)) {
                 let unitObj = revMapping[cell.unit.type];
+                console.log(unitObj);
                 activeObjects.push(engine.createAndAddObjectToLocation(unitObj,
                     {'r': i, 'c': j}));
             }
         }
     }
+    engine.objectSelectCallback = onObjectSelect;
 }
