@@ -17,7 +17,7 @@ container.appendChild(pixiRoot.view);
 let activeObjects = [];
 
 let optionHighlightObjs = [];
-let confirmedMovesObjs = [];
+let confirmedMovesObjs = {};
 
 let serverGameState = undefined;
 
@@ -66,6 +66,30 @@ var instanceConfig = {
         "/static/assets/Logo_Small.png",
         "/static/assets/ggj_ground_movelight.png",
         "/static/assets/ggj_ground_attacklight.png",
+        "/static/assets/ggj_movearrow_1.png",
+        "/static/assets/ggj_movearrow_2.png",
+        "/static/assets/ggj_movearrow_3.png",
+        "/static/assets/ggj_movearrow_4.png",
+        "/static/assets/ggj_movearrow_5.png",
+        "/static/assets/ggj_movearrow_6.png",
+        "/static/assets/ggj_movearrow_7.png",
+        "/static/assets/ggj_movearrow_8.png",
+        "/static/assets/ggj_moveline_diagonal_1.png",
+        "/static/assets/ggj_moveline_diagonal_2.png",
+        "/static/assets/ggj_moveline_horiz.png",
+        "/static/assets/ggj_moveline_vert.png",
+        "/static/assets/ggj_attackarrow_1.png",
+        "/static/assets/ggj_attackarrow_2.png",
+        "/static/assets/ggj_attackarrow_3.png",
+        "/static/assets/ggj_attackarrow_4.png",
+        "/static/assets/ggj_attackarrow_5.png",
+        "/static/assets/ggj_attackarrow_6.png",
+        "/static/assets/ggj_attackarrow_7.png",
+        "/static/assets/ggj_attackarrow_8.png",
+        "/static/assets/ggj_attackline_diagonal_1.png",
+        "/static/assets/ggj_attackline_diagonal_2.png",
+        "/static/assets/ggj_attackline_horiz.png",
+        "/static/assets/ggj_attackline_vert.png"
     ], 
     tileHeight: 33,
     isoAngle: 27.27676,
@@ -97,57 +121,57 @@ function objIsNotEmpty(obj) {
 function onEngineInstanceReady()
 {
     pixiRoot.stage.addChild(engine);
-    
+
     // create buttons
     var btnZoomIn = new PIXI.Sprite.fromFrame("/static/assets/btn_zoomIn.png");
     pixiRoot.stage.addChild(btnZoomIn);
-    
+
     var btnZoomOut = new PIXI.Sprite.fromFrame("/static/assets/btn_zoomOut.png");
     pixiRoot.stage.addChild(btnZoomOut);
-    
+
     var btnCentralize = new PIXI.Sprite.fromFrame("/static/assets/btn_centralize.png");
     pixiRoot.stage.addChild(btnCentralize);
-    
+
     var btnCentralizeToObject = new PIXI.Sprite.fromFrame("/static/assets/btn_centralizeToObject.png");
     pixiRoot.stage.addChild(btnCentralizeToObject);
-    
+
     var btnFocusMapToObject = new PIXI.Sprite.fromFrame("/static/assets/btn_focusToObject.png");
     pixiRoot.stage.addChild(btnFocusMapToObject);
-    
+
     // set positions
     btnZoomIn.position.x = 8;
     btnZoomOut.position.x = btnZoomIn.position.x + btnZoomIn.width + 8;
     btnCentralize.position.x = btnZoomOut.position.x + btnZoomOut.width + 8;
     btnCentralizeToObject.position.x = btnCentralize.position.x + btnCentralize.width + 8;
     btnFocusMapToObject.position.x = btnCentralizeToObject.position.x + btnCentralizeToObject.width + 8;
-    
+
     btnZoomIn.interactive = btnZoomIn.buttonMode = true;
     btnZoomOut.interactive = btnZoomOut.buttonMode = true;
     btnCentralize.interactive = btnCentralize.buttonMode = true;
     btnCentralizeToObject.interactive = btnCentralizeToObject.buttonMode = true;
     btnFocusMapToObject.interactive = btnFocusMapToObject.buttonMode = true;
-    
+
     // add click callbacks
     btnZoomIn.click = btnZoomIn.tap = function(data)
     {
         engine.zoomIn();
     };
-    
+
     btnZoomOut.click = btnZoomOut.tap = function(data)
     {
         engine.zoomOut();
     };
-    
+
     btnCentralize.click = btnCentralize.tap = function(data)
     {
         engine.centralizeToCurrentExternalCenter();
     };
-    
+
     btnCentralizeToObject.click = btnCentralizeToObject.tap = function(data)
     {
         if (engine.getCurrentControllable()) engine.centralizeToObject(engine.getCurrentControllable());
     };
-    
+
     btnFocusMapToObject.click = btnFocusMapToObject.tap = function(data)
     {
         if (engine.getCurrentControllable()) engine.focusMapToObject(engine.getCurrentControllable());
@@ -156,13 +180,11 @@ function onEngineInstanceReady()
     renderServerReply(serverGameState);
 }
 
-let highlightMovementTiles = (obj) => {
-    let center_x = obj.mapPos.r;
-    let center_y = obj.mapPos.c;
-    let unitData = get_unit(center_x, center_y);
-    console.log(unitData);
+let highlightMovementTiles = (unit_x, unit_y, center_x, center_y, steps, isAttacking) => {
+    console.log("Higlihging");
+    let prefix = isAttacking ? "attack" : "move"
 
-    let movementHighlight = revMapping["move_highlight"];
+    let movementHighlight = revMapping[prefix + "_highlight"];
 
     let addHighlighTile = (step, dx, dy) => {
         if (center_x + step * dx >= 0 && center_x + step * dx < boardXMax &&
@@ -176,7 +198,7 @@ let highlightMovementTiles = (obj) => {
 
     addHighlighTile(0, 0, 0);
 
-    for (var i = 1 ; i < unitData.movement_range ; i++) {
+    for (var i = 1 ; i <= steps ; i++) {
         console.log(i);
         for (var dx = -1 ; dx <= 1 ; dx++) {
             for (var dy = -1 ; dy <= 1 ; dy++) {
@@ -189,30 +211,84 @@ let highlightMovementTiles = (obj) => {
     return;
 }
 
-let removeOptionHighlightsAndConfirm = (newX, newY) => {
+let removeOptionHighlightsAndConfirm = (obj, initX, initY, newX, newY,
+    isAttacking) => {
     console.log("Remove options");
     console.log(optionHighlightObjs);
-    optionHighlightObjs.forEach((asdf) => {
-        engine.removeObjectFromLocation(asdf);
+    optionHighlightObjs.forEach((jkl) => {
+        engine.removeObjectFromLocation(jkl);
     });
     optionHighlightObjs.length = 0;
+    let unit = get_unit(obj.mapPos.r, obj.mapPos.c);
+    console.log(obj.mapPos.r);
+    console.log(obj.mapPos.c);
+    console.log(initX);
+    console.log(initY);
+
+    let dx = Math.sign(newX - initX);
+    let dy = Math.sign(newY - initY);
+    let arrowObj = undefined;
+    let lineObj = undefined;
+    let steps = Math.abs(newX - initX);
+    let prefix = isAttacking ? "attack" : "move" 
+
+    if (dx === -1 && dy === -1) {
+        arrowObj = revMapping[prefix + "arrow_W"];
+        lineObj = revMapping[prefix + "line_horiz"];
+    } else if (dx === -1 && dy === 0) {
+        arrowObj = revMapping[prefix + "arrow_NW"];
+        lineObj = revMapping[prefix + "line_diag_2"];
+    } else if (dx === -1 && dy === 1) {
+        arrowObj = revMapping[prefix + "arrow_N"];
+        lineObj = revMapping[prefix + "line_vert"];
+    } else if (dx === 0 && dy === -1) {
+        arrowObj = revMapping[prefix + "arrow_SW"];
+        lineObj = revMapping[prefix + "line_diag_1"];
+    } else if (dx === 0 && dy === 0) {
+        return;
+    } else if (dx === 0 && dy === 1) {
+        arrowObj = revMapping[prefix + "arrow_NE"];
+        lineObj = revMapping[prefix + "line_diag_1"];
+    } else if (dx === 1 && dy === -1) {
+        arrowObj = revMapping[prefix + "arrow_S"];
+        lineObj = revMapping[prefix + "line_vert"];
+    } else if (dx === 1 && dy === 0) {
+        arrowObj = revMapping[prefix + "arrow_SE"];
+        lineObj = revMapping[prefix + "line_diag_2"];
+    } else if (dx === 1 && dy === 1) {
+        arrowObj = revMapping[prefix + "arrow_E"];
+        lineObj = revMapping[prefix + "line_horiz"];
+    }
+
+    confirmedMovesObjs[unit.id] = [];
+    for (var i = 1 ; i < steps ; i++) {
+        confirmedMovesObjs[unit.id].push(
+            engine.createAndAddObjectToLocation(
+                lineObj,
+                {
+                    'r': initX + dx * i,
+                    'c': initY + dy * i
+                }));
+    }
+    confirmedMovesObjs[unit.id].push(
+        engine.createAndAddObjectToLocation( arrowObj, {'r': newX, 'c': newY}));
 }
 
 let highlightAttackTiles = (obj) => {
     return;
 }
 
-let removeAttackHighlightsAndConfirm = (obj) => {
-    return;
-}
 
 function onObjectSelect(obj) {
     console.log("Selected obj", obj.type);
     if (selectMode === SELECT && obj.type > 0 && obj.type < 6) {
         var currentUnit = engine.getCurrentControllable();
         // window.selected_cell = [obj.mapPos.r, obj.mapPos.c];
-        
-        highlightMovementTiles(obj);
+        let unitData = get_unit(obj.mapPos.r, obj.mapPos.c);
+        console.log(unitData);
+
+        highlightMovementTiles(obj.mapPos.r, obj.mapPos.c,
+            obj.mapPos.r, obj.mapPos.c, unitData.movement_range, false);
 
         selectMode = MOVE;
 
@@ -238,28 +314,25 @@ function onObjectSelect(obj) {
                 }
                 unitActions[obj.mapPos.r][obj.mapPos.c] = existingAction;
             }
-            
-            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
-            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
-            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
+        } else if (selectMode === MOVE) {
+            console.log("MOVINGGGG");
+            selectMode = ACTION;
+
+            var currentUnit = engine.getCurrentControllable();
+            updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+            updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+            // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", obj.mapPos.r, obj.mapPos.c);
+        } else if (selectMode === ACTION) {
+            removeAttackHighlightsAndConfirm(obj);
+            selectMode = DISABLED;
+            var currentUnit = engine.getCurrentControllable();
+            updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
+            setTimeout(function() {
+                window.selectMode = SELECT;
+                deselectUnit();
+                engine.setCurrentControllable(null);
+            }, 1000);
         }
-    } else if (selectMode === MOVE) {
-        console.log("MOVINGGGG");
-        selectMode = ACTION;
-        var currentUnit = engine.getCurrentControllable();
-        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
-    } else if (selectMode === ACTION) {
-        removeAttackHighlightsAndConfirm(obj);
-        selectMode = DISABLED;
-        var currentUnit = engine.getCurrentControllable();
-        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
-        setTimeout(function() {
-            selectMode = SELECT;
-            deselectUnit();
-            engine.setCurrentControllable(null);
-        }, 1000);
     }
 }
 
@@ -292,31 +365,41 @@ function onTileSelect(x, y) {
         }
     });
     if (!objFound) {
-        if (selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
+        if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
             console.log("TILE MOVE");
-            selectMode = ACTION;
+            window.selectMode = ACTION;
             var currentUnit = engine.getCurrentControllable();
+            removeOptionHighlightsAndConfirm(currentUnit,
+                currentUnit.mapPos.r,
+                currentUnit.mapPos.c,
+                x, y, false);
+
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
             updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+            // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", currentUnit.mapPos.r, currentUnit.mapPos.c);
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-            removeOptionHighlightsAndConfirm(x, y);
-            highlightAttackTiles();
+            let unitData = get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c);
+            highlightMovementTiles(currentUnit.mapPos.r,
+                currentUnit.mapPos.c, x, y, unitData.attack_range, true);
+
         } else if (selectMode === ACTION) {
             console.log("TILE ACTION");
             var currentUnit = engine.getCurrentControllable();
+            let cur_actions = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c].move;
+
+            removeOptionHighlightsAndConfirm(currentUnit, 
+                cur_actions.x, cur_actions.y,
+                x, y, true);
             updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-            selectMode = DISABLED;
-            setTimeout(function() {
-                selectMode = SELECT;
-                deselectUnit();
-                engine.setCurrentControllable(null);
-            }, 1000);
+            deselectUnit();
+            engine.setCurrentControllable(null);
+            window.selectMode = SELECT;
         }
     }
     // console.log(x, y);
 
     // var currentUnit = engine.getCurrentControllable();
-    
+
     // console.log(currentUnit);
     // if(currentUnit) {
     //     updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y);
@@ -344,6 +427,7 @@ function onTileSelect(x, y) {
 
 function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
     var existingAction = unitActions[unitX][unitY];
+    // console.log("UPDATE UNIT MOVE: ", unitX, unitY);
     if (objIsNotEmpty(existingAction) && objIsNotEmpty(existingAction.move)
         && (existingAction.move.x != moveX || existingAction.move.y != moveY)) {
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, instant);
@@ -356,11 +440,12 @@ function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
             "y" : moveY,
         }
         unitActions[unitX][unitY] = existingAction;
-        engine.createAndAddObjectToLocation(10, {"r": existingAction.move.x, "c": existingAction.move.y});
+        //engine.createAndAddObjectToLocation(10, {"r": existingAction.move.x, "c": existingAction.move.y});
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
         // console.log(engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor);
+        console.log(unitX, unitY, get_unit(unitX, unitY).id);
         add_move(get_unit(unitX, unitY).id, [unitX, unitY], [moveX, moveY]);
     } else {
         unitActions[unitX][unitY].move = {};
@@ -431,7 +516,7 @@ function renderServerReply(data) {
                 // this is not actually background
                 activeObjects.push(
                     engine.createAndAddObjectToLocation(defaultBackGround, 
-                    {'r': i, 'c': j}));
+                        {'r': i, 'c': j}));
             }
             activeObjects.push(engine.createAndAddObjectToLocation(backgroundObj, 
                 {'r': i, 'c': j}));
@@ -446,4 +531,5 @@ function renderServerReply(data) {
         }
     }
     engine.objectSelectCallback = onObjectSelect;
+    window.selectMode = SELECT;
 }
