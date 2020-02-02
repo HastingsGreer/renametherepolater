@@ -10,7 +10,9 @@ class SFX {
 	}
 
 	PreloadAllSFX() { 
-		var noVolume = 0;
+		var noVolume = 1;
+
+		console.log("music")
 	
 		//ADD ALL SFX HERE FROM FOLDER!
 		this.Play("SFX_Dodge.wav",noVolume)
@@ -87,3 +89,7 @@ class BGM {
 	}
 
 }
+
+
+
+

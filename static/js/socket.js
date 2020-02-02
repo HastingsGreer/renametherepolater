@@ -18,7 +18,7 @@ socket.on('connect', function() {
 });
 
 socket.on("client_disconnected", function(){
-	alert("Your opponent disconnected. You win I guess.Clicking OK will reload to start a new match")
+	alert("Your opponent disconnected. You win I guess. Please reload to start a new match")
 	window.location.reload(false)
 })
 
@@ -107,6 +107,10 @@ function goToCharSel() {
 
     container.innerHTML = html;
     // bgm.Play("sad_song.mp3", 0.5, true);
+    sfx.Initialize();
+    bgm.Initialize();
+
+    ambience.Initialize();
     ambience.Play("AmbientSFX_Forest_1.mp3", 0.5, true);
 }
 
