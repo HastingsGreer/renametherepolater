@@ -76,10 +76,11 @@ function startingUnits(selectedMap) {
 function goToCharSel() {
     selectedMap = document.getElementById('mapSelect').value;
     var html = '<textarea id="startUnits" rows="30" cols="50">' + 
-    '{"units": [{ "type": "flower_girl"}, { "type": "normie"}]}' + 
-    '</textarea>' +
-    '<br>' +
-    '<button id="startingUnits" onclick="startingUnits(selectedMap)"> Starting Units </button>';
+    '{"units": [{ "type": "flower_girl"}, { "type": "normie"}' + 
+    ',{ "type": "bench_boi"} ' + 
+    ',{ "type": "therapist"}, { "type": "treebuchet"}]}' + 
+    '</textarea>' + 
+    '<button id="startingUnits" onclick="startingUnits()"> Starting Units </button>';
 
     var container = document.getElementById("container");
     var mapSelTextArea = document.getElementById("mapSelect");
@@ -88,6 +89,8 @@ function goToCharSel() {
     charSelection.parentNode.removeChild(charSelection);
 
     container.innerHTML = html;
+    // bgm.Play("sad_song.mp3", 0.5, true);
+    ambience.Play("AmbientSFX_Forest_1.mp3", 0.5, true);
 }
 
 // function parseGameData(gameData) {
