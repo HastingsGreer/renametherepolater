@@ -1,5 +1,34 @@
 <html>
     <head>
+        <style>
+            #container{
+                text-align: center;
+                display: block;
+                width:750px;
+                height:750px;
+/*                width:500px;
+                height:500px;
+                position:relative;*/
+
+            }
+
+            #start_screen{
+                width: 100%;
+                height: 100%;
+            }
+
+            #start_text{
+                width:111px;
+                height:21px;
+            }
+
+            #c3 {
+                position: absolute;
+                top: 375px;
+                left: 320px;
+
+            }
+        </style>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
         <meta charset="UTF-8">
@@ -18,8 +47,15 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/music.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/audioclasses.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
-        <div id="container" style="text-align: center;display: block;">
-          <img id="start_screen" src="static/assets/ggj_startscreen.png" alt="Start Screen" style="width:750px;height:750px;" onclick="mapSelection()">
+
+
+        <div id="container">
+          <div id="c3">
+            <img id="start_text" src="static/assets/ggj_start_white.png" onmouseover="startTextRed()" onmouseout="startTextWhite()" onclick="mapSelection()">
+          </div>  
+          <div id="c2">
+            <img id="start_screen" src="static/assets/ggj_startscreen.png" alt="Start Screen" >
+          </div>
         </div>
     </body>
 </html>
