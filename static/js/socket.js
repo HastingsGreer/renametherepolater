@@ -88,3 +88,8 @@ function parseGameData(gameData) {
     }
     return map;
 } 
+
+
+window.onbeforeunload = function(e) {
+  socket.disconnect();
+};

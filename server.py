@@ -42,9 +42,7 @@ def join():
 
 @socketio.on('disconnect')
 def disconnect():   
-    print('Client disconnected')
     del players[request.sid]
-    print(players)
     emit("client_disconnected", broadcast=True)
 
 # once both players runs execute, we actually execute the command
