@@ -1,13 +1,15 @@
 import json
 
-def generate_initial_map(x, y, player1_units, player2_units):
+def generate_initial_map(player1_units, player2_units, selMap):
+    rows = selMap['map']
+
     initMap = {
         "map" : {
             "board":[[
                 {
-                "background":"dirt",
+                "background": bg,
                 "unit": {}
-                } for i in range(x)] for j in range(y)],
+                } for bg in row['row']] for row in rows],
 
             "animations": {
                 "moves": [
@@ -18,6 +20,10 @@ def generate_initial_map(x, y, player1_units, player2_units):
         }
     }
 
+    y = len(rows)
+    # May need to edit this if we're allowing jagged maps (which we shouldn't)
+    x = len(rows[0]['row'])
+
     count = 1
     for unit in player1_units:
         initMap["map"]["board"][0][(x // 2) + (-1 if (count % 2) == 1 else 1) * (count // 2)]["unit"] = unit
@@ -26,4 +32,5 @@ def generate_initial_map(x, y, player1_units, player2_units):
     for unit in player2_units:
         initMap["map"]["board"][y-1][(x // 2) + (-1 if (count % 2) == 1 else 1) * (count // 2)]["unit"] = unit
         count += 1
+
     return initMap

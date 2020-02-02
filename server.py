@@ -136,8 +136,15 @@ def get_room_id(request):
 @socketio.on('startingUnit')
 def startingUnit(data):
     units = []
-    data = json.loads(data)
-    for unit in data['units']:
+    #print("datatype:", type(data))
+    #data = json.loads(data)
+
+    print(data)
+
+    mapData = data['selectedMap']
+    unitData = data['units']
+
+    for unit in unitData['units']:
         units.append(make_unit(unit['type'], players[request.sid]['id']))
     print(units)
     players[request.sid]['units'] = units
@@ -150,11 +157,10 @@ def startingUnit(data):
             return
         player_units.append(player['units'])
 
-
     player1_units = player_units[0]
     player2_units = player_units[1]
 
-    maps[get_room_id(request)] = generate_initial_map(5, 7, player1_units, player2_units)
+    maps[get_room_id(request)] = generate_initial_map(player1_units, player2_units, mapData)
     print("INIT MAP")
 
     games[get_room_id(request)] = Game(maps[get_room_id(request)]['map']['board'])
