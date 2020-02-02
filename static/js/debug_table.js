@@ -30,7 +30,8 @@ function fill_table(some_json) {
             var cellText = document.createTextNode(JSON.stringify(some_json.map.board[i][j]).replace(/,/g, " ")); 
 
             cell.appendChild(cellText);
-            if(Object.keys(get_unit(i, j)).length != 0){
+            if(Object.keys(get_unit(i, j)).length != 0 &&
+                get_unit(i, j).owner == window.player_id){
                 function make_print_my_location(i, j) {      
     	            function print_my_location() {
             
