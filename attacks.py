@@ -21,7 +21,7 @@ def bench_attack(x, y, game):
 
 ATTACK_LOOKUP = {
     'tree_rocket': rocket_attack,
-    'bench_attack': bench_attack
+    'place_bench': bench_attack
 }
 
 def flower_dmg(x, y, game):

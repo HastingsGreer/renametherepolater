@@ -71,7 +71,8 @@ function fill_table(some_json) {
                     }
                     add_attack(get_unit(window.selected_cell[0], 
                         window.selected_cell[1]).id,
-                        [i, j], "tree_rocket");
+                        [i, j], get_unit(window.selected_cell[0], 
+                        window.selected_cell[1]).attack);
                 }
                 return act_my_location;
             }
