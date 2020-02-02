@@ -114,7 +114,7 @@ class Game(object):
                         stopped_units.add(other_unit_id)
                         del unit_moves[other_unit_id]
                     # delete future moves on this unit
-                    #stopped_units.add(other_unit_id)
+                    stopped_units.add(unit_id)
                     del unit_moves[unit_id]
                 else:
                     next_step[new_x][new_y] = unit_id
