@@ -93,6 +93,13 @@ function update_table() {
                     can_act = true;
                 }
 
+                if (unit.attack_range >= Math.max(
+                    Math.abs(window.selected_cell[0] - i),
+                    Math.abs(window.selected_cell[1] - j)
+                )) {
+                    can_act = true;
+                }
+
                 if(can_act) {
                 
                     function make_act_my_location(i, j) {   
