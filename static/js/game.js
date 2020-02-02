@@ -408,16 +408,8 @@ function onTileSelect(x, y) {
     console.log("Selected tile", x, y);
     console.log(yourObjects);
     let objFound = false;
-    yourObjects.forEach(obj => {
-        if(obj.mapPos.r === x && obj.mapPos.c === y
-            && obj.type > 0 && obj.type < 6) {
-            console.log(obj);
-            onObjectSelect(obj);
-            objFound = true;
-        }
-    });
     let clickedObstacle = false;
-    activeObjects.forEach(obj => {
+    yourObjects.forEach(obj => {
         if(obj.mapPos.r === x && obj.mapPos.c === y) {
             if(obj.type > 0 && obj.type < 6) {
                 console.log(obj);
