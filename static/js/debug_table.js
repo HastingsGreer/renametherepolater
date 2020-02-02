@@ -18,11 +18,11 @@ function fill_table(some_json) {
     var tblBody = document.createElement("tbody");
  
     // cells creation
-    for (var j = 0; j <= 4; j++) {
+    for (var i = 0; i < window.state_json.map.board.length; i++) {
         // table row creation
         var row = document.createElement("tr");
 
-        for (var i = 0; i < 4; i++) {
+        for (var j = 0; j < window.state_json.map.board[0].length; j++) {
             // create element <td> and text node 
             //Make text node the contents of <td> element
             // put <td> at end of the table row

@@ -31,6 +31,7 @@ def join():
     global player1_joined, player2_joined
     global map
     server_logger.log("Client connected")
+    print("Client connected")
     if not player1_joined:
         player_id = 0
         player1_joined = True
