@@ -1,6 +1,6 @@
 import random
 
-def rocket_attack(x, y, game):
+def rocket_attack(x, y, game, id):
     rocket_damage = 10
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
@@ -13,15 +13,24 @@ def rocket_attack(x, y, game):
             if len(game._map[xhat][yhat]['unit']) != 0:
                 game._map[xhat][yhat]['unit']['happiness'] += \
                     int(random.normalvariate(rocket_damage, rocket_damage / 5))
-            game._map[xhat][yhat]['background'] = 'grass'
+            if game._map[xhat][yhat]['background'] == 'dirt':
+                game._map[xhat][yhat]['background'] = 'grass'
     game._map[x][y]["background"] = 'tree'
 
-def bench_attack(x, y, game):
+def bench_attack(x, y, game, id):
     game._map[x][y]["background"] = 'bench'
+    game._map
+
+def therapist_attack(x, y, game, id):
+    pass
+
+def normie_attack(x, y, game, id):
+    pass
 
 ATTACK_LOOKUP = {
     'tree_rocket': rocket_attack,
-    'place_bench': bench_attack
+    'place_bench': bench_attack,
+    'encourage' : normie_attack
 }
 
 def flower_dmg(x, y, game):
@@ -41,6 +50,7 @@ ENVIRONMENT_LOOKUP = {
     'grass' : (lambda x, y, game: None),
     'flowers': flower_dmg,
     "bench": bench_dmg,
+    "water": (lambda x, y, game: None),
     "dirt": (lambda x, y, game: None)
 }
 
@@ -49,11 +59,11 @@ ENVIRONMENT_LOOKUP = {
 id_counter = 0
 def make_unit(type, owner):
     units = {
-       "treebuchet" : {"id": -1, "type": "treebuchet", "happiness":3, "owner":-1, "attack": "tree_rocket"},
-       "flower_girl" : {"id": -1, "type": "flower_girl", "happiness":3, "owner":-1},
-       "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1, "attack": "place_bench"},
-       "therapist" : {"id": -1, "type": "therapist", "happiness":3, "owner":-1, "attack": "discuss_problems"},
-       "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "encourage"}
+       "treebuchet" : {"id": -1, "type": "treebuchet", "happiness":3, "owner":-1, "attack": "tree_rocket", "attack_range": 100},
+       "flower_girl" : {"id": -1, "type": "flower_girl", "happiness":3, "owner":-1, "attack_range": -1},
+       "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1, "attack": "place_bench", "has_bench": 1, "attack_range":1},
+       "therapist" : {"id": -1, "type": "therapist", "happiness":3, "owner":-1, "attack": "discuss_problems", "attack_range":1},
+       "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "encourage", "attack_range":1}
     }
 
     res = units[type]

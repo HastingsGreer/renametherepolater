@@ -7,8 +7,11 @@ function get_unit(i, j){
 
 
 function fill_table(some_json) {
-
+    window.selected_cell = -1;
     window.state_json = some_json;
+    update_table()
+}
+function update_table() {
     console.log("asdf");
 	//body reference 
     var tableParent = document.getElementById("tempMap");
@@ -27,15 +30,22 @@ function fill_table(some_json) {
             //Make text node the contents of <td> element
             // put <td> at end of the table row
             var cell = document.createElement("td");    
-            var cellText = document.createTextNode(JSON.stringify(some_json.map.board[i][j]).replace(/,/g, " ")); 
+            var cellText = document.createTextNode(JSON.stringify(window.state_json.map.board[i][j])
+                .replace(/,/g, " ")
+                .replace(/"/g, "")
+                .replace(/:/g, ": ")
+                .replace("unit: {}", "")); 
 
             cell.appendChild(cellText);
+            var br = document.createElement("br");
+            cell.appendChild(br);
             if(Object.keys(get_unit(i, j)).length != 0 &&
                 get_unit(i, j).owner == window.player_id){
                 function make_print_my_location(i, j) {      
     	            function print_my_location() {
             
     	                window.selected_cell = [i, j];
+                        update_table();
     	            }
     	            return print_my_location;
     	        }
@@ -45,43 +55,74 @@ function fill_table(some_json) {
                 btn.onclick = make_print_my_location(i, j);
                 cell.appendChild(btn);
             }
+            if(window.selected_cell != -1) {
 
-            function make_move_my_location(i, j) {      
-                function move_my_location() {
-                    if(window.selected_cell == -1){
-                        alert("nothing selected");
-                        return
+                var can_queen_move = (
+                    (window.selected_cell[0] == i) ||
+                    (window.selected_cell[1] == j) ||
+                    (window.selected_cell[0] - i == window.selected_cell[1] - j )||
+                    (window.selected_cell[0] - i == -(window.selected_cell[1] - j))
+                )
+                if(can_queen_move) {
+                    function make_move_my_location(i, j) {
+
+                        function move_my_location() {
+                            if(window.selected_cell == -1){
+                                alert("nothing selected");
+                                return
+                            }
+                            add_move(get_unit(window.selected_cell[0], 
+                                window.selected_cell[1]).id,
+                                window.selected_cell, [i, j]);
+                        }
+                        return move_my_location;
                     }
-                    add_move(get_unit(window.selected_cell[0], 
-                        window.selected_cell[1]).id,
-                        window.selected_cell, [i, j]);
-                }
-                return move_my_location;
-            }
 
-            var btn = document.createElement("BUTTON");   // Create a <button> element
-            btn.innerHTML = "MOVE HERE";
-            btn.onclick = make_move_my_location(i, j);
-            cell.appendChild(btn);
-            
-            function make_act_my_location(i, j) {   
-                function act_my_location() {
-                    if(window.selected_cell == -1){
-                        alert("nothing selected");
-                        return
+                    var btn = document.createElement("BUTTON");   // Create a <button> element
+                    btn.innerHTML = "MOVE HERE";
+                    btn.onclick = make_move_my_location(i, j);
+                    cell.appendChild(btn);
+                }
+
+                var can_act = false;
+
+                var unit = get_unit(window.selected_cell[0], 
+                            window.selected_cell[1])
+
+                if (unit.type === "treebuchet") {
+                    can_act = true;
+                }
+
+                if (unit.attack_range >= Math.max(
+                    Math.abs(window.selected_cell[0] - i),
+                    Math.abs(window.selected_cell[1] - j)
+                )) {
+                    can_act = true;
+                }
+
+                if(can_act) {
+                
+                    function make_act_my_location(i, j) {   
+                        function act_my_location() {
+                            if(window.selected_cell == -1){
+                                alert("nothing selected");
+                                return
+                            }
+                            add_attack(get_unit(window.selected_cell[0], 
+                                window.selected_cell[1]).id,
+                                [i, j], get_unit(window.selected_cell[0], 
+                                window.selected_cell[1]).attack);
+                        }
+                        return act_my_location;
                     }
-                    add_attack(get_unit(window.selected_cell[0], 
-                        window.selected_cell[1]).id,
-                        [i, j], get_unit(window.selected_cell[0], 
-                        window.selected_cell[1]).attack);
-                }
-                return act_my_location;
-            }
 
-            var btn = document.createElement("BUTTON");   // Create a <button> element
-            btn.onclick = make_act_my_location(i, j);
-            btn.innerHTML = "HELP HERE";
-            cell.appendChild(btn);
+                    var btn = document.createElement("BUTTON");   // Create a <button> element
+                    btn.onclick = make_act_my_location(i, j);
+                    btn.innerHTML = "HELP HERE";
+                    cell.appendChild(btn);
+                }
+                
+            }
 
 
             row.appendChild(cell);

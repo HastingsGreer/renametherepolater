@@ -1,9 +1,10 @@
-
 var jsonMapper = {
     "placeholder" : 0,
     "flower_girl" : 1,
     "treebuchet" : 2,
     "therapist" : 3,
+    "bench_boi" : 4,
+    "normie" : 5,
     "dirt" : 1,
     "grass" : 2, 
     "tree" : 3, 
@@ -13,17 +14,13 @@ var jsonMapper = {
 var maps;
 var socket = io();
 socket.on('connect', function() {
-    socket.emit('join');
+    socket.emit('join');    
 });
 
 socket.on("connection_received", function(data) {
     console.log("Im in connection_received");
     console.log(data);
     window.player_id = data.player_id;
-    document.getElementById("implayer").innerText = JSON.stringify([data.player_id])
-    fill_table(data);
-    maps = parseGameData(data);
-    serverGameState = data;
 });
 
 socket.on("exec_result", function(data) {
@@ -38,12 +35,42 @@ socket.on("exec_result", function(data) {
     console.log(maps);
 });
 
+socket.on("game_start", async function(data) {
+    var container = document.getElementById("container");
+    var button = document.getElementById("startingUnits");
+    var textArea = document.getElementById("startUnits");
+    var p = document.getElementById("pixiContainer");
+    p.style.display = "block";
+
+    container.removeChild(button);
+    container.removeChild(textArea);
+
+    let response = await fetch('/game' , {
+        credentials: 'same-origin',
+        mode: 'cors'
+    });
+
+    let resp = await response.text();
+    container.innerHTML = resp; 
+    console.log("game started");
+    console.log(data);
+
+    document.getElementById("implayer").innerText = window.player_id;
+    fill_table(data);
+    renderServerReply(data);
+    //serverGameState = data;
+});
+
 function sendAction() {
-	document.getElementById("waitingIndicator").innerHTML = "<b> WAITING_ON_PLAYER_2 </b>";
+	document.getElementById("waitingIndicator").innerHTML = "<b> WAITING_ON_OTHER_PLAYER </b>";
     var action = document.getElementById("inputAction").value;
     socket.emit('execute', action);
 }
-
+    
+function startingUnits() {
+    var units = document.getElementById('startUnits').value;
+    socket.emit('startingUnit', units);
+}
 
 function parseGameData(gameData) {
     var board = gameData['map']['board']
@@ -79,3 +106,8 @@ function parseGameData(gameData) {
     }
     return map;
 } 
+
+
+window.onbeforeunload = function(e) {
+  socket.disconnect();
+};

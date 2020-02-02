@@ -1,71 +1,23 @@
-
-
 <html>
     <head>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <meta charset="UTF-8">
         <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+        <meta charset="UTF-8">
     </head>
     <body>
-        <h1>ELLO</h1>
-        <div id="pixiContainer"> </div>
-        <!-- <canvas width="800" height="600" id="canvas"></canvas> -->
+        <div id="pixiContainer" style="display:none"> </div>
         <script type="text/javascript" src="{{ url_for('static', filename='js/pixi.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/traviso.dev.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/debug_table.js') }}"></script>
         <script type="text/javascript">
             var travConfig = {{ trav_config|safe }}
         </script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/game.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/socket.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/music.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static',
-            filename='js/socket.js') }}"></script>
-        <!-- <script type="module" src="{{ url_for('static', filename='js/socket.js') }}"></script> -->
-        
-        <p id="tempMap"></p>
-        <div> My Gamer ID is <div id=implayer></div></div>
-        <p id="waitingIndicator"></p>
-        <button onclick="clear_actions();" > clear actions </button>
-        <button onclick="sendAction(); clear_actions();" > Execute </button>
-        <br/>
-        <textarea id="inputAction" rows="15" cols="50">
-
-        </textarea>
-
-        
-
-        <!-- Audio for Happy and Sad Music -->
-        <audio controls id="happy_music">
-            <source src="{{ url_for('static', filename='music/happy_song.mp3') }}" type="audio/mpeg">
-        </audio>
-
-        <audio controls id="sad_music">
-            <source src="{{ url_for('static', filename='music/sad_song.mp3') }}" type="audio/mpeg">
-        </audio>
-
-        <button onclick="playHappy()" type="button">Happy</button>
-        <button onclick="playSad()" type="button">Sad</button>
-
-        <script>
-        var happy= document.getElementById("happy_music");
-        function playHappy() {
-            if(isPlaying(sad)){
-                sad.pause();
-            }
-            happy.play();
-        }
-
-        var sad = document.getElementById("sad_music");
-        function playSad() {
-            if(isPlaying(happy)){
-                happy.pause();
-            }
-            sad.play();
-        }
-
-        function isPlaying(audelem) {
-            return !audelem.paused;
-        }
-        </script>
+        <div id="container" style="text-align: center;display: block;">
+          <img id="start_screen" src="static/assets/ggj_startscreen.png" alt="Start Screen" style="width:750px;height:750px;" onclick="mapSelection()">
+        </div>
     </body>
-
 </html>
