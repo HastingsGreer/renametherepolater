@@ -13,7 +13,7 @@ let serverGameState = undefined;
 
 // engine-instance configuration object
 var instanceConfig = {
-    mapDataPath: "/static/map/mapData.json", // the path to the json file that defines map data, required
+    mapDataPath: "/mapData/map.json", // the path to the json file that defines map data, required
     assetsToLoad: [ // array of paths to the assets that are desired to be loaded by traviso, no need to use if assets are already loaded to PIXI cache, default null
         "/static/assets/t1.png", 
         "/static/assets/ggj_ground_alive.png", 

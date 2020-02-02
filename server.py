@@ -24,6 +24,11 @@ def home():
     trav_config_str = open("./static/map/mapData.json").read()
     return render_template("index.html", trav_config=trav_config_str)
 
+@app.route('/mapData/map.json')
+def produce_map_json():
+    trav_config_str = open("./static/map/mapData.json").read()
+    return trav_config_str
+
 @socketio.on('connect')
 def join():
     global map
