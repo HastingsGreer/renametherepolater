@@ -36,7 +36,7 @@ def apply_help(x, y, game, help):
 
 
 def rocket_attack(x, y, game, id):
-    rocket_damage = 10
+    rocket_damage = 30
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
             xhat = x + dx
@@ -78,7 +78,7 @@ def normie_attack(x, y, game, id):
     if not(check_range_legal(x, y, game, id)):
         print("can't yeech a bench")
         return
-    apply_help(x, y, game, 30)
+    apply_help(x, y, game, 50)
 
 ATTACK_LOOKUP = {
     'tree_rocket': rocket_attack,
@@ -91,7 +91,7 @@ def flower_dmg(x, y, game):
     unit = game._map[x][y]['unit']
     if len(unit) != 0:
         if unit['type'] != 'flower_girl':
-            unit['happiness'] += 15
+            unit['happiness'] += 20
 
 def bench_dmg(x, y, game):
     unit = game._map[x][y]['unit']
