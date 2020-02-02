@@ -130,8 +130,15 @@ def execute(data):
 @socketio.on('startingUnit')
 def startingUnit(data):
     units = []
-    data = json.loads(data)
-    for unit in data['units']:
+    unitData = data['units']
+    unitData = json.loads(unitData)
+
+    mapData = data['selectedMap']
+    mapData = json.loads(mapData)
+
+    # data = json.loads(data)
+
+    for unit in unitData['units']:
         units.append(make_unit(unit['type'], players[request.sid]['id']))
     print(units)
     players[request.sid]['units'] = units
@@ -151,7 +158,7 @@ def startingUnit(data):
         player1_units = player_units[0]
         player2_units = player_units[1]
         global map
-        map = generate_initial_map(5, 7, player1_units, player2_units)
+        map = generate_initial_map(player1_units, player2_units, mapData)
         print("INIT MAP")
         global game
         game = Game(map['map']['board'])

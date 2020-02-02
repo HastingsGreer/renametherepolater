@@ -11,7 +11,7 @@ var jsonMapper = {
     "flower" : 4,
     "bench" : 5
 }
-var maps;
+var selectedMap;
 var socket = io();
 socket.on('connect', function() {
     socket.emit('join');    
@@ -31,8 +31,8 @@ socket.on("exec_result", function(data) {
     console.log(data);
     fill_table(data);
     renderServerReply(data);
-    maps = parseGameData(data);
-    console.log(maps);
+    // maps = parseGameData(data);
+    // console.log(maps);
 });
 
 socket.on("game_start", async function(data) {
@@ -67,45 +67,63 @@ function sendAction() {
     socket.emit('execute', action);
 }
     
-function startingUnits() {
+function startingUnits(selectedMap) {
     var units = document.getElementById('startUnits').value;
-    socket.emit('startingUnit', units);
+    socket.emit('startingUnit', { units, selectedMap });
+    // socket.emit('startingUnit', units);
 }
 
-function parseGameData(gameData) {
-    var board = gameData['map']['board']
-    var map = {}
-    map["groundMap"] = []
-    map["objectsMap"] = []
-    for(var i = 0; i < board.length; i++) {
-        var groundRow = {};
-        var objectRow = {};
-        groundRow['row'] = "";
-        objectRow['row'] = "";
-        for(var j = 0; j < board[1].length; j++) {
-            var curr = board[i][j];
-            if(j == board[1].length - 1) {
-                groundRow['row'] += jsonMapper[curr["background"]];
-                if(jsonMapper[curr["unit"].type]) {
-                    objectRow['row'] += jsonMapper[curr["unit"].type];
-                } else {
-                    objectRow['row'] += "0";
-                }
-            } else {
-                groundRow['row'] += jsonMapper[curr["background"]] + " ,";
-                if(jsonMapper[curr["unit"].type]) {
-                    objectRow['row'] += jsonMapper[curr["unit"].type] + " ,";
-                } else {
-                    objectRow['row'] += "0 ,";
-                }
+function goToCharSel() {
+    selectedMap = document.getElementById('mapSelect').value;
+    var html = '<textarea id="startUnits" rows="30" cols="50">' + 
+    '{"units": [{ "type": "flower_girl"}, { "type": "normie"}]}' + 
+    '</textarea>' +
+    '<br>' +
+    '<button id="startingUnits" onclick="startingUnits(selectedMap)"> Starting Units </button>';
+
+    var container = document.getElementById("container");
+    var mapSelTextArea = document.getElementById("mapSelect");
+    mapSelTextArea.parentNode.removeChild(mapSelTextArea);
+    charSelection = document.getElementById("characterSelection");
+    charSelection.parentNode.removeChild(charSelection);
+
+    container.innerHTML = html;
+}
+
+// function parseGameData(gameData) {
+//     var board = gameData['map']['board']
+//     var map = {}
+//     map["groundMap"] = []
+//     map["objectsMap"] = []
+//     for(var i = 0; i < board.length; i++) {
+//         var groundRow = {};
+//         var objectRow = {};
+//         groundRow['row'] = "";
+//         objectRow['row'] = "";
+//         for(var j = 0; j < board[1].length; j++) {
+//             var curr = board[i][j];
+//             if(j == board[1].length - 1) {
+//                 groundRow['row'] += jsonMapper[curr["background"]];
+//                 if(jsonMapper[curr["unit"].type]) {
+//                     objectRow['row'] += jsonMapper[curr["unit"].type];
+//                 } else {
+//                     objectRow['row'] += "0";
+//                 }
+//             } else {
+//                 groundRow['row'] += jsonMapper[curr["background"]] + " ,";
+//                 if(jsonMapper[curr["unit"].type]) {
+//                     objectRow['row'] += jsonMapper[curr["unit"].type] + " ,";
+//                 } else {
+//                     objectRow['row'] += "0 ,";
+//                 }
                 
-            }
-        }
-        map["groundMap"].push(groundRow);
-        map["objectsMap"].push(objectRow);
-    }
-    return map;
-} 
+//             }
+//         }
+//         map["groundMap"].push(groundRow);
+//         map["objectsMap"].push(objectRow);
+//     }
+//     return map;
+// } 
 
 
 window.onbeforeunload = function(e) {
