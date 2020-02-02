@@ -30,6 +30,7 @@ socket.on("connection_received", function(data) {
 socket.on("exec_result", function(data) {
 
     document.getElementById("waitingIndicator").innerHTML = "";
+    window.selectMode = 0;
 
     console.log("Im in exec_result");
     console.log(data);

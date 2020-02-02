@@ -70,7 +70,7 @@ const SELECT = 0;
 const MOVE = 1;
 const ACTION = 2;
 
-var selectMode = SELECT;
+window.selectMode = SELECT;
 
 var unitActions = [
     [{},{},{},{},{}],
@@ -151,10 +151,10 @@ function onEngineInstanceReady()
 
 function onObjectSelect(obj) {
     console.log("Selected obj", obj.type);
-    if (selectMode === SELECT && obj.type > 0 && obj.type < 6) {
+    if (window.selectMode === SELECT && obj.type > 0 && obj.type < 6) {
         var currentUnit = engine.getCurrentControllable();
         // window.selected_cell = [obj.mapPos.r, obj.mapPos.c];
-        selectMode = MOVE;
+        window.selectMode = MOVE;
         if (!currentUnit) {
             engine.setCurrentControllable(obj);
             var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
@@ -182,18 +182,18 @@ function onObjectSelect(obj) {
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
         }
-    } else if (selectMode === MOVE) {
-        selectMode = ACTION;
+    } else if (window.selectMode === MOVE) {
+        window.selectMode = ACTION;
         var currentUnit = engine.getCurrentControllable();
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
-    } else if (selectMode === ACTION) {
-        selectMode = DISABLED;
+    } else if (window.selectMode === ACTION) {
+        window.selectMode = DISABLED;
         var currentUnit = engine.getCurrentControllable();
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
         setTimeout(function() {
-            selectMode = SELECT;
+            window.selectMode = SELECT;
             deselectUnit();
             engine.setCurrentControllable(null);
         }, 1000);
@@ -229,20 +229,20 @@ function onTileSelect(x, y) {
         }
     });
     if (!objFound) {
-        if (selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
+        if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
             console.log("TILE MOVE");
-            selectMode = ACTION;
+            window.selectMode = ACTION;
             var currentUnit = engine.getCurrentControllable();
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
             updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-        } else if (selectMode === ACTION) {
+        } else if (window.selectMode === ACTION) {
             console.log("TILE ACTION");
             var currentUnit = engine.getCurrentControllable();
             updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-            selectMode = DISABLED;
+            window.selectMode = DISABLED;
             setTimeout(function() {
-                selectMode = SELECT;
+                window.selectMode = SELECT;
                 deselectUnit();
                 engine.setCurrentControllable(null);
             }, 1000);
