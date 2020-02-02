@@ -62,8 +62,10 @@ class Game(object):
             unit_moves: Dict[int, Dict]) -> Set[int]:
 
         move_animations = {}
+        orig_locs = {}
         for id in unit_locs.keys():
             move_animations[id] = {"id": id, "start": unit_locs[id][:]}
+            orig_locs[id] = unit_locs[id][:]
 
         next_step = [[-1 for _ in range(len(self._map[0]))]
                 for _ in range(len(self._map))]
@@ -97,6 +99,16 @@ class Game(object):
                 
                 cur_x = unit_locs[unit_id][0]
                 cur_y = unit_locs[unit_id][1]
+
+                self._perform_environment_damage(cur_x, cur_y,
+                        orig_locs[unit_id][0], orig_locs[unit_id][1])
+
+                if unit_data[unit_id]['owner'] == -1:
+                    unit_moves[unit_id]['steps'] = 0
+                    continue
+                if unit_data[unit_id]['happiness'] > 100:
+                    continue
+
                 new_x = cur_x + unit_moves[unit_id]['dx']
                 new_y = cur_y + unit_moves[unit_id]['dy']
                 unit_moves[unit_id]['steps'] -= 1
@@ -198,12 +210,11 @@ class Game(object):
 
         return anims_to_play
 
-    def _perform_environment_damage(self):
-        for x, row in enumerate(self._map):
-            for y, cell in enumerate(row):
-                background = self._map[x][y]['background']
-                ENVIRONMENT_LOOKUP[background]                                          \
-                (x, y, self)
+    def _perform_environment_damage(self, env_x, env_y, x, y):
+        background = self._map[env_x][env_y]['background']
+        print(background);
+        ENVIRONMENT_LOOKUP[background]                                          \
+        (x, y, self)
 
     def _check_win(self):
         owners = set([])
@@ -237,7 +248,6 @@ class Game(object):
         attacks = self._prune_attacks(can_attack, order66['attacks'])
 
         attack_anims = self._perform_attacks(unit_locs, attacks)
-        self._perform_environment_damage()
         self._check_healing()
 
         rv = {
