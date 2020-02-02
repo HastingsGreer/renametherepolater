@@ -72,45 +72,70 @@ class Game(object):
             next_step[unit_locs[id][0]][unit_locs[id][1]] = -2
 
         full_move_units = set([])
+        stopped_units = set([])
 
         while True:
             next_step = [[-1 for _ in range(len(self._map[0]))]
                     for _ in range(len(self._map))]
 
-            for id in static_units:
+            keys = list(unit_moves.keys())
+            for unit_id in keys:
+                if unit_moves[unit_id]['steps'] == 0:
+                    del unit_moves[unit_id]
+                    full_move_units.add(unit_id)
+
+            for id in (static_units | stopped_units | full_move_units):
                 next_step[unit_locs[id][0]][unit_locs[id][1]] = -2
 
             if len(unit_moves) == 0:
                 break
+
             keys = list(unit_moves.keys())
             for unit_id in keys:
                 if unit_id not in unit_moves.keys():
                     continue
-                if unit_moves[unit_id]['steps'] == 0:
-                    del unit_moves[unit_id]
-                    full_move_units.add(unit_id)
-                    continue
                 
-                print(unit_locs[unit_id])
-                new_x = unit_locs[unit_id][0] + unit_moves[unit_id]['dx']
-                new_y = unit_locs[unit_id][1] + unit_moves[unit_id]['dy']
+                cur_x = unit_locs[unit_id][0]
+                cur_y = unit_locs[unit_id][1]
+                new_x = cur_x + unit_moves[unit_id]['dx']
+                new_y = cur_y + unit_moves[unit_id]['dy']
                 unit_moves[unit_id]['steps'] -= 1
 
                 print(new_x)
                 print(new_y)
 
-                # check for conflict:
+                # check for conflict (odd, aka, move onto same square):
                 if next_step[new_x][new_y] != -1:
                     # mark conflicted squares as dead
                     other_unit_id = next_step[new_x][new_y]
                     # delete other bounced units moves
                     if other_unit_id != -2:
                         next_step[new_x][new_y] = -2
+                        stopped_units.add(other_unit_id)
                         del unit_moves[other_unit_id]
                     # delete future moves on this unit
+                    stopped_units.add(other_unit_id)
                     del unit_moves[unit_id]
                 else:
                     next_step[new_x][new_y] = unit_id
+
+                # check for conflict (even, aka cross facing each other):
+                for other_id in unit_locs:
+                    if unit_locs[other_id][0] == new_x and \
+                        unit_locs[other_id][1] == new_y:
+                        # check if they are facing the exact opposite direction
+                        if unit_moves[other_id]['dx'] == \
+                            -1 * unit_moves[unit_id]['dx'] and \
+                            unit_moves[other_id]['dy'] == \
+                            -1 * unit_moves[unit_id]['dy']:
+                            next_step[new_x][new_y] = -2
+                            next_step[new_x][new_y] = -2
+                            next_step[cur_x][cur_y] = -2
+                            next_step[cur_x][cur_y] = -2
+                            stopped_units.add(other_id)
+                            stopped_units.add(unit_id)
+                            del unit_moves[other_id]
+                            del unit_moves[unit_id]
 
             print("="*20)
             for row in next_step:
@@ -118,16 +143,15 @@ class Game(object):
             print("="*20)
 
             for i, row in enumerate(next_step):
-                for j, cell_contents in enumerate(row):
-                    if cell_contents >= 0:
-                        cur_x = unit_locs[cell_contents][0]
-                        cur_y = unit_locs[cell_contents][1]
+                for j, cell in enumerate(row):
+                    if cell >= 0:
+                        cur_x = unit_locs[unit_id][0]
+                        cur_y = unit_locs[unit_id][1]
                         self._execute_move_side_effects(cur_x, cur_y,
-                                unit_data[cell_contents])
+                                unit_data[cell])
                         # move the unit
-                        unit_locs[cell_contents][0] = i
-                        unit_locs[cell_contents][1] = j
-
+                        unit_locs[cell][0] = i
+                        unit_locs[cell][1] = j
 
         for i, row in enumerate(self._map):
             for j, cell in enumerate(row):
@@ -138,7 +162,7 @@ class Game(object):
             x = unit_locs[unit_id][0]
             y = unit_locs[unit_id][1]
             self._map[x][y]['unit'] = unit
-            move_animations[unit_id]['end'] = unit_locs[unit_id][:]
+            move_animations[unit_id]['end'] = unit_locs[id][:]
 
         return full_move_units, list(move_animations.values())
 
@@ -169,7 +193,7 @@ class Game(object):
 
             # of course this should be pretty straightforward
             ATTACK_LOOKUP[attack['type']]                                               \
-            (target[0], target[1], self, attack['id'])
+            (target[0], target[1], self)
 
         return anims_to_play
 
@@ -177,7 +201,7 @@ class Game(object):
         for x, row in enumerate(self._map):
             for y, cell in enumerate(row):
                 background = self._map[x][y]['background']
-                ENVIRONMENT_LOOKUP[background]                                           \
+                ENVIRONMENT_LOOKUP[background]                                          \
                 (x, y, self)
 
     def _check_healing(self):
