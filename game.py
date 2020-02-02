@@ -175,6 +175,7 @@ class Game(object):
             x = unit_locs[unit_id][0]
             y = unit_locs[unit_id][1]
             self._map[x][y]['unit'] = unit
+            self._perform_environment_damage(x, y, x, y)
             move_animations[unit_id]['end'] = unit_locs[unit_id][:]
 
         return full_move_units, list(move_animations.values())
