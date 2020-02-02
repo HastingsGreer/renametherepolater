@@ -32,7 +32,6 @@ def join():
         'units' : [],
         'currMove' : {}
     }
-    print("Client")
     server_logger.log("Client connected")
 
     emit("connection_received", {'player_id' : players[request.sid]['id']})
@@ -104,6 +103,7 @@ def startingUnit(data):
     if allSelected:
         player1_units = player_units[0]
         player2_units = player_units[1]
+        global map
         map = generate_initial_map(8, 8, player1_units, player2_units)
         print("INIT MAP")
         global game
