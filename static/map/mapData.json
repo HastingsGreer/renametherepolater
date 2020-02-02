@@ -692,6 +692,20 @@
                     ] 
                 }
             }
+        },
+
+        "51": { "key": "unit_marker",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_unitmarker.png" }
+                    ] 
+                }
+            }
         }
     },
     "groundMap": [

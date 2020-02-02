@@ -117,6 +117,7 @@ var instanceConfig = {
         "/static/assets/ggj_healthbar_09.png",
         "/static/assets/ggj_healthbar_10.png",
         "/static/assets/ggj_shadow.png",
+        "/static/assets/ggj_unitmarker.png"
     ], 
     tileHeight: 33,
     isoAngle: 27.27676,
@@ -614,9 +615,13 @@ function renderServerReply(data) {
                 console.log(unitObj);
                 activeObjects.push(engine.createAndAddObjectToLocation(revMapping["shadow"], 
                     {'r': i, 'c': j}));
+                if (cell.unit.owner === window.player_id) {
+                    activeObjects.push(engine.createAndAddObjectToLocation(
+                        revMapping["unit_marker"],
+                        {'r': i, 'c': j}));
+                }
                 let unitView = engine.createAndAddObjectToLocation(unitObj,
                     {'r': i, 'c': j});
-                console.log("HELLOjadkshfjkadshfjksadf");
                 console.log(cell.unit.owner);
                 console.log(window.player_id);
                 activeObjects.push(unitView);
