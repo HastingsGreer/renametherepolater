@@ -13,7 +13,8 @@ def rocket_attack(x, y, game):
             if len(game._map[xhat][yhat]['unit']) != 0:
                 game._map[xhat][yhat]['unit']['happiness'] += \
                     int(random.normalvariate(rocket_damage, rocket_damage / 5))
-            game._map[xhat][yhat]['background'] = 'grass'
+            if game._map[xhat][yhat]['background'] == 'dirt':
+                game._map[xhat][yhat]['background'] = 'grass'
     game._map[x][y]["background"] = 'tree'
 
 def bench_attack(x, y, game):
@@ -41,6 +42,7 @@ ENVIRONMENT_LOOKUP = {
     'grass' : (lambda x, y, game: None),
     'flowers': flower_dmg,
     "bench": bench_dmg,
+    "water": (lambda x, y, game: None)
     "dirt": (lambda x, y, game: None)
 }
 
