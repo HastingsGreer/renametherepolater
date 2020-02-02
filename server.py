@@ -5,7 +5,7 @@ from attacks import make_unit
 from map import generate_initial_map
 
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 import json
 
@@ -15,6 +15,9 @@ socketio = SocketIO(app)
 server_logger = Logger("server.log", "")
 
 players = {}
+playerId = 0
+activeRooms = {}
+roomId = 0
 
 map = example_json()
 game = Game(map['board'])
@@ -39,26 +42,44 @@ def gamePage():
 
 
 @socketio.on('connect')
-def join():
-    global map
+def connect():
+    global map, playerId, roomId, activeRooms
+    if roomId in activeRooms and \
+        (len(activeRooms[roomId]['players']) == 0 or len(activeRooms[roomId]['players']) == 2):
+        roomId += 1
+
     players[request.sid] = {
-        'id' : len(list(players.keys())),
-        'playerId' : request.sid,
+        'id' : playerId,
+        'socketId' : request.sid,
+        'roomId': roomId,
         'units' : [],
         'currMove' : {}
     }
+    room = players[request.sid]['roomId']
+    join_room(room)
+    if roomId in activeRooms:
+        activeRooms[roomId]['players'].append(request.sid)
+    else:
+        activeRooms[roomId] = {'players': [request.sid]}
+
+    print('Player ' + str(playerId) + ' has entered room ' + str(room))
+    playerId += 1
+
     server_logger.log("Client connected")
 
     emit("connection_received", {'player_id' : players[request.sid]['id']})
 
     if len(list(players.keys())) == 2:
         print("game start")
-        emit("allPlayersConnected", broadcast=True)
+        emit("allPlayersConnected", broadcast=True, room=room)
 
 @socketio.on('disconnect')
-def disconnect():   
+def disconnect():
+    print('Player ' + str(players[request.sid]['id']) + ' has disconnected from room ' + str(players[request.sid]['roomId']))
+    room = players[request.sid]['roomId']
+    activeRooms[players[request.sid]['roomId']]['players'] = []
     del players[request.sid]
-    emit("client_disconnected", broadcast=True)
+    emit("client_disconnected", broadcast=True, room=room)
 
 # once both players runs execute, we actually execute the command
 @socketio.on('execute')
@@ -80,20 +101,22 @@ def execute(data):
     players[request.sid]['currMove'] = data
 
     allMoved = True
-    for player in players.values():
+    for socket in activeRooms[players[request.sid]['roomId']]['players']:
+        player = players[socket]
         if not player['currMove']:
             allMoved = False
     emit("execution_ack")
 
     if allMoved:   
         cmd = players[request.sid]['currMove']
-        for player in players.values():
-            if player['playerId'] != request.sid:
+        for socket in activeRooms[players[request.sid]['roomId']]['players']:
+            player = players[socket]
+            if player['socketId'] != request.sid:
                 cmd['moves'].extend(player['currMove']['moves'])
                 cmd['attacks'].extend(player['currMove']['attacks'])
             player['currMove'] = {}
         resp = game.execute(cmd)
-        emit("exec_result", {'map': resp}, broadcast=True)
+        emit("exec_result", {'map': resp}, broadcast=True, room=players[request.sid]['roomId'])
 
 @socketio.on('startingUnit')
 def startingUnit(data):
@@ -107,7 +130,8 @@ def startingUnit(data):
     allSelected = True
 
     player_units = []
-    for player in players.values():
+    for socket in activeRooms[players[request.sid]['roomId']]['players']:
+        player = players[socket]
         if not player['units']:
             allSelected = False
             break
@@ -122,7 +146,7 @@ def startingUnit(data):
         global game
         game = Game(map['map']['board'])
 
-        emit("game_start", map , broadcast=True)
+        emit("game_start", map , broadcast=True, room=players[request.sid]['roomId'])
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
