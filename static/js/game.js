@@ -606,6 +606,10 @@ function renderServerReply(data) {
                     engine.createAndAddObjectToLocation(defaultBackGround, 
                         {'r': i, 'c': j}));
             }
+            if(cell.background === "tree") {
+                activeObjects.push(engine.createAndAddObjectToLocation(revMapping["shadow"], 
+                    {'r': i, 'c': j}));
+            }
             activeObjects.push(engine.createAndAddObjectToLocation(backgroundObj, 
                 {'r': i, 'c': j}));
 
