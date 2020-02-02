@@ -14,7 +14,7 @@
         }
     },
     "objects": {
-        "1": {
+        "1": { "key": "flower_girl",
             "movable": true,
             "interactive": true,
             "rowSpan": 1,
@@ -26,20 +26,154 @@
                     ] 
                 }
             }
+        },
+        "2": { "key": "treebuchet",
+            "movable": true,
+            "interactive": true,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_lumberjack_forward.png" }
+                    ] 
+                }
+            }
+        },
+        "3": { "key": "bench_boi",
+            "movable": true,
+            "interactive": true,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_benchboi_forward.png" }
+                    ] 
+                }
+            }
+        },
+        "4": { "key": "therapist",
+            "movable": true,
+            "interactive": true,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_therapist_forward.png" }
+                    ] 
+                }
+            }
+        },
+        "5": { "key": "normie",
+            "movable": true,
+            "interactive": true,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_austin_forward.png" }
+                    ] 
+                }
+            }
+        },
+        "6": { "key": "dirt",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_ground_dead.png" }
+                    ] 
+                }
+            }
+        },
+        "7": { "key": "grass",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_ground_alive.png" }
+                    ] 
+                }
+            }
+        },
+        "8": { "key": "flowers",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_ground_flower.png" }
+                    ] 
+                }
+            }
+        },
+        "9": { "key": "tree",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_tree.png" }
+                    ] 
+                }
+            }
+        },
+        "10": { "key": "bench",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_bench.png" }
+                    ] 
+                }
+            }
+        },
+        "11": { "key": "water",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_ground_water.png" }
+                    ] 
+                }
+            }
         }
     },
     "groundMap": [
-        { "row": "2 ,2 ,2 ,2 ,2 " },
-        { "row": "2 ,2 ,1 ,3 ,2 " },
-        { "row": "2 ,2 ,1 ,2 ,2 " },
-        { "row": "2 ,1 ,1 ,1 ,2 " },
-        { "row": "2 ,1 ,3 ,1, 2 " }
+        { "row": "0,0,0,0,0" },
+        { "row": "0,0,0,0,0" },
+        { "row": "0,0,0,0,0" },
+        { "row": "0,0,0,0,0" },
+        { "row": "0,0,0,0,0" },
+        { "row": "0,0,0,0,0" },
+        { "row": "0,0,0,0,0" }
     ],
     "objectsMap": [
-        { "row": "1 ,0 ,1 ,0 ,0 " },
-        { "row": "0 ,1 ,0 ,0 ,0 " },
-        { "row": "0 ,0 ,1 ,0 ,0 " },
-        { "row": "0 ,0 ,0 ,1 ,0 " },
-        { "row": "1 ,0 ,0 ,0 ,0 " }
+        { "row": "0 ,0 ,0 ,0 ,0 "},
+        { "row": "0 ,0 ,0 ,0 ,0 "},
+        { "row": "0 ,0 ,0 ,0 ,0 "},
+        { "row": "0 ,0 ,0 ,0 ,0 "},
+        { "row": "0 ,0 ,0 ,0 ,0 "},
+        { "row": "0 ,0 ,0 ,0 ,0 "},
+        { "row": "0 ,0 ,0 ,0 ,0 "}
     ]
 }

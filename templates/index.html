@@ -8,10 +8,14 @@
     </head>
     <body>
         <h1>ELLO</h1>
+        <div id="pixiContainer"> </div>
         <!-- <canvas width="800" height="600" id="canvas"></canvas> -->
         <script type="text/javascript" src="{{ url_for('static', filename='js/pixi.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/traviso.dev.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/debug_table.js') }}"></script>
+        <script type="text/javascript">
+            var travConfig = {{ trav_config|safe }}
+        </script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static',
             filename='js/socket.js') }}"></script>
@@ -31,12 +35,24 @@
 
         
 
+        <br>
+
+        <textarea id="startUnits" rows="30" cols="50">
+{
+    "units": [
+        { "type": "flower_girl"},
+        { "type": "normie"}
+    ]
+}      
+        </textarea>
+        <button onclick="startingUnits()" > Starting Units </button>
+
         <!-- Audio for Happy and Sad Music -->
-        <audio controls id="happy_music">
+        <audio controls id="happy_music" hidden>
             <source src="{{ url_for('static', filename='music/happy_song.mp3') }}" type="audio/mpeg">
         </audio>
 
-        <audio controls id="sad_music">
+        <audio controls="none" id="sad_music" hidden>
             <source src="{{ url_for('static', filename='music/sad_song.mp3') }}" type="audio/mpeg">
         </audio>
 
@@ -53,6 +69,55 @@
             music.play();
         }
         </script>
+
+        <!-- SFX for actions and selections -->
+        <audio controls id="sfx_dodge" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Dodge.wav') }}" type="audio/wav">
+        </audio>
+
+        <audio controls id="sfx_drop_long" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Drop_Long.wav') }}" type="audio/wav">
+        </audio>
+
+        <audio controls id="sfx_drop_medium" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Drop_Medium.wav') }}" type="audio/wav">
+        </audio>
+
+        <audio controls id="sfx_drop_short" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Drop_Short.wav') }}" type="audio/wav">
+        </audio>
+
+        <audio controls id="sfx_glissando" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Glissando.wav') }}" type="audio/wav">
+        </audio>
+
+        <audio controls id="sfx_hit_long" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Hit_Long.wav') }}" type="audio/wav">
+        </audio>
+
+        <audio controls id="sfx_hit_short" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Hit_Long.wav') }}" type="audio/wav">
+        </audio>
+
+        <audio controls id="sfx_move_space" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Move_Space.wav') }}" type="audio/wav">
+        </audio>
+
+        <audio controls id="sfx_select_forward" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Select_Forward.wav') }}" type="audio/wav">
+        </audio> 
+
+        <audio controls id="sfx_select_move" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Select_Move.wav') }}" type="audio/wav">
+        </audio> 
+
+        <audio controls id="sfx_thunder_bomb" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Thunder_Bomb.wav') }}" type="audio/wav">
+        </audio> 
+
+        <audio controls id="sfx_treebuchet_throw" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Treebuchet_Throw.wav') }}" type="audio/wav">
+        </audio> 
     </body>
 
 </html>

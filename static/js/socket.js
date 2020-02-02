@@ -1,8 +1,11 @@
+
 var jsonMapper = {
     "placeholder" : 0,
     "flower_girl" : 1,
     "treebuchet" : 2,
     "therapist" : 3,
+    "bench_boi" : 4,
+    "normie" : 5,
     "dirt" : 1,
     "grass" : 2, 
     "tree" : 3, 
@@ -20,8 +23,6 @@ socket.on("connection_received", function(data) {
     console.log(data);
     window.player_id = data.player_id;
     document.getElementById("implayer").innerText = JSON.stringify([data.player_id])
-    fill_table(data);
-    maps = parseGameData(data);
 });
 
 socket.on("exec_result", function(data) {
@@ -31,8 +32,17 @@ socket.on("exec_result", function(data) {
     console.log("Im in exec_result");
     console.log(data);
     fill_table(data);
+    renderServerReply(data);
     maps = parseGameData(data);
     console.log(maps);
+});
+
+socket.on("game_start", function(data) {
+    console.log("game started");
+    console.log(data);
+    fill_table(data);
+    renderServerReply(data);
+    //serverGameState = data;
 });
 
 function sendAction() {
@@ -41,6 +51,10 @@ function sendAction() {
     socket.emit('execute', action);
 }
 
+function startingUnits() {
+    var units = document.getElementById('startUnits').value;
+    socket.emit('startingUnit', units);
+}
 
 function parseGameData(gameData) {
     var board = gameData['map']['board']
@@ -76,3 +90,8 @@ function parseGameData(gameData) {
     }
     return map;
 } 
+
+
+window.onbeforeunload = function(e) {
+  socket.disconnect();
+};
