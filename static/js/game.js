@@ -1,3 +1,8 @@
+var sfx = new SFX();
+sfx.Initialize();
+var bgm = new BGM();
+bgm.Initialize();
+
 ////// Here, we initialize the pixi application
 var pixiRoot = new PIXI.Application(800, 600, { backgroundColor : 0x6BACDE });
 
@@ -70,7 +75,7 @@ const SELECT = 0;
 const MOVE = 1;
 const ACTION = 2;
 
-var selectMode = SELECT;
+window.selectMode = SELECT;
 
 var unitActions = [
     [{},{},{},{},{}],
@@ -151,49 +156,48 @@ function onEngineInstanceReady()
 
 function onObjectSelect(obj) {
     console.log("Selected obj", obj.type);
-    if (selectMode === SELECT && obj.type > 0 && obj.type < 6) {
-        var currentUnit = engine.getCurrentControllable();
-        // window.selected_cell = [obj.mapPos.r, obj.mapPos.c];
-        selectMode = MOVE;
-        if (!currentUnit) {
-            engine.setCurrentControllable(obj);
-            var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
-            if (objIsNotEmpty(existingAction)) {
-                if(objIsNotEmpty(existingAction.move)) {
-                    updateUnitMove(obj.mapPos.r, obj.mapPos.c, existingAction.move.x, existingAction.move.y, false);
-                }
-                if(objIsNotEmpty(existingAction.action)) {
-                    setTimeout(function() {
-                        updateUnitAction(obj.mapPos.r, obj.mapPos.c, existingAction.action.x, existingAction.action.y, false)
-                    }, 500);
-                }
-            } else {
-                existingAction = {
-                    "move" : {
-                        "x": obj.mapPos.r,
-                        "y": obj.mapPos.c,
-                    },
-                    "action" : {},
-                }
-                unitActions[obj.mapPos.r][obj.mapPos.c] = existingAction;
-            }
+    if (window.selectMode === SELECT && obj.type > 0 && obj.type < 6) {
+        // console.log("OBJECT SELECTED: ", obj.mapPos.r, obj.mapPos.c);
+        window.selectMode = MOVE;
             
-            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
-            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
-            engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
+        engine.setCurrentControllable(obj);
+        var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
+        if (objIsNotEmpty(existingAction)) {
+            if(objIsNotEmpty(existingAction.move)) {
+                updateUnitMove(obj.mapPos.r, obj.mapPos.c, existingAction.move.x, existingAction.move.y, false);
+            }
+            if(objIsNotEmpty(existingAction.action)) {
+                setTimeout(function() {
+                    updateUnitAction(obj.mapPos.r, obj.mapPos.c, existingAction.action.x, existingAction.action.y, false)
+                }, 500);
+            }
+        } else {
+            existingAction = {
+                "move" : {
+                    "x": obj.mapPos.r,
+                    "y": obj.mapPos.c,
+                },
+                "action" : {},
+            }
+            unitActions[obj.mapPos.r][obj.mapPos.c] = existingAction;
         }
-    } else if (selectMode === MOVE) {
-        selectMode = ACTION;
+        
+        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
+        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
+    } else if (window.selectMode === MOVE) {
+        window.selectMode = ACTION;
         var currentUnit = engine.getCurrentControllable();
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+        // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", obj.mapPos.r, obj.mapPos.c);
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
-    } else if (selectMode === ACTION) {
-        selectMode = DISABLED;
+    } else if (window.selectMode === ACTION) {
+        window.selectMode = DISABLED;
         var currentUnit = engine.getCurrentControllable();
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
         setTimeout(function() {
-            selectMode = SELECT;
+            window.selectMode = SELECT;
             deselectUnit();
             engine.setCurrentControllable(null);
         }, 1000);
@@ -229,20 +233,21 @@ function onTileSelect(x, y) {
         }
     });
     if (!objFound) {
-        if (selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
+        if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
             console.log("TILE MOVE");
-            selectMode = ACTION;
+            window.selectMode = ACTION;
             var currentUnit = engine.getCurrentControllable();
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
             updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+            // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", currentUnit.mapPos.r, currentUnit.mapPos.c);
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-        } else if (selectMode === ACTION) {
+        } else if (window.selectMode === ACTION) {
             console.log("TILE ACTION");
             var currentUnit = engine.getCurrentControllable();
             updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-            selectMode = DISABLED;
+            window.selectMode = DISABLED;
             setTimeout(function() {
-                selectMode = SELECT;
+                window.selectMode = SELECT;
                 deselectUnit();
                 engine.setCurrentControllable(null);
             }, 1000);
@@ -279,6 +284,7 @@ function onTileSelect(x, y) {
 
 function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
     var existingAction = unitActions[unitX][unitY];
+    // console.log("UPDATE UNIT MOVE: ", unitX, unitY);
     if (objIsNotEmpty(existingAction) && objIsNotEmpty(existingAction.move)
         && (existingAction.move.x != moveX || existingAction.move.y != moveY)) {
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, instant);
@@ -296,6 +302,7 @@ function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
         // console.log(engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor);
+        console.log(unitX, unitY, get_unit(unitX, unitY).id);
         add_move(get_unit(unitX, unitY).id, [unitX, unitY], [moveX, moveY]);
     } else {
         unitActions[unitX][unitY].move = {};
@@ -381,4 +388,5 @@ function renderServerReply(data) {
         }
     }
     engine.objectSelectCallback = onObjectSelect;
+    window.selectMode = SELECT;
 }
