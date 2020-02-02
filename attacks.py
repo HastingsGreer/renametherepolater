@@ -1,6 +1,6 @@
 import random
 
-def rocket_attack(x, y, game):
+def rocket_attack(x, y, game, id):
     rocket_damage = 10
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
@@ -17,13 +17,14 @@ def rocket_attack(x, y, game):
                 game._map[xhat][yhat]['background'] = 'grass'
     game._map[x][y]["background"] = 'tree'
 
-def bench_attack(x, y, game):
+def bench_attack(x, y, game, id):
     game._map[x][y]["background"] = 'bench'
+    game._map
 
-def therapist_attack(x, y, game):
+def therapist_attack(x, y, game, id):
     pass
 
-def normie_attack(x, y, game):
+def normie_attack(x, y, game, id):
     pass
 
 ATTACK_LOOKUP = {

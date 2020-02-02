@@ -118,15 +118,15 @@ class Game(object):
             print("="*20)
 
             for i, row in enumerate(next_step):
-                for j, cell in enumerate(row):
-                    if cell >= 0:
-                        cur_x = unit_locs[unit_id][0]
-                        cur_y = unit_locs[unit_id][1]
+                for j, cell_contents in enumerate(row):
+                    if cell_contents >= 0:
+                        cur_x = unit_locs[cell_contents][0]
+                        cur_y = unit_locs[cell_contents][1]
                         self._execute_move_side_effects(cur_x, cur_y,
-                                unit_data[cell])
+                                unit_data[cell_contents])
                         # move the unit
-                        unit_locs[cell][0] = i
-                        unit_locs[cell][1] = j
+                        unit_locs[cell_contents][0] = i
+                        unit_locs[cell_contents][1] = j
 
 
         for i, row in enumerate(self._map):
@@ -138,7 +138,7 @@ class Game(object):
             x = unit_locs[unit_id][0]
             y = unit_locs[unit_id][1]
             self._map[x][y]['unit'] = unit
-            move_animations[unit_id]['end'] = unit_locs[id][:]
+            move_animations[unit_id]['end'] = unit_locs[unit_id][:]
 
         return full_move_units, list(move_animations.values())
 
@@ -169,7 +169,7 @@ class Game(object):
 
             # of course this should be pretty straightforward
             ATTACK_LOOKUP[attack['type']]                                               \
-            (target[0], target[1], self)
+            (target[0], target[1], self, attack['id'])
 
         return anims_to_play
 
