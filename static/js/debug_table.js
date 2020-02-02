@@ -170,17 +170,33 @@ clear_actions = function() {
 }
 
 add_move = function(id, start, end) {
-    window.action_ready_json.moves = window.action_ready_json.moves.filter(obj => {
-        obj.id !== id });
-    window.action_ready_json.moves.push(
-        {id: id, start:start, end:end});
+    let isAnUpdate = false;
+    window.action_ready_json.moves.forEach((move) => {
+        if (move.id === id) {
+            isAnUpdate = true;
+            move.start = start;
+            move.end = end;
+        }
+    });
+    if (!isAnUpdate) {
+        window.action_ready_json.moves.push(
+            {id: id, start:start, end:end});
+    }
     actions_changed();
 }
 add_attack = function(id, target, type) {
-    window.action_ready_json.attacks = window.action_ready_json.attacks.filter(obj => {
-        obj.id !== id });
-    window.action_ready_json.attacks.push(
-        {id: id, target, type});
+    let isAnUpdate = false;
+    window.action_ready_json.attacks.forEach((move) => {
+        if (move.id === id) {
+            isAnUpdate = true;
+            move.target = target;
+            move.type = type;
+        }
+    });
+    if (!isAnUpdate) {
+        window.action_ready_json.attacks.push(
+            {id: id, target, type});
+    }
     actions_changed();
 }
 
