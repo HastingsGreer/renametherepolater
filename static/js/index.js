@@ -19,12 +19,6 @@ function mapSelection() {
     startScreen.parentNode.removeChild(startScreen)
 
     container.innerHTML = html;
-
-    // var mapSelection = document.createElement("img");
-    // mapSelection.setAttribute('src', 'static/assets/yeech.png');
-    // mapSelection.setAttribute('id' , 'yeech')
-    // container.appendChild(mapSelection);
-    // document.querySelector('#yeech').addEventListener('click', characterSelection);
 }
 
 // function characterSelection() {
