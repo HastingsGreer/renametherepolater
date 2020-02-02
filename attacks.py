@@ -112,17 +112,29 @@ ENVIRONMENT_LOOKUP = {
 id_counter = 0
 def make_unit(type, owner):
     units = {
-       "treebuchet" 	: {"id": -1, 	"type": "treebuchet", 	"happiness":3, "owner":-1, "attack": "tree_rocket", 					"attack_range": 100},
-       "flower_girl" 	: {"id": -1, 	"type": "flower_girl", 	"happiness":3, "owner":-1, 												"attack_range": -1},
-       "bench_boi" 		: {"id": -1, 	"type": "bench_boi", 	"happiness":3, "owner":-1, "attack": "place_bench", "has_bench": 1, 	"attack_range":1},
-       "therapist" 		: {"id": -1, 	"type": "therapist", 	"happiness":3, "owner":-1, "attack": "discuss_problems", 				"attack_range":1},
-       "normie" 		: {"id": -1, 	"type": "normie", 		"happiness":3, "owner":-1, "attack": "encourage", 						"attack_range":1},
-       "doggo" 			: {"id": -1, 	"type": "doggo", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
-       "austin" 		: {"id": -1, 	"type": "austin", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
-       "cat" 			: {"id": -1, 	"type": "cat", 	        "happiness":3, "owner":-1, 												"attack_range": -1},
-       "cynthia" 		: {"id": -1, 	"type": "cynthia", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
-       "lumberjack" 	: {"id": -1, 	"type": "lumberjack", 	"happiness":3, "owner":-1, 												"attack_range": -1},
-       "pirate" 		: {"id": -1, 	"type": "pirate", 	    "happiness":3, "owner":-1, 												"attack_range": -1}
+       "treebuchet" : {"id": -1, "type": "treebuchet", "happiness":3,
+           "owner":-1, "attack": "tree_rocket", "attack_range": 100,
+           "movement_range": 2},
+       "flower_girl" : {"id": -1, "type": "flower_girl", "happiness":3,
+           "owner":-1, "attack_range": -1, "movement_range": 4},
+       "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1,
+           "attack": "place_bench", "has_bench": 1, "attack_range":1,
+           "movement_range": 2},
+       "therapist" : {"id": -1, "type": "therapist", "happiness":3, "owner":-1,
+           "attack": "discuss_problems", "attack_range":1, "movement_range": 2},
+       "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1,
+           "attack": "encourage", "attack_range":1, "movement_range": 3}
+       #"treebuchet" 	: {"id": -1, 	"type": "treebuchet", 	"happiness":3, "owner":-1, "attack": "tree_rocket", 					"attack_range": 100},
+       #"flower_girl" 	: {"id": -1, 	"type": "flower_girl", 	"happiness":3, "owner":-1, 												"attack_range": -1},
+       #"bench_boi" 		: {"id": -1, 	"type": "bench_boi", 	"happiness":3, "owner":-1, "attack": "place_bench", "has_bench": 1, 	"attack_range":1},
+       #"therapist" 		: {"id": -1, 	"type": "therapist", 	"happiness":3, "owner":-1, "attack": "discuss_problems", 				"attack_range":1},
+       #"normie" 		: {"id": -1, 	"type": "normie", 		"happiness":3, "owner":-1, "attack": "encourage", 						"attack_range":1},
+       #"doggo" 			: {"id": -1, 	"type": "doggo", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
+       #"austin" 		: {"id": -1, 	"type": "austin", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
+       #"cat" 			: {"id": -1, 	"type": "cat", 	        "happiness":3, "owner":-1, 												"attack_range": -1},
+       #"cynthia" 		: {"id": -1, 	"type": "cynthia", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
+       #"lumberjack" 	: {"id": -1, 	"type": "lumberjack", 	"happiness":3, "owner":-1, 												"attack_range": -1},
+       #"pirate" 		: {"id": -1, 	"type": "pirate", 	    "happiness":3, "owner":-1, 												"attack_range": -1}
     }
 
     res = units[type]
