@@ -156,6 +156,32 @@
                     ] 
                 }
             }
+        },
+        "13": { "key": "move_highlight",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_ground_movelight.png" }
+                    ] 
+                }
+            }
+        },
+        "14": { "key": "attack_highlight",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_ground_attacklight.png" }
+                    ] 
+                }
+            }
         }
     },
     "groundMap": [

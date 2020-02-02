@@ -1,11 +1,23 @@
 ////// Here, we initialize the pixi application
 var pixiRoot = new PIXI.Application(800, 600, { backgroundColor : 0x6BACDE });
+let boardXMax = 7;
+let boardYMax = 5;
+
+const DISABLED = -1;
+const SELECT = 0;
+const MOVE = 1;
+const ACTION = 2;
+
+var selectMode = SELECT;
 
 // add the renderer view element to the DOM
 let container = document.getElementById("pixiContainer");
 container.appendChild(pixiRoot.view);
 
 let activeObjects = [];
+
+let optionHighlightObjs = [];
+let confirmedMovesObjs = [];
 
 let serverGameState = undefined;
 
@@ -52,6 +64,8 @@ var instanceConfig = {
         "/static/assets/Logo_Big.png",
         "/static/assets/Logo_Medium.png",
         "/static/assets/Logo_Small.png",
+        "/static/assets/ggj_ground_movelight.png",
+        "/static/assets/ggj_ground_attacklight.png",
     ], 
     tileHeight: 33,
     isoAngle: 27.27676,
@@ -64,13 +78,6 @@ var instanceConfig = {
 };
 
 var engine = TRAVISO.getEngineInstance(instanceConfig);
-
-const DISABLED = -1;
-const SELECT = 0;
-const MOVE = 1;
-const ACTION = 2;
-
-var selectMode = SELECT;
 
 var unitActions = [
     [{},{},{},{},{}],
@@ -149,12 +156,66 @@ function onEngineInstanceReady()
     renderServerReply(serverGameState);
 }
 
+let highlightMovementTiles = (obj) => {
+    let center_x = obj.mapPos.r;
+    let center_y = obj.mapPos.c;
+    let unitData = get_unit(center_x, center_y);
+    console.log(unitData);
+
+    let movementHighlight = revMapping["move_highlight"];
+
+    let addHighlighTile = (step, dx, dy) => {
+        if (center_x + step * dx >= 0 && center_x + step * dx < boardXMax &&
+            center_y + step * dy >= 0 && center_y + step * dy < boardYMax) {
+            optionHighlightObjs.push(
+                engine.createAndAddObjectToLocation(movementHighlight, {'r':
+                    center_x + step * dx, 'c': center_y + step * dy}))
+        }
+
+    }
+
+    addHighlighTile(0, 0, 0);
+
+    for (var i = 1 ; i < unitData.movement_range ; i++) {
+        console.log(i);
+        for (var dx = -1 ; dx <= 1 ; dx++) {
+            for (var dy = -1 ; dy <= 1 ; dy++) {
+                if (!(dx === 0 && dy === 0))
+                    addHighlighTile(i, dx, dy);
+            }
+        }
+    }
+
+    return;
+}
+
+let removeOptionHighlightsAndConfirm = (newX, newY) => {
+    console.log("Remove options");
+    console.log(optionHighlightObjs);
+    optionHighlightObjs.forEach((asdf) => {
+        engine.removeObjectFromLocation(asdf);
+    });
+    optionHighlightObjs.length = 0;
+}
+
+let highlightAttackTiles = (obj) => {
+    return;
+}
+
+let removeAttackHighlightsAndConfirm = (obj) => {
+    return;
+}
+
 function onObjectSelect(obj) {
     console.log("Selected obj", obj.type);
     if (selectMode === SELECT && obj.type > 0 && obj.type < 6) {
         var currentUnit = engine.getCurrentControllable();
         // window.selected_cell = [obj.mapPos.r, obj.mapPos.c];
+        
+        highlightMovementTiles(obj);
+
         selectMode = MOVE;
+
         if (!currentUnit) {
             engine.setCurrentControllable(obj);
             var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
@@ -183,12 +244,14 @@ function onObjectSelect(obj) {
             engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
         }
     } else if (selectMode === MOVE) {
+        console.log("MOVINGGGG");
         selectMode = ACTION;
         var currentUnit = engine.getCurrentControllable();
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
     } else if (selectMode === ACTION) {
+        removeAttackHighlightsAndConfirm(obj);
         selectMode = DISABLED;
         var currentUnit = engine.getCurrentControllable();
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
@@ -236,6 +299,8 @@ function onTileSelect(x, y) {
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
             updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+            removeOptionHighlightsAndConfirm(x, y);
+            highlightAttackTiles();
         } else if (selectMode === ACTION) {
             console.log("TILE ACTION");
             var currentUnit = engine.getCurrentControllable();
