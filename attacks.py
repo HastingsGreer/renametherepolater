@@ -20,9 +20,6 @@ def rocket_attack(x, y, game):
 def bench_attack(x, y, game):
     game._map[x][y]["background"] = 'bench'
 
-def _attack(x, y, game):
-    game._map[x][y]["background"] = 'bench'
-
 ATTACK_LOOKUP = {
     'tree_rocket': rocket_attack,
     'place_bench': bench_attack
@@ -58,7 +55,10 @@ def make_unit(type, owner):
        "flower_girl" : {"id": -1, "type": "flower_girl", "happiness":3, "owner":-1, "attack_range": -1},
        "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1, "attack": "place_bench", "has_bench": 1, "attack_range":1},
        "therapist" : {"id": -1, "type": "therapist", "happiness":3, "owner":-1, "attack": "discuss_problems", "attack_range":1},
-       "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "encourage", "attack_range":1}
+       "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "encourage", "attack_range":2},
+       "boomboxer" : {"id": -1, "type": "boomboxer", "happiness":3, "owner":-1, "attack": "music burst", "attack_range":1},
+       "bone dog" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "lick", "attack_range":1},
+       "splab" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "bakaw", "attack_range":0}
     }
 
     res = units[type]
