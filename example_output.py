@@ -27,6 +27,9 @@ def example_json():
 
     example_json["board"][1][3]["unit"] = attacks.make_unit("treebuchet", 0)
     example_json["board"][3][3]["unit"] = attacks.make_unit("flower_girl", 1)
+    example_json["board"][1][1]["unit"] = attacks.make_unit("bench_boi", 1)
+    example_json["board"][6][2]["unit"] = attacks.make_unit("therapist", 0)
+    example_json["board"][2][4]["unit"] = attacks.make_unit("normie", 1)
     example_json["board"][4][4]["background"] = "bench"
 
     return example_json
