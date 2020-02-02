@@ -1,12 +1,12 @@
-var SFXPath = "static/sfx/";
-var BGMPath = "static/music/";
+var SFXPath = "/static/sfx/";
+var BGMPath = "/static/music/";
 
 class SFX { 
 	
 	constructor(Audio) { this.Audio = Audio; }
 
 	Initialize() { 
-		PreloadAllSFX();
+		this.PreloadAllSFX();
 	}
 
 	PreloadAllSFX() { 

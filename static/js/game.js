@@ -1,3 +1,8 @@
+var sfx = new SFX();
+sfx.Initialize();
+var bgm = new BGM();
+bgm.Initialize();
+
 ////// Here, we initialize the pixi application
 var pixiRoot = new PIXI.Application(800, 600, { backgroundColor : 0x6BACDE });
 

@@ -1,4 +1,3 @@
-
 function mapSelection() {
     var container = document.getElementById("container");
     var startScreen = document.getElementById("start_screen");
@@ -20,4 +19,5 @@ function characterSelection() {
     var yeech = document.getElementById("yeech");
     yeech.parentNode.removeChild(yeech)
     container.innerHTML = html;
+    bgm.Play("sad_song.mp3", 0.5, true);
 }
