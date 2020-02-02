@@ -72,9 +72,10 @@ function sendAction() {
     socket.emit('execute', action);
 }
     
-function startingUnits(selectedMap) {
+function startingUnits() {
     var units = document.getElementById('startUnits').value;
-    socket.emit('startingUnit', { units, selectedMap });
+    var selectedMap = window.map_select_json;
+    socket.emit('startingUnit', { 'units':JSON.parse(units), 'selectedMap':JSON.parse(selectedMap) });
     // socket.emit('startingUnit', units);
 }
 
@@ -85,10 +86,13 @@ function goToCharSel() {
     ',{ "type": "bench_boi"} ' + 
     ',{ "type": "therapist"}, { "type": "treebuchet"}]}' + 
     '</textarea>' + 
+    '<br/>' + 
     '<button id="startingUnits" onclick="startingUnits()"> Starting Units </button>';
 
     var container = document.getElementById("container");
     var mapSelTextArea = document.getElementById("mapSelect");
+
+    window.map_select_json = mapSelTextArea.value;
     mapSelTextArea.parentNode.removeChild(mapSelTextArea);
     charSelection = document.getElementById("characterSelection");
     charSelection.parentNode.removeChild(charSelection);

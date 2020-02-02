@@ -20,9 +20,9 @@ def generate_initial_map(player1_units, player2_units, selMap):
         }
     }
 
-    x = len(rows)
+    y = len(rows)
     # May need to edit this if we're allowing jagged maps (which we shouldn't)
-    y = len(rows[0]['row'])
+    x = len(rows[0]['row'])
 
     count = 1
     for unit in player1_units:

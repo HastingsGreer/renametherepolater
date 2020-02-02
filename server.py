@@ -136,11 +136,13 @@ def get_room_id(request):
 @socketio.on('startingUnit')
 def startingUnit(data):
     units = []
-    unitData = data['units']
-    unitData = json.loads(unitData)
+    #print("datatype:", type(data))
+    #data = json.loads(data)
+
+    print(data)
 
     mapData = data['selectedMap']
-    mapData = json.loads(mapData)
+    unitData = data['units']
 
     for unit in unitData['units']:
         units.append(make_unit(unit['type'], players[request.sid]['id']))
