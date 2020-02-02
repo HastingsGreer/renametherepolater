@@ -23,6 +23,8 @@ container.appendChild(pixiRoot.view);
 
 let activeObjects = [];
 
+let healthObjects = [];
+
 let actions = {
     "normie" : "encourage",
     "bench_boi" : "place_bench",
@@ -102,7 +104,11 @@ var instanceConfig = {
         "/static/assets/ggj_attackline_diagonal_1.png",
         "/static/assets/ggj_attackline_diagonal_2.png",
         "/static/assets/ggj_attackline_horiz.png",
-        "/static/assets/ggj_attackline_vert.png"
+        "/static/assets/ggj_attackline_vert.png",
+        "/static/assets/ggj_barofhealth_offset.png",
+        "/static/assets/ggj_healthbar_01.png",
+        "/static/assets/ggj_healthbar_02.png",
+        "/static/assets/ggj_healthbar_03.png"
     ], 
     tileHeight: 33,
     isoAngle: 27.27676,
@@ -545,6 +551,13 @@ function renderServerReply(data) {
     });
     activeObjects.length = 0;
 
+    healthObjects.forEach((obj) => {
+        engine.removeObjectFromLocation(obj);
+    });
+    healthObjects.length = 0;
+
+    toAddHealth = [];
+
     console.log("trying to render to engine");
     console.log(data);
     for (var i = 0 ; i < data.map.board.length ; i++) {
@@ -568,9 +581,24 @@ function renderServerReply(data) {
                 console.log(unitObj);
                 activeObjects.push(engine.createAndAddObjectToLocation(unitObj,
                     {'r': i, 'c': j}));
+                toAddHealth.push({
+                    'r': i,
+                    'c': j,
+                    "happiness": cell.unit.happiness
+                });
             }
         }
     }
+
+    toAddHealth.forEach((unit) => {
+        healthObjects.push(engine.createAndAddObjectToLocation(revMapping["empty_healthbar"],
+            {'r': unit.r, 'c': unit.c}));
+        for(var k = 0; k < unit.happiness; k++) {
+            healthObjects.push(engine.createAndAddObjectToLocation(revMapping["health_segment_01"] + k,
+            {'r': unit.r, 'c': unit.c}));
+        }
+    });
+
     engine.objectSelectCallback = onObjectSelect;
     window.selectMode = SELECT;
 }

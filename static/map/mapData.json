@@ -524,6 +524,160 @@
                     ] 
                 }
             }
+        },
+
+        "39": { "key": "empty_healthbar",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_barofhealth_offset.png" }
+                    ] 
+                }
+            }
+        },
+
+        "40": { "key": "health_segment_01",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_01.png" }
+                    ] 
+                }
+            }
+        },
+
+        "41": { "key": "health_segment_02",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_02.png" }
+                    ] 
+                }
+            }
+        },
+
+        "42": { "key": "health_segment_03",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_03.png" }
+                    ] 
+                }
+            }
+        },
+
+        "43": { "key": "health_segment_04",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_04.png" }
+                    ] 
+                }
+            }
+        },
+
+        "44": { "key": "health_segment_05",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_05.png" }
+                    ] 
+                }
+            }
+        },
+
+        "45": { "key": "health_segment_06",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_06.png" }
+                    ] 
+                }
+            }
+        },
+
+        "46": { "key": "health_segment_07",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_07.png" }
+                    ] 
+                }
+            }
+        },
+
+        "47": { "key": "health_segment_08",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_08.png" }
+                    ] 
+                }
+            }
+        },
+
+        "48": { "key": "health_segment_09",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_09.png" }
+                    ] 
+                }
+            }
+        },
+
+        "49": { "key": "health_segment_10",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_healthbar_10.png" }
+                    ] 
+                }
+            }
         }
     },
     "groundMap": [
