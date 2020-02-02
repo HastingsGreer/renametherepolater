@@ -105,7 +105,7 @@
                 }
             }
         },
-        "8": { "key": "flower",
+        "8": { "key": "flowers",
             "movable": true,
             "interactive": false,
             "rowSpan": 1,
