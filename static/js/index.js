@@ -18,4 +18,5 @@ function mapSelection() {
     startScreen.parentNode.removeChild(startScreen)
 
     container.innerHTML = html;
+  
 }
