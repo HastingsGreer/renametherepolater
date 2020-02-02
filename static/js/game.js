@@ -207,6 +207,15 @@ function onEngineInstanceReady()
 }
 
 let highlightMovementTiles = (unit_x, unit_y, center_x, center_y, steps, isAttacking) => {
+    if (!isAttacking) {
+        let unit = get_unit(unit_x, unit_y);
+        if (confirmedMovesObjs[unit.id] !== undefined) {
+            confirmedMovesObjs[unit.id].forEach((obj) => {
+                engine.removeObjectFromLocation(obj);
+            });
+            confirmedMovesObjs[unit.id].length = 0;
+        }
+    }
     console.log("Higlihging");
     let prefix = isAttacking ? "attack" : "move"
 
@@ -286,7 +295,8 @@ let removeOptionHighlightsAndConfirm = (obj, initX, initY, newX, newY,
         lineObj = revMapping[prefix + "line_horiz"];
     }
 
-    confirmedMovesObjs[unit.id] = [];
+    if (confirmedMovesObjs[unit.id] === undefined)
+        confirmedMovesObjs[unit.id] = [];
     for (var i = 1 ; i < steps ; i++) {
         confirmedMovesObjs[unit.id].push(
             engine.createAndAddObjectToLocation(
@@ -297,7 +307,7 @@ let removeOptionHighlightsAndConfirm = (obj, initX, initY, newX, newY,
                 }));
     }
     confirmedMovesObjs[unit.id].push(
-        engine.createAndAddObjectToLocation( arrowObj, {'r': newX, 'c': newY}));
+        engine.createAndAddObjectToLocation(arrowObj, {'r': newX, 'c': newY}));
 }
 
 let resetStateMachine = () => {
@@ -533,7 +543,7 @@ function updateUnitAction(unitX, unitY, actX, actY, instant) {
             "y" : actY,
         }
         unitActions[unitX][unitY] = existingAction;
-        engine.createAndAddObjectToLocation(10, {"r": existingAction.action.x, "c": existingAction.action.y});
+        //engine.createAndAddObjectToLocation(10, {"r": existingAction.action.x, "c": existingAction.action.y});
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).setHighlighted(true, false);
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
@@ -576,6 +586,7 @@ function renderServerReply(data) {
         engine.removeObjectFromLocation(obj);
     });
     healthObjects.length = 0;
+    confirmedMovesObjs = {};
 
     toAddHealth = [];
 
