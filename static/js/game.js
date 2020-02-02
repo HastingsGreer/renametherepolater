@@ -287,10 +287,11 @@ let removeOptionHighlightsAndConfirm = (obj, initX, initY, newX, newY,
         engine.createAndAddObjectToLocation( arrowObj, {'r': newX, 'c': newY}));
 }
 
-let highlightAttackTiles = (obj) => {
-    return;
+let resetStateMachine = () => {
+    window.selectMode = SELECT;
+    deselectUnit();
+    engine.setCurrentControllable(null);
 }
-
 
 function onObjectSelect(obj) {
     console.log("Selected obj", obj.type);
@@ -351,8 +352,12 @@ function onObjectSelect(obj) {
         engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
     } else if (window.selectMode === MOVE) {
         var currentUnit = engine.getCurrentControllable();
-        if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).type === "flower_girl") window.selectMode = SELECT;
-        else window.selectMode = ACTION;
+        if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) 
+        {
+            resetStateMachine();
+        } else {
+            window.selectMode = ACTION;
+        }
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", obj.mapPos.r, obj.mapPos.c);
@@ -401,8 +406,11 @@ function onTileSelect(x, y) {
         if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
             console.log("TILE MOVE");
             var currentUnit = engine.getCurrentControllable();
-            if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) window.selectMode = SELECT;
-            else window.selectMode = ACTION;
+            if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) {
+                resetStateMachine();
+            }
+            else 
+                window.selectMode = ACTION;
             removeOptionHighlightsAndConfirm(currentUnit,
                 currentUnit.mapPos.r,
                 currentUnit.mapPos.c,
