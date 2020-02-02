@@ -375,9 +375,9 @@ function onObjectSelect(obj) {
                 engine.setCurrentControllable(null);
             }, 1000);
         }
-        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
-        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
-        engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
+        // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(true, false);
+        // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
+        // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
     } else if (window.selectMode === MOVE) {
         var currentUnit = engine.getCurrentControllable();
         if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) 
