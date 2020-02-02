@@ -103,8 +103,13 @@
 
         <audio controls id="sfx_treebuchet_throw" hidden>
             <source src="{{ url_for('static', filename='sfx/SFX_Treebuchet_Throw.wav') }}" type="audio/wav">
+        </audio>
+        <audio controls id="sfx_voices_catmeow" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Voices_CatMeow.wav') }}" type="audio/wav">
         </audio> 
-
+        <audio controls id="sfx_voices_piratearg" hidden>
+            <source src="{{ url_for('static', filename='sfx/SFX_Voices_PirateArg.wav') }}" type="audio/wav">
+        </audio> 
         <script>
         var happy= document.getElementById("happy_music");
         var sad = document.getElementById("sad_music");
@@ -137,6 +142,8 @@
         <button onclick="playMusic(sfx_select_move)" type="button">Select Move</button>
         <button onclick="playMusic(sfx_thunder_bomb)" type="button">Thunder Bomb</button>
         <button onclick="playMusic(sfx_treebuchet_throw)" type="button">Treebuchet Throw</button>
+        <button onclick="playMusic(sfx_voices_catmeow)" type="button">Cat Meow</button>  
+        <button onclick="playMusic(sfx_voices_piratearg)" type="button">Pirate Arg</button>         
     </body>
 
 </html>
