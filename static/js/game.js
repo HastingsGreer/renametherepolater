@@ -416,8 +416,21 @@ function onTileSelect(x, y) {
             objFound = true;
         }
     });
+    let clickedObstacle = false;
+    activeObjects.forEach(obj => {
+        if(obj.mapPos.r === x && obj.mapPos.c === y) {
+            if(obj.type > 0 && obj.type < 6) {
+                console.log(obj);
+                onObjectSelect(obj);
+                objFound = true;
+            }
+            if(obj.type === revMapping["water"] || obj.type === revMapping["tree"]) {
+                clickedObstacle = true;
+            }
+        };
+    });
     if (!objFound) {
-        if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
+        if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3 && !clickedObstacle) {
             console.log("TILE MOVE");
             var currentUnit = engine.getCurrentControllable();
             if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) {
