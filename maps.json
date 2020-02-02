@@ -1,0 +1,71 @@
+{
+    "tiny_map": [
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, water, water, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, water, water, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"}
+    ],
+
+    "small_map": [
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, water, dirt, dirt, dirt, dirt, water, dirt, dirt"},
+        { "row": "dirt, water, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, water, water, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, water, water, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, water, dirt"},
+        { "row": "dirt, dirt, water, dirt, dirt, dirt, dirt, water, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"}
+    ],
+
+    "medium_map": [
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, water, water, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, water, dirt, dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, water, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, water, water, dirt, dirt, dirt, dirt"},
+        { "row": "water, water, water, dirt, dirt, dirt, dirt, dirt, dirt, water, water, dirt, water, dirt, dirt, dirt"},
+        { "row": "water, water, water, dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, dirt, dirt, water, water, water"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, water, water, dirt, dirt, dirt, dirt, dirt, dirt, water, water, water"},
+        { "row": "dirt, water, dirt, dirt, water, water, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, water, dirt, water, dirt, dirt, dirt, dirt, dirt, dirt, dirt, water, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, water, dirt, water, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, water, water, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, water, dirt, dirt, water, dirt, dirt, water, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, water, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"}
+    ],
+
+    "large_map": [
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"},
+        { "row": "dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt, dirt"}
+    ]
+}

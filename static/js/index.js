@@ -144,7 +144,6 @@ function onEngineInstanceReady()
         if (engine.getCurrentControllable()) engine.focusMapToObject(engine.getCurrentControllable());
     };
 
-    renderServerReply(serverGameState);
 }
 
 function onObjectSelect(obj) {

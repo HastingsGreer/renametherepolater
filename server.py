@@ -1,8 +1,10 @@
 from example_output import example_json
 from logger import Logger
 from game import Game
+from attacks import make_unit
+from map import generate_initial_map
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 
 import json
@@ -12,12 +14,7 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 server_logger = Logger("server.log", "")
 
-player1_joined = False
-player2_joined = False
-
-player1_executed = False
-player2_executed = False
-partial_cmds = {}
+players = {}
 
 map = example_json()
 game = Game(map['board'])
@@ -27,51 +24,91 @@ def home():
     trav_config_str = open("./static/map/mapData.json").read()
     return render_template("index.html", trav_config=trav_config_str)
 
-@socketio.on('join')
+@socketio.on('connect')
 def join():
-    global player1_joined, player2_joined
     global map
+    players[request.sid] = {
+        'id' : len(list(players.keys())),
+        'playerId' : request.sid,
+        'units' : [],
+        'currMove' : {}
+    }
     server_logger.log("Client connected")
-    print("Client connected")
-    if not player1_joined:
-        player_id = 0
-        player1_joined = True
-    else:
-        player_id = 1
-        player2_joined = True
 
-    emit("connection_received", {'player_id': player_id, 'map': map})
+    emit("connection_received", {'player_id' : players[request.sid]['id']})
 
-    if player2_joined:
-        emit("game_start", broadcast=True)
+    if len(list(players.keys())) == 2:
+        print("game start")
+        emit("allPlayersConnected", broadcast=True)
+
+@socketio.on('disconnect')
+def disconnect():   
+    del players[request.sid]
+    emit("client_disconnected", broadcast=True)
 
 # once both players runs execute, we actually execute the command
 @socketio.on('execute')
 def execute(data):
-    print(data)
-    global game, player1_executed, player2_executed, partial_cmds
+    if not players[request.sid]['units']:
+        print("Player " + str(players[request.sid]['id']) + " has not selected any units")
+        return
+    if players[request.sid]['currMove']:
+        print("Player " + str(players[request.sid]['id']) + " has already executed a move")
+        return
+    global game
     data = json.loads(data)
-    if not player1_executed:
-        partial_cmds = data
-        player1_executed = True
-    else:
-        player2_executed = True
-        partial_cmds['moves'].extend(data['moves'])
-        partial_cmds['attacks'].extend(data['attacks'])
+    unit_locs, unit_data = game._gather_unit_information()
 
+    for move in data['moves']:
+        if unit_data[move['id']]['owner'] != players[request.sid]['id']:
+            print("cannot move that unit")
+            return
+    players[request.sid]['currMove'] = data
 
-
+    allMoved = True
+    for player in players.values():
+        if not player['currMove']:
+            allMoved = False
     emit("execution_ack")
-    if player2_executed:
-        resp = game.execute(partial_cmds)
-        player1_executed = False
-        player2_executed = False
-        partial_cmds = {}
+
+    if allMoved:   
+        cmd = players[request.sid]['currMove']
+        for player in players.values():
+            if player['playerId'] != request.sid:
+                cmd['moves'].extend(player['currMove']['moves'])
+                cmd['attacks'].extend(player['currMove']['attacks'])
+            player['currMove'] = {}
+        resp = game.execute(cmd)
         emit("exec_result", {'map': resp}, broadcast=True)
 
-@socketio.on('disconnect')
-def disconnect():
-    emit("client_disconnected", broadcast=True)
+@socketio.on('startingUnit')
+def startingUnit(data):
+    units = []
+    data = json.loads(data)
+    for unit in data['units']:
+        units.append(make_unit(unit['type'], players[request.sid]['id']))
+    print(units)
+    players[request.sid]['units'] = units
+
+    allSelected = True
+
+    player_units = []
+    for player in players.values():
+        if not player['units']:
+            allSelected = False
+            break
+        player_units.append(player['units'])
+
+    if allSelected:
+        player1_units = player_units[0]
+        player2_units = player_units[1]
+        global map
+        map = generate_initial_map(5, 7, player1_units, player2_units)
+        print("INIT MAP")
+        global game
+        game = Game(map['map']['board'])
+
+        emit("game_start", map , broadcast=True)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
