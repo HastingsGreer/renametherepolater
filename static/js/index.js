@@ -1,4 +1,3 @@
-
 function mapSelection() {
 
     var html = '<textarea id="mapSelect" rows="30" cols="50">' + 
@@ -19,19 +18,5 @@ function mapSelection() {
     startScreen.parentNode.removeChild(startScreen)
 
     container.innerHTML = html;
+  
 }
-
-// function characterSelection() {
-
-//     var html = '<textarea id="startUnits" rows="30" cols="50">' + 
-//                '{"units": [{ "type": "flower_girl"}, { "type": "normie"}]}' + 
-//                '</textarea>' + 
-//                '<button id="startingUnits" onclick="startingUnits()"> Starting Units </button>';
-        
-//     var container = document.getElementById("container");
-//     // var yeech = document.getElementById("yeech");
-//     // yeech.parentNode.removeChild(yeech)
-
-//     container.innerHTML = html;
-// }
-

@@ -1,5 +1,40 @@
 import random
 
+def get_unit_by_id(game, id):
+    for row in game._map:
+        for cell in row:
+            unit = cell['unit']
+            if (len(unit) != 0):
+                if(unit['id'] == id):
+                    return unit
+    print("attempted to get a unit that doesn't exist. Error inbound")
+
+def get_position_by_id(game, id):
+    for i, row in enumerate(game._map):
+        for j, cell in enumerate(row):
+            unit = cell['unit']
+            if (len(unit) != 0):
+                if(unit['id'] == id):
+                    return i, j
+    print("attempted to get a unit that doesn't exist. Error inbound")
+
+
+def check_range_legal(x, y, game, id):
+
+    unit_i, unit_j = get_position_by_id(game, id)
+    unit = get_unit_by_id(game, id)
+
+    return max(abs(x - unit_i), abs(y - unit_j)) <= unit["attack_range"]
+
+
+def apply_help(x, y, game, help):
+    if len(game._map[x][y]['unit']) != 0:
+        game._map[x][y]['unit']['happiness'] += help
+
+    if game._map[x][y]['background'] == 'dirt':
+        game._map[x][y]['background'] = 'grass'
+
+
 def rocket_attack(x, y, game, id):
     rocket_damage = 10
     for dx in [-1, 0, 1]:
@@ -18,32 +53,52 @@ def rocket_attack(x, y, game, id):
     game._map[x][y]["background"] = 'tree'
 
 def bench_attack(x, y, game, id):
+    
+    if not(check_range_legal(x, y, game, id)):
+        print("can't yeech a bench")
+        return
+
+    unit = get_unit_by_id(game, id)
+
+    if unit['has_bench'] == 0:
+        print("illegal bench attempted")
+        return
+    unit['has_bench'] = 0
+
     game._map[x][y]["background"] = 'bench'
-    game._map
+    
 
 def therapist_attack(x, y, game, id):
-    pass
+    if not(check_range_legal(x, y, game, id)):
+        print("can't yeech a bench")
+        return
+    apply_help(x, y, game, 100)
 
 def normie_attack(x, y, game, id):
-    pass
+    if not(check_range_legal(x, y, game, id)):
+        print("can't yeech a bench")
+        return
+    apply_help(x, y, game, 30)
 
 ATTACK_LOOKUP = {
     'tree_rocket': rocket_attack,
     'place_bench': bench_attack,
-    'encourage' : normie_attack
+    'encourage' : normie_attack,
+    'discuss_problems': therapist_attack
 }
 
 def flower_dmg(x, y, game):
     unit = game._map[x][y]['unit']
     if len(unit) != 0:
         if unit['type'] != 'flower_girl':
-            unit['happiness'] += 5
+            unit['happiness'] += 15
 
 def bench_dmg(x, y, game):
     unit = game._map[x][y]['unit']
     if len(unit) != 0:
         if unit['type'] != 'bench_boi':
-            unit['happiness'] += 100
+            unit['sitting_on_bench'] = "yes"
+            unit['owner'] = -1
 
 ENVIRONMENT_LOOKUP = {
     'tree' : (lambda x, y, game: None),

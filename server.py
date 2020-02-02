@@ -25,9 +25,9 @@ activeRooms = {}
 roomId = 0
 
 cors = CORS(app, resources={r'/game': {"origins": "http://localhost:5000"}})
-
-map = example_json()
-game = Game(map['board'])
+N = 4000
+maps = [example_json() for _ in range(N)]
+games = [Game(maps[i]['board']) for i in range(N)]
 
 units = {}
 
@@ -51,7 +51,8 @@ def gamePage():
 
 @socketio.on('connect')
 def connect():
-    global map, playerId, roomId, activeRooms
+    global playerId, roomId
+
     if roomId in activeRooms and \
         (len(activeRooms[roomId]['players']) == 0 or len(activeRooms[roomId]['players']) == 2):
         roomId += 1
@@ -64,30 +65,32 @@ def connect():
         'currMove' : {},
         'ready' : False
     }
-    room = players[request.sid]['roomId']
+
+    room = get_room_id(request)
     join_room(room)
-    if roomId in activeRooms:
-        activeRooms[roomId]['players'].append(request.sid)
+    if room in activeRooms:
+        activeRooms[room]['players'].append(request.sid)
     else:
-        activeRooms[roomId] = {'players': [request.sid]}
+        activeRooms[room] = {'players': [request.sid]}
 
     print('Player ' + str(playerId) + ' has entered room ' + str(room))
     playerId += 1
 
     server_logger.log("Client connected")
 
-    emit("connection_received", {'player_id' : players[request.sid]['id']})
+    emit("connection_received", {'player_id' : players[request.sid]['id'], 'room_id' : get_room_id(request)})
 
-    if len(list(players.keys())) == 2:
-        print("game start")
+    if len(activeRooms[room]["players"]) == 2:
+        print("allPlayersConnected")
         emit("allPlayersConnected", broadcast=True, room=room)
 
 @socketio.on('disconnect')
 def disconnect():
-    print('Player ' + str(players[request.sid]['id']) + ' has disconnected from room ' + str(players[request.sid]['roomId']))
-    room = players[request.sid]['roomId']
-    activeRooms[players[request.sid]['roomId']]['players'] = []
-    del players[request.sid]
+    print('Player ' + str(players[request.sid]['id']) + ' has disconnected from room ' + str(get_room_id(request)))
+    room = get_room_id(request)
+
+    activeRooms[get_room_id(request)]['players'] = []
+    
     emit("client_disconnected", broadcast=True, room=room)
 
 # once both players runs execute, we actually execute the command
@@ -99,9 +102,9 @@ def execute(data):
     if players[request.sid]['currMove']:
         print("Player " + str(players[request.sid]['id']) + " has already executed a move")
         return
-    global game
+    
     data = json.loads(data)
-    unit_locs, unit_data = game._gather_unit_information()
+    unit_locs, unit_data = games[get_room_id(request)]._gather_unit_information()
 
     for move in data['moves']:
         if unit_data[move['id']]['owner'] != players[request.sid]['id']:
@@ -110,7 +113,7 @@ def execute(data):
     players[request.sid]['currMove'] = data
 
     allMoved = True
-    for socket in activeRooms[players[request.sid]['roomId']]['players']:
+    for socket in activeRooms[get_room_id(request)]['players']:
         player = players[socket]
         if not player['currMove']:
             allMoved = False
@@ -124,8 +127,11 @@ def execute(data):
                 cmd['moves'].extend(player['currMove']['moves'])
                 cmd['attacks'].extend(player['currMove']['attacks'])
             player['currMove'] = {}
-        resp = game.execute(cmd)
-        emit("exec_result", {'map': resp}, broadcast=True, room=players[request.sid]['roomId'])
+        resp = games[get_room_id(request)].execute(cmd)
+        emit("exec_result", {'map': resp}, broadcast=True, room=get_room_id(request))
+
+def get_room_id(request):
+    return players[request.sid]['roomId']
 
 @socketio.on('startingUnit')
 def startingUnit(data):
@@ -142,26 +148,22 @@ def startingUnit(data):
     players[request.sid]['units'] = units
     players[request.sid]['ready'] = True
 
-    bothReady = True
-
     player_units = []
-    for socket in activeRooms[players[request.sid]['roomId']]['players']:
+    for socket in activeRooms[get_room_id(request)]['players']:
         player = players[socket]
         if not player['ready']:
-            bothReady = False
             return
         player_units.append(player['units'])
 
-    if bothReady:
-        player1_units = player_units[0]
-        player2_units = player_units[1]
-        global map
-        map = generate_initial_map(player1_units, player2_units, mapData)
-        print("INIT MAP")
-        global game
-        game = Game(map['map']['board'])
+    player1_units = player_units[0]
+    player2_units = player_units[1]
 
-        emit("game_start", map , broadcast=True, room=players[request.sid]['roomId'])
+    maps[get_room_id(request)] = generate_initial_map(player1_units, player2_units, mapData)
+    print("INIT MAP")
+
+    games[get_room_id(request)] = Game(maps[get_room_id(request)]['map']['board'])
+
+    emit("game_start", maps[get_room_id(request)] , broadcast=True, room=players[request.sid]['roomId'])
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
