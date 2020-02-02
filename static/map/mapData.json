@@ -678,6 +678,20 @@
                     ] 
                 }
             }
+        },
+
+        "50": { "key": "shadow",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_shadow.png" }
+                    ] 
+                }
+            }
         }
     },
     "groundMap": [
