@@ -109,8 +109,6 @@ ENVIRONMENT_LOOKUP = {
     "dirt": (lambda x, y, game: None)
 }
 
-
-
 id_counter = 0
 def make_unit(type, owner):
     units = {
@@ -119,12 +117,12 @@ def make_unit(type, owner):
        "bench_boi" 		: {"id": -1, 	"type": "bench_boi", 	"happiness":3, "owner":-1, "attack": "place_bench", "has_bench": 1, 	"attack_range":1},
        "therapist" 		: {"id": -1, 	"type": "therapist", 	"happiness":3, "owner":-1, "attack": "discuss_problems", 				"attack_range":1},
        "normie" 		: {"id": -1, 	"type": "normie", 		"happiness":3, "owner":-1, "attack": "encourage", 						"attack_range":1},
-       "doggo" 			: {"id": -1, 	"type": "doggo", 	"happiness":3, "owner":-1, 												"attack_range": -1},
-       "austin" 		: {"id": -1, 	"type": "austin", 	"happiness":3, "owner":-1, 												"attack_range": -1},
-       "cat" 			: {"id": -1, 	"type": "cat", 	"happiness":3, "owner":-1, 												"attack_range": -1},
-       "cynthia" 		: {"id": -1, 	"type": "cynthia", 	"happiness":3, "owner":-1, 												"attack_range": -1},
+       "doggo" 			: {"id": -1, 	"type": "doggo", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
+       "austin" 		: {"id": -1, 	"type": "austin", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
+       "cat" 			: {"id": -1, 	"type": "cat", 	        "happiness":3, "owner":-1, 												"attack_range": -1},
+       "cynthia" 		: {"id": -1, 	"type": "cynthia", 	    "happiness":3, "owner":-1, 												"attack_range": -1},
        "lumberjack" 	: {"id": -1, 	"type": "lumberjack", 	"happiness":3, "owner":-1, 												"attack_range": -1},
-       "pirate" 		: {"id": -1, 	"type": "pirate", 	"happiness":3, "owner":-1, 												"attack_range": -1}
+       "pirate" 		: {"id": -1, 	"type": "pirate", 	    "happiness":3, "owner":-1, 												"attack_range": -1}
     }
 
     res = units[type]
