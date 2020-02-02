@@ -21,5 +21,6 @@ function characterSelection() {
     var yeech = document.getElementById("yeech");
     yeech.parentNode.removeChild(yeech)
     container.innerHTML = html;
-    bgm.Play("sad_song.mp3", 0.5, true);
+    // bgm.Play("sad_song.mp3", 0.5, true);
+    ambience.Play("AmbientSFX_Forest_1.mp3", 0.5, true);
 }

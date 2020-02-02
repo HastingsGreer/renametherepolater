@@ -10,24 +10,33 @@ class SFX {
 	}
 
 	PreloadAllSFX() { 
-		var noVolume = 0.5;
+		var noVolume = 0;
 	
 		//ADD ALL SFX HERE FROM FOLDER!
 		this.Play("SFX_Dodge.wav",noVolume)
-		this.Play("SFX_Drop_Long.wav",noVolume)
-		this.Play("SFX_Drop_Medium.wav",noVolume);
-		this.Play("SFX_Glissando.wav",noVolume);
-		this.Play("SFX_Hit_Long.wav",noVolume);
-		this.Play("SFX_Hit_Short.wav",noVolume);
-		this.Play("SFX_Move_Space.wav",noVolume);
-		this.Play("SFX_MoveSpace.wav",noVolume);
-		this.Play("SFX_Select_Forward.wav",noVolume);
-		this.Play("SFX_Select_Move.wav",noVolume);
-		this.Play("SFX_Thunder_Bomb.wav",noVolume);
-		this.Play("SFX_ThunderBomb.wav",noVolume);
-		this.Play("SFX_Treebuchet_THROW.wav",noVolume);
-		this.Play("SFX_Voices_CatMeow.wav",noVolume);
-		this.Play("SFX_Voices_PirateArg.wav",noVolume);
+		this.Play("SFX_Extras_BigBomb.wav",noVolume)
+		this.Play("SFX_Extras_DropLong.wav",noVolume)
+		this.Play("SFX_Extras_DropMedium.wav",noVolume)
+		this.Play("SFX_Extras_DropShort.wav",noVolume)
+		this.Play("SFX_Extras_TreebuchetThrow.wav",noVolume)
+		this.Play("SFX_Move_Space.wav",noVolume)
+		this.Play("SFX_Select_Forward.wav",noVolume)
+		this.Play("SFX_Select_Move.wav",noVolume)
+		this.Play("SFX_Units_Austin_1.wav",noVolume)
+		this.Play("SFX_Units_BenchBoi_1.wav",noVolume)
+		this.Play("SFX_Units_BlankBenchBoi_1.wav",noVolume)
+		this.Play("SFX_Units_Cat_1.wav",noVolume)
+		this.Play("SFX_Units_Cynthia_1.wav",noVolume)
+		this.Play("SFX_Units_Cynthia_2.wav",noVolume)
+		this.Play("SFX_Units_Doggo_1.wav",noVolume)
+		this.Play("SFX_Units_FlowerGirl_1.wav",noVolume)
+		this.Play("SFX_Units_Lumberjack_1.wav",noVolume)
+		this.Play("SFX_Units_Pirate_1.wav",noVolume)
+		this.Play("SFX_Units_Therapist_1.wav",noVolume)
+		this.Play("SFX_Units_Therapist_2.wav",noVolume)
+		this.Play("SFX_Units_Therapist_3.wav",noVolume)
+		this.Play("SFX_Units_Treebuchet_1.wav",noVolume)
+		this.Play("SFX_Units_Treebuchet_2.wav",noVolume)
 	}
 
 	Play(_fileName,_volume) { 
