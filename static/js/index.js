@@ -19,5 +19,17 @@ function mapSelection() {
     startScreen.parentNode.removeChild(startScreen)
 
     container.innerHTML = html;
-  
+
+    // bgm.Play("sad_song.mp3", 0.5, true);
+    ambience.Play("AmbientSFX_Forest_1.mp3", 0.5, true);
+}
+
+function startTextRed() {
+     var start_text = document.getElementById('start_text');
+     start_text.setAttribute('src', 'static/assets/ggj_start_red.png');
+}
+
+function startTextWhite() {
+     var start_text = document.getElementById('start_text');
+     start_text.setAttribute('src', 'static/assets/ggj_start_white.png');
 }
