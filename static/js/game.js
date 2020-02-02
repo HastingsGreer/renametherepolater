@@ -12,6 +12,13 @@ container.appendChild(pixiRoot.view);
 
 let activeObjects = [];
 
+let actions = {
+    "normie" : "encourage",
+    "bench_boi" : "place_bench",
+    "therapist" : "discuss_problems",
+    "treebuchet" : "tree_rocket"
+}
+
 let serverGameState = undefined;
 
 ////// Here, we create our traviso instance and add on top of pixi
@@ -186,8 +193,9 @@ function onObjectSelect(obj) {
         engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillColor = 8443903;
         engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
     } else if (window.selectMode === MOVE) {
-        window.selectMode = ACTION;
         var currentUnit = engine.getCurrentControllable();
+        if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).type === "flower_girl") window.selectMode = SELECT;
+        else window.selectMode = ACTION;
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", obj.mapPos.r, obj.mapPos.c);
@@ -235,8 +243,9 @@ function onTileSelect(x, y) {
     if (!objFound) {
         if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
             console.log("TILE MOVE");
-            window.selectMode = ACTION;
             var currentUnit = engine.getCurrentControllable();
+            if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).type === "flower_girl") window.selectMode = SELECT;
+            else window.selectMode = ACTION;
             updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
             updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
             // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", currentUnit.mapPos.r, currentUnit.mapPos.c);
@@ -328,7 +337,7 @@ function updateUnitAction(unitX, unitY, actX, actY, instant) {
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
         // console.log(engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor);
-        add_attack(get_unit(unitX, unitY).id, [actX, actY], "tree_rocket");
+        add_attack(get_unit(unitX, unitY).id, [actX, actY], actions[get_unit(unitX, unitY).type]);
     } else {
         unitActions[unitX][unitY].action = {};
     }
