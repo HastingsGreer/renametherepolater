@@ -15,6 +15,8 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static',
             filename='js/socket.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static',
+            filename='js/music.js') }}"></script>
         <!-- <script type="module" src="{{ url_for('static', filename='js/socket.js') }}"></script> -->
         
         <p id="tempMap"></p>
@@ -38,28 +40,17 @@
             <source src="{{ url_for('static', filename='music/sad_song.mp3') }}" type="audio/mpeg">
         </audio>
 
-        <button onclick="playHappy()" type="button">Happy</button>
-        <button onclick="playSad()" type="button">Sad</button>
+        <button onclick="playMusic(happy_music)" type="button">Happy</button>
+        <button onclick="playMusic(sad_music)" type="button">Sad</button>
 
         <script>
         var happy= document.getElementById("happy_music");
-        function playHappy() {
-            if(isPlaying(sad)){
-                sad.pause();
-            }
-            happy.play();
-        }
-
         var sad = document.getElementById("sad_music");
-        function playSad() {
-            if(isPlaying(happy)){
-                happy.pause();
-            }
-            sad.play();
-        }
 
-        function isPlaying(audelem) {
-            return !audelem.paused;
+        function playMusic(music){
+            happy.pause();
+            sad.pause();
+            music.play();
         }
         </script>
     </body>
