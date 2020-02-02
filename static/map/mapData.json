@@ -156,6 +156,374 @@
                     ] 
                 }
             }
+        },
+        "13": { "key": "move_highlight",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_ground_movelight.png" }
+                    ] 
+                }
+            }
+        },
+
+        "14": { "key": "attack_highlight",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_ground_attacklight.png" }
+                    ] 
+                }
+            }
+        },
+
+        "15": { "key": "movearrow_N",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_movearrow_1.png" }
+                    ] 
+                }
+            }
+        },
+
+        "16": { "key": "movearrow_NE",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_movearrow_2.png" }
+                    ] 
+                }
+            }
+        },
+
+        "17": { "key": "movearrow_E",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_movearrow_3.png" }
+                    ] 
+                }
+            }
+        },
+
+        "18": { "key": "movearrow_SE",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_movearrow_4.png" }
+                    ] 
+                }
+            }
+        },
+
+        "19": { "key": "movearrow_S",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_movearrow_5.png" }
+                    ] 
+                }
+            }
+        },
+
+        "20": { "key": "movearrow_SW",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_movearrow_6.png" }
+                    ] 
+                }
+            }
+        },
+
+        "21": { "key": "movearrow_W",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_movearrow_7.png" }
+                    ] 
+                }
+            }
+        },
+
+        "22": { "key": "movearrow_NW",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_movearrow_8.png" }
+                    ] 
+                }
+            }
+        },
+
+        "23": { "key": "moveline_diag_1",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_moveline_diagonal_1.png" }
+                    ] 
+                }
+            }
+        },
+
+
+        "24": { "key": "moveline_diag_2",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_moveline_diagonal_2.png" }
+                    ] 
+                }
+            }
+        },
+
+
+        "25": { "key": "moveline_horiz",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_moveline_horiz.png" }
+                    ] 
+                }
+            }
+        },
+
+
+        "26": { "key": "moveline_vert",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_moveline_vert.png" }
+                    ] 
+                }
+            }
+        },
+        "27": { "key": "attackarrow_N",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackarrow_1.png" }
+                    ] 
+                }
+            }
+        },
+
+        "28": { "key": "attackarrow_NE",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackarrow_2.png" }
+                    ] 
+                }
+            }
+        },
+
+        "29": { "key": "attackarrow_E",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackarrow_3.png" }
+                    ] 
+                }
+            }
+        },
+
+        "30": { "key": "attackarrow_SE",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackarrow_4.png" }
+                    ] 
+                }
+            }
+        },
+
+        "31": { "key": "attackarrow_S",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackarrow_5.png" }
+                    ] 
+                }
+            }
+        },
+
+        "32": { "key": "attackarrow_SW",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackarrow_6.png" }
+                    ] 
+                }
+            }
+        },
+
+        "33": { "key": "attackarrow_W",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackarrow_7.png" }
+                    ] 
+                }
+            }
+        },
+
+        "34": { "key": "attackarrow_NW",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackarrow_8.png" }
+                    ] 
+                }
+            }
+        },
+
+        "35": { "key": "attackline_diag_1",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackline_diagonal_1.png" }
+                    ] 
+                }
+            }
+        },
+
+
+        "36": { "key": "attackline_diag_2",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackline_diagonal_2.png" }
+                    ] 
+                }
+            }
+        },
+
+
+        "37": { "key": "attackline_horiz",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackline_horiz.png" }
+                    ] 
+                }
+            }
+        },
+
+
+        "38": { "key": "attackline_vert",
+            "movable": true,
+            "interactive": false,
+            "rowSpan": 1,
+            "columnSpan": 1,
+            "visuals": {
+                "idle": {
+                    "frames": [
+                        { "path": "/static/assets/ggj_attackline_vert.png" }
+                    ] 
+                }
+            }
         }
     },
     "groundMap": [
