@@ -6,7 +6,8 @@ var jsonMapper = {
     "dirt" : 1,
     "grass" : 2, 
     "tree" : 3, 
-    "flower" : 4
+    "flower" : 4,
+    "bench" : 5
 }
 var maps;
 var socket = io();
@@ -54,14 +55,14 @@ function parseGameData(gameData) {
         for(var j = 0; j < board[1].length; j++) {
             var curr = board[i][j];
             if(j == board[1].length - 1) {
-                groundRow['row'] += jsonMapper[curr["environment"]["background"]];
+                groundRow['row'] += jsonMapper[curr["background"]];
                 if(jsonMapper[curr["unit"].type]) {
                     objectRow['row'] += jsonMapper[curr["unit"].type];
                 } else {
                     objectRow['row'] += "0";
                 }
             } else {
-                groundRow['row'] += jsonMapper[curr["environment"]["background"]] + " ,";
+                groundRow['row'] += jsonMapper[curr["background"]] + " ,";
                 if(jsonMapper[curr["unit"].type]) {
                     objectRow['row'] += jsonMapper[curr["unit"].type] + " ,";
                 } else {

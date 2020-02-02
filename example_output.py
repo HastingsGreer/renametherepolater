@@ -4,8 +4,7 @@ def example_json():
     example_json = {
             "board":[[
                 {
-                "environment": 
-                    {"background":"dirt", "improvements":[]},
+                "background":"dirt",
                 "unit": {}
                 } for i in range(5)] for j in range(7)],
 
@@ -28,7 +27,7 @@ def example_json():
             "happiness":3, "owner":0}
     example_json["board"][3][3]["unit"] = {"id": 1, "type": "flower_girl",
             "happiness":3, "owner":1}
-    example_json["board"][4][4]["environment"]["improvements"].append("flowers")
+    example_json["board"][4][4]["background"] = "flowers"
 
     return example_json
 

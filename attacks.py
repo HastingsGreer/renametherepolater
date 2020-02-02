@@ -15,8 +15,12 @@ def rocket_attack(x, y, game):
                     int(random.normalvariate(rocket_damage, rocket_damage / 5))
             game._map[xhat][yhat]['environment']['background'] = 'grass'
 
+def bench_attack(x, y, game):
+    game._map[x][y]['enhancements'].append('bench')
+
 ATTACK_LOOKUP = {
-    'tree_rocket': rocket_attack
+    'tree_rocket': rocket_attack,
+    'bench_attack': bench_attack
 }
 
 def flower_dmg(x, y, game):
@@ -25,6 +29,14 @@ def flower_dmg(x, y, game):
         if unit['type'] != 'flower_girl':
             unit['happiness'] += 5
 
+def bench_dmg(x, y, game):
+    unit = game._map[x][y]['unit']
+    if len(unit) != 0:
+        if unit['type'] != 'bench_boi':
+            unit['happiness'] += 100
+
 ENVIRONMENT_LOOKUP = {
-    'flowers': flower_dmg
+    'flowers': flower_dmg,
+    "bench": bench_dmg,
+    "dirt": (lambda x, y, game: None)
 }

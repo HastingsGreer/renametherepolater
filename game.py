@@ -53,8 +53,7 @@ class Game(object):
 
         # execute side-effects on board
         if unit_data['type'] == 'flower_girl':
-            self._map[x][y]['environment']['background'] = "grass"
-            self._map[x][y]['environment']['improvements'].append('flowers')
+            self._map[x][y]["background"] = "flowers"
 
     def _execute_moves(self,
             static_units: Set[int],
@@ -177,9 +176,9 @@ class Game(object):
     def _perform_environment_damage(self):
         for x, row in enumerate(self._map):
             for y, cell in enumerate(row):
-                for improvement in self._map[x][y]['environment']['improvements']:
-                    ENVIRONMENT_LOOKUP[improvement]                                     \
-                    (x, y, self)
+                background = self._map[x][y]['background']
+                ENVIRONMENT_LOOKUP[background]                                           \
+                (x, y, self)
 
     def _check_healing(self):
         for x, row in enumerate(self._map):
