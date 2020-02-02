@@ -201,7 +201,7 @@ function deselectUnit() {
 }
 
 function onTileSelect(x, y) {
-    if (selectMode === MOVE) {
+    if (selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
         console.log("MOVE");
         var currentUnit = engine.getCurrentControllable();
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
