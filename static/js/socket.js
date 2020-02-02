@@ -3,6 +3,8 @@ var jsonMapper = {
     "flower_girl" : 1,
     "treebuchet" : 2,
     "therapist" : 3,
+    "bench_boi" : 4,
+    "normie" : 5,
     "dirt" : 1,
     "grass" : 2, 
     "tree" : 3, 
@@ -20,8 +22,8 @@ socket.on("connection_received", function(data) {
     console.log(data);
     window.player_id = data.player_id;
     document.getElementById("implayer").innerText = JSON.stringify([data.player_id])
-    fill_table(data);
-    maps = parseGameData(data);
+    //fill_table(data);
+    //maps = parseGameData(data);
 });
 
 socket.on("exec_result", function(data) {
@@ -35,12 +37,22 @@ socket.on("exec_result", function(data) {
     console.log(maps);
 });
 
+socket.on("game_start", function(data) {
+    console.log("game started");
+    console.log(data);
+    fill_table(data);
+})
+
 function sendAction() {
 	document.getElementById("waitingIndicator").innerHTML = "<b> WAITING_ON_PLAYER_2 </b>";
     var action = document.getElementById("inputAction").value;
     socket.emit('execute', action);
 }
 
+function startingUnits() {
+    var units = document.getElementById('startUnits').value;
+    socket.emit('startingUnit', units);
+}
 
 function parseGameData(gameData) {
     var board = gameData['map']['board']

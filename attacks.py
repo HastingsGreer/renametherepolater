@@ -20,12 +20,16 @@ def rocket_attack(x, y, game):
 def bench_attack(x, y, game):
     game._map[x][y]["background"] = 'bench'
 
-def _attack(x, y, game):
-    game._map[x][y]["background"] = 'bench'
+def therapist_attack(x, y, game):
+    pass
+
+def normie_attack(x, y, game):
+    pass
 
 ATTACK_LOOKUP = {
     'tree_rocket': rocket_attack,
-    'place_bench': bench_attack
+    'place_bench': bench_attack,
+    'encourage' : normie_attack
 }
 
 def flower_dmg(x, y, game):

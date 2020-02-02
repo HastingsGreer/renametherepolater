@@ -31,6 +31,18 @@
 
         
 
+        <br>
+
+        <textarea id="startUnits" rows="30" cols="50">
+{
+    "units": [
+        { "type": "flower_girl"},
+        { "type": "normie"}
+    ]
+}      
+        </textarea>
+        <button onclick="startingUnits()" > Starting Units </button>
+
         <!-- Audio for Happy and Sad Music -->
         <audio controls id="happy_music">
             <source src="{{ url_for('static', filename='music/happy_song.mp3') }}" type="audio/mpeg">
