@@ -56,7 +56,7 @@ def make_unit(type, owner):
     units = {
        "treebuchet" : {"id": -1, "type": "treebuchet", "happiness":3, "owner":-1, "attack": "tree_rocket"},
        "flower_girl" : {"id": -1, "type": "flower_girl", "happiness":3, "owner":-1},
-       "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1, "attack": "place_bench"},
+       "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1, "attack": "place_bench", "has_bench": 1},
        "therapist" : {"id": -1, "type": "therapist", "happiness":3, "owner":-1, "attack": "discuss_problems"},
        "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "encourage"}
     }
