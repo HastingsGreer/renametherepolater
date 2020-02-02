@@ -149,7 +149,9 @@ function onObjectSelect(obj) {
                     updateUnitMove(obj.mapPos.r, obj.mapPos.c, existingAction.move.x, existingAction.move.y, false);
                 }
                 if(Object.entries(existingAction.action).length !== 0 && existingAction.action.constructor === Object) {
-                    updateUnitAction(obj.mapPos.r, obj.mapPos.c, existingAction.action.x, existingAction.action.y, false);
+                    setTimeout(function() {
+                        updateUnitAction(obj.mapPos.r, obj.mapPos.c, existingAction.action.x, existingAction.action.y, false)
+                    }, 500);
                 }
             } else {
                 existingAction = {
