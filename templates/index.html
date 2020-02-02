@@ -8,10 +8,14 @@
     </head>
     <body>
         <h1>ELLO</h1>
+        <div id="pixiContainer"> </div>
         <!-- <canvas width="800" height="600" id="canvas"></canvas> -->
         <script type="text/javascript" src="{{ url_for('static', filename='js/pixi.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/traviso.dev.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/debug_table.js') }}"></script>
+        <script type="text/javascript">
+            var travConfig = {{ trav_config|safe }}
+        </script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static',
             filename='js/socket.js') }}"></script>

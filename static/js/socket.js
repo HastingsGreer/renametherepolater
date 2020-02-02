@@ -1,3 +1,4 @@
+
 var jsonMapper = {
     "placeholder" : 0,
     "flower_girl" : 1,
@@ -22,8 +23,6 @@ socket.on("connection_received", function(data) {
     console.log(data);
     window.player_id = data.player_id;
     document.getElementById("implayer").innerText = JSON.stringify([data.player_id])
-    //fill_table(data);
-    //maps = parseGameData(data);
 });
 
 socket.on("exec_result", function(data) {
@@ -33,6 +32,7 @@ socket.on("exec_result", function(data) {
     console.log("Im in exec_result");
     console.log(data);
     fill_table(data);
+    renderServerReply(data);
     maps = parseGameData(data);
     console.log(maps);
 });
@@ -41,7 +41,9 @@ socket.on("game_start", function(data) {
     console.log("game started");
     console.log(data);
     fill_table(data);
-})
+    renderServerReply(data);
+    //serverGameState = data;
+});
 
 function sendAction() {
 	document.getElementById("waitingIndicator").innerHTML = "<b> WAITING_ON_PLAYER_2 </b>";

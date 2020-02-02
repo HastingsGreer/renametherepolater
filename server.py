@@ -21,7 +21,8 @@ game = Game(map['board'])
 
 @app.route('/')
 def home():
-    return render_template("index.html")
+    trav_config_str = open("./static/map/mapData.json").read()
+    return render_template("index.html", trav_config=trav_config_str)
 
 @socketio.on('connect')
 def join():
@@ -102,7 +103,7 @@ def startingUnit(data):
         player1_units = player_units[0]
         player2_units = player_units[1]
         global map
-        map = generate_initial_map(8, 8, player1_units, player2_units)
+        map = generate_initial_map(5, 7, player1_units, player2_units)
         print("INIT MAP")
         global game
         game = Game(map['map']['board'])
