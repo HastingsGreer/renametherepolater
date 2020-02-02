@@ -48,6 +48,7 @@ var instanceConfig = {
         "/static/assets/ggj_ground_flower.png",
         "/static/assets/ggj_ground_flower_shadow.png",
         "/static/assets/ggj_ground_water.png",
+        "/static/assets/ggj_background_5.png",
         "/static/assets/box.png",
         "/static/assets/btn_zoomIn.png",
         "/static/assets/btn_zoomOut.png",

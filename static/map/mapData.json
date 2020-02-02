@@ -708,6 +708,10 @@
             }
         }
     },
+    "singleGroundImage": {
+        "path": "/static/assets/ggj_background_5.png",
+        "scale": 1.2
+    },
     "groundMap": [
         { "row": "1,1,1,1,1" },
         { "row": "1,1,1,1,1" },
