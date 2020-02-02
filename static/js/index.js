@@ -15,7 +15,7 @@ function mapSelection() {
     '<button id="characterSelection" onclick="goToCharSel()"> Select Characters </button>';
 
     var container = document.getElementById("container");
-    var startScreen = document.getElementById("start_screen");
+    var startScreen = document.getElementById("c3");
     startScreen.parentNode.removeChild(startScreen)
 
     container.innerHTML = html;
