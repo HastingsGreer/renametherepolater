@@ -12,9 +12,11 @@
         <script type="text/javascript">
             var travConfig = {{ trav_config|safe }}
         </script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/audioclasses.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/game.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/socket.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/music.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/audioclasses.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
         <div id="container" style="text-align: center;display: block;">
           <img id="start_screen" src="static/assets/ggj_startscreen.png" alt="Start Screen" style="width:750px;height:750px;" onclick="mapSelection()">

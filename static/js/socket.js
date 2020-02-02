@@ -17,6 +17,10 @@ socket.on('connect', function() {
     socket.emit('join');    
 });
 
+socket.on("client_disconnected", function(){
+	alert("Your opponent disconnected. You win I guess")
+})
+
 socket.on("connection_received", function(data) {
     console.log("Im in connection_received");
     console.log(data);
@@ -26,6 +30,7 @@ socket.on("connection_received", function(data) {
 socket.on("exec_result", function(data) {
 
     document.getElementById("waitingIndicator").innerHTML = "";
+    window.selectMode = -1;
 
     console.log("Im in exec_result");
     console.log(data);
