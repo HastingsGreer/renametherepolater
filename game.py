@@ -114,7 +114,7 @@ class Game(object):
                         stopped_units.add(other_unit_id)
                         del unit_moves[other_unit_id]
                     # delete future moves on this unit
-                    stopped_units.add(other_unit_id)
+                    #stopped_units.add(other_unit_id)
                     del unit_moves[unit_id]
                 else:
                     next_step[new_x][new_y] = unit_id
@@ -122,7 +122,8 @@ class Game(object):
                 # check for conflict (even, aka cross facing each other):
                 for other_id in unit_locs:
                     if unit_locs[other_id][0] == new_x and \
-                        unit_locs[other_id][1] == new_y:
+                        unit_locs[other_id][1] == new_y and \
+                        other_id in unit_moves:
                         # check if they are facing the exact opposite direction
                         if unit_moves[other_id]['dx'] == \
                             -1 * unit_moves[unit_id]['dx'] and \
