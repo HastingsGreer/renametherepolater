@@ -98,7 +98,6 @@ def disconnect():
 def execute(data):
     if not players[request.sid]['units']:
         print("Player " + str(players[request.sid]['id']) + " has not selected any units")
-        return
     if players[request.sid]['currMove']:
         print("Player " + str(players[request.sid]['id']) + " has already executed a move")
         return
@@ -127,8 +126,12 @@ def execute(data):
                 cmd['moves'].extend(player['currMove']['moves'])
                 cmd['attacks'].extend(player['currMove']['attacks'])
             player['currMove'] = {}
-        resp = games[get_room_id(request)].execute(cmd)
+        winner, resp = games[get_room_id(request)].execute(cmd)
         emit("exec_result", {'map': resp}, broadcast=True, room=get_room_id(request))
+        if winner:
+            for sid in players:
+                if players[sid]['id'] == winner:
+                    emit("win", {"winner": sid}, broadcast=True)
 
 def get_room_id(request):
     return players[request.sid]['roomId']

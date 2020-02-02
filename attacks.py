@@ -43,7 +43,7 @@ def rocket_attack(x, y, game, id):
             yhat = y + dy
             if xhat < 0 or xhat >= len(game._map):
                 continue
-            if yhat < 0 or yhat >= len(game._map):
+            if yhat < 0 or yhat >= len(game._map[0]):
                 continue
             if len(game._map[xhat][yhat]['unit']) != 0:
                 game._map[xhat][yhat]['unit']['happiness'] += \

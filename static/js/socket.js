@@ -27,6 +27,13 @@ socket.on("connection_received", function(data) {
     window.player_id = data.player_id;
 });
 
+socket.on("win", function(data) {
+    console.log("=".repeat(100));
+    console.log("WINNNN");
+    console.log(data);
+    console.log("=".repeat(100));
+})
+
 socket.on("exec_result", function(data) {
 
     document.getElementById("waitingIndicator").innerHTML = "";

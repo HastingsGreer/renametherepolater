@@ -205,13 +205,25 @@ class Game(object):
                 ENVIRONMENT_LOOKUP[background]                                          \
                 (x, y, self)
 
+    def _check_win(self):
+        owners = set([])
+        for x, row in enumerate(self._map):
+            for y, cell in enumerate(row):
+                unit = self._map[x][y]['unit']
+                if len(unit) == 0:
+                    continue
+                owners.add(unit['owner'])
+        if len(owners) == 2:
+            return None
+        return list(owners)[0]
+
     def _check_healing(self):
         for x, row in enumerate(self._map):
             for y, cell in enumerate(row):
                 if len(cell['unit']) != 0 and cell['unit']['happiness'] > 100:
                     self._map[x][y]['unit'] = {}
 
-    def execute(self, order66: Dict) -> Dict:
+    def execute(self, order66: Dict):
         print(order66)
         unit_locs, unit_data = self._gather_unit_information()
         # set of units that did not move in the last turn
@@ -238,4 +250,6 @@ class Game(object):
 
         print(json.dumps(rv))
 
-        return rv
+        winner = self._check_win()
+
+        return winner, rv
