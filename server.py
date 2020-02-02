@@ -136,8 +136,6 @@ def startingUnit(data):
     mapData = data['selectedMap']
     mapData = json.loads(mapData)
 
-    # data = json.loads(data)
-
     for unit in unitData['units']:
         units.append(make_unit(unit['type'], players[request.sid]['id']))
     print(units)
