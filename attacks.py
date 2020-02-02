@@ -13,10 +13,11 @@ def rocket_attack(x, y, game):
             if len(game._map[xhat][yhat]['unit']) != 0:
                 game._map[xhat][yhat]['unit']['happiness'] += \
                     int(random.normalvariate(rocket_damage, rocket_damage / 5))
-            game._map[xhat][yhat]['environment']['background'] = 'grass'
+            game._map[xhat][yhat]['background'] = 'grass'
+    game._map[x][y]["background"] = 'tree'
 
 def bench_attack(x, y, game):
-    game._map[x][y]['enhancements'].append('bench')
+    game._map[x][y]["background"] = 'bench'
 
 ATTACK_LOOKUP = {
     'tree_rocket': rocket_attack,
@@ -36,7 +37,17 @@ def bench_dmg(x, y, game):
             unit['happiness'] += 100
 
 ENVIRONMENT_LOOKUP = {
+    'tree' : (lambda x, y, game: None),
     'flowers': flower_dmg,
     "bench": bench_dmg,
     "dirt": (lambda x, y, game: None)
+}
+
+
+units = {
+   "treebuchet" : {"id": -1, "type": "treebuchet", "happiness":3, "owner":-1, "attack": "tree_rocket"},
+   "flower_girl" : {"id": -1, "type": "flower_girl", "happiness":3, "owner":-1},
+   "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1, "attack": "place_bench"},
+   "therapist" : {"id": -1, "type": "therapist", "happiness":3, "owner":-1, "attack": "discuss_problems"},
+   "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "encourage"}
 }
