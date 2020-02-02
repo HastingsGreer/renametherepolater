@@ -2,11 +2,15 @@
     "tiles": {
         "1":  {
             "movable": true,
-            "path": "/static/assets/ground.png"
+            "path": "/static/assets/ggj_ground_dead.png"
         },
         "2":  {
             "movable": true,
-            "path": "/static/assets/grass.png"
+            "path": "/static/assets/ggj_ground_alive.png"
+        },
+        "3":  {
+            "movable": false,
+            "path": "/static/assets/ggj_ground_water.png"
         }
     },
     "objects": {
@@ -26,10 +30,10 @@
     },
     "groundMap": [
         { "row": "2 ,2 ,2 ,2 ,2 " },
-        { "row": "2 ,2 ,1 ,2 ,2 " },
+        { "row": "2 ,2 ,1 ,3 ,2 " },
         { "row": "2 ,2 ,1 ,2 ,2 " },
         { "row": "2 ,1 ,1 ,1 ,2 " },
-        { "row": "2 ,1 ,2 ,1, 2 " }
+        { "row": "2 ,1 ,3 ,1, 2 " }
     ],
     "objectsMap": [
         { "row": "1 ,0 ,1 ,0 ,0 " },
