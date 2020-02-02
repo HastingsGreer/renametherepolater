@@ -1,3 +1,4 @@
+
 var jsonMapper = {
     "placeholder" : 0,
     "flower_girl" : 1,
@@ -31,6 +32,7 @@ socket.on("exec_result", function(data) {
     console.log("Im in exec_result");
     console.log(data);
     fill_table(data);
+    renderServerReply(data);
     maps = parseGameData(data);
     console.log(maps);
 });

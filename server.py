@@ -24,7 +24,8 @@ game = Game(map['board'])
 
 @app.route('/')
 def home():
-    return render_template("index.html")
+    trav_config_str = open("./static/map/mapData.json").read()
+    return render_template("index.html", trav_config=trav_config_str)
 
 @socketio.on('join')
 def join():

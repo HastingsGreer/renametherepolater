@@ -2,7 +2,10 @@
 var pixiRoot = new PIXI.Application(800, 600, { backgroundColor : 0x6BACDE });
 
 // add the renderer view element to the DOM
-document.body.appendChild(pixiRoot.view);
+let container = document.getElementById("pixiContainer");
+container.appendChild(pixiRoot.view);
+
+let activeObjects = [];
 
 ////// Here, we create our traviso instance and add on top of pixi
 
@@ -75,6 +78,10 @@ var unitActions = [
     [{},{},{},{},{}]
 ];
 
+function objIsNotEmpty(obj) {
+    return Object.entries(obj).length !== 0 && obj.constructor === Object
+}
+
 // this method will be called when the engine is ready
 function onEngineInstanceReady()
 {
@@ -144,11 +151,11 @@ function onObjectSelect(obj) {
         if (!currentUnit) {
             engine.setCurrentControllable(obj);
             var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
-            if (Object.entries(existingAction).length !== 0 && existingAction.constructor === Object) {
-                if(Object.entries(existingAction.move).length !== 0 && existingAction.move.constructor === Object) {
+            if (objIsNotEmpty(existingAction)) {
+                if(objIsNotEmpty(existingAction.move)) {
                     updateUnitMove(obj.mapPos.r, obj.mapPos.c, existingAction.move.x, existingAction.move.y, false);
                 }
-                if(Object.entries(existingAction.action).length !== 0 && existingAction.action.constructor === Object) {
+                if(objIsNotEmpty(existingAction.action)) {
                     setTimeout(function() {
                         updateUnitAction(obj.mapPos.r, obj.mapPos.c, existingAction.action.x, existingAction.action.y, false)
                     }, 500);
@@ -190,11 +197,11 @@ function deselectUnit() {
     var currentUnit = engine.getCurrentControllable();
     if(currentUnit) {
         var currentAction = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c];
-        if (Object.entries(currentAction).length !== 0 && currentAction.constructor === Object) {
-            if (Object.entries(currentAction.move).length !== 0 && currentAction.move.constructor === Object) {
+        if (objIsNotEmpty(currentAction)) {
+            if (objIsNotEmpty(currentAction.move)) {
                 engine.getTileAtRowAndColumn(currentAction.move.x, currentAction.move.y).setHighlighted(false, false);
             }
-            if (Object.entries(currentAction.action).length !== 0 && currentAction.action.constructor === Object) {
+            if (objIsNotEmpty(currentAction.action)) {
                 engine.getTileAtRowAndColumn(currentAction.action.x, currentAction.action.y).setHighlighted(false, false);
             }
         }
@@ -252,8 +259,7 @@ function onTileSelect(x, y) {
 
 function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
     var existingAction = unitActions[unitX][unitY];
-    if (existingAction && Object.entries(existingAction).length !== 0 && existingAction.constructor === Object 
-        && Object.entries(existingAction.move).length !== 0 && existingAction.move.constructor === Object 
+    if (objIsNotEmpty(existingAction) && objIsNotEmpty(existingAction.move)
         && (existingAction.move.x != moveX || existingAction.move.y != moveY)) {
         engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).setHighlighted(false, instant);
     }
@@ -276,8 +282,8 @@ function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
 
 function updateUnitAction(unitX, unitY, actX, actY, instant) {
     var existingAction = unitActions[unitX][unitY];
-    if (existingAction && Object.entries(existingAction).length !== 0 && existingAction.constructor === Object 
-        && Object.entries(existingAction.action).length !== 0 && existingAction.action.constructor === Object 
+    if (existingAction && objIsNotEmpty(existingAction)
+        && objIsNotEmpty(existingAction.action)
         && (existingAction.action.x != actX || existingAction.action.y != actY)) {
         engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).setHighlighted(false, instant);
     }
@@ -295,5 +301,57 @@ function updateUnitAction(unitX, unitY, actX, actY, instant) {
         add_attack(get_unit(unitX, unitY).id, [actX, actY], "tree_rocket");
     } else {
         unitActions[unitX][unitY].action = {};
+    }
+}
+
+let improvements = ["tree", "bench"];
+
+function establishReverseUnitToTravObjMapping(travConfig) {
+    let revMapping = {}
+    let objects = travConfig.objects;
+    for (var key in objects) {
+        if (objects.hasOwnProperty(key)) {
+            revMapping[objects[key]["key"]] = parseInt(key, 10);
+        }
+    }
+    return revMapping;
+}
+
+let revMapping = establishReverseUnitToTravObjMapping(travConfig);
+let defaultBackGround = revMapping["grass"];
+
+console.log("Rev mapping");
+console.log(revMapping);
+
+function renderServerReply(data) {
+    // destroy everything
+    activeObjects.forEach((obj) => {
+        engine.removeObjectFromLocation(obj);
+    });
+    activeObjects.length = 0;
+
+    console.log("trying to render to engine");
+    console.log(data);
+    for (var i = 0 ; i < data.map.board.length ; i++) {
+        for (var j = 0 ; j < data.map.board[0].length ; j++) {
+            let cell = data.map.board[i][j];
+            let backgroundObj = revMapping[cell.background];
+            console.log(cell.background);
+            if (improvements.includes(cell.background)) {
+                // this is not actually background
+                activeObjects.push(
+                    engine.createAndAddObjectToLocation(defaultBackGround, 
+                    {'r': i, 'c': j}));
+            }
+            activeObjects.push(engine.createAndAddObjectToLocation(backgroundObj, 
+                {'r': i, 'c': j}));
+
+
+            if (objIsNotEmpty(cell.unit)) {
+                let unitObj = revMapping[cell.unit.type];
+                activeObjects.push(engine.createAndAddObjectToLocation(unitObj,
+                    {'r': i, 'c': j}));
+            }
+        }
     }
 }
