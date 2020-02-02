@@ -1,5 +1,7 @@
 import json
 
+import attacks
+
 def example_json():
     example_json = {
             "board":[[
@@ -23,11 +25,9 @@ def example_json():
             }
     }
 
-    example_json["board"][1][3]["unit"] = {"id": 0, "type": "treebuchet",
-            "happiness":3, "owner":0}
-    example_json["board"][3][3]["unit"] = {"id": 1, "type": "flower_girl",
-            "happiness":3, "owner":1}
-    example_json["board"][4][4]["background"] = "flowers"
+    example_json["board"][1][3]["unit"] = attacks.make_unit("treebuchet", 0)
+    example_json["board"][3][3]["unit"] = attacks.make_unit("flower_girl", 1)
+    example_json["board"][4][4]["background"] = "bench"
 
     return example_json
 

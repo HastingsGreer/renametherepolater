@@ -38,16 +38,29 @@ def bench_dmg(x, y, game):
 
 ENVIRONMENT_LOOKUP = {
     'tree' : (lambda x, y, game: None),
+    'grass' : (lambda x, y, game: None),
     'flowers': flower_dmg,
     "bench": bench_dmg,
     "dirt": (lambda x, y, game: None)
 }
 
 
-units = {
-   "treebuchet" : {"id": -1, "type": "treebuchet", "happiness":3, "owner":-1, "attack": "tree_rocket"},
-   "flower_girl" : {"id": -1, "type": "flower_girl", "happiness":3, "owner":-1},
-   "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1, "attack": "place_bench"},
-   "therapist" : {"id": -1, "type": "therapist", "happiness":3, "owner":-1, "attack": "discuss_problems"},
-   "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "encourage"}
-}
+
+id_counter = 0
+def make_unit(type, owner):
+    units = {
+       "treebuchet" : {"id": -1, "type": "treebuchet", "happiness":3, "owner":-1, "attack": "tree_rocket"},
+       "flower_girl" : {"id": -1, "type": "flower_girl", "happiness":3, "owner":-1},
+       "bench_boi" : {"id": -1, "type": "bench_boi", "happiness":3, "owner":-1, "attack": "place_bench"},
+       "therapist" : {"id": -1, "type": "therapist", "happiness":3, "owner":-1, "attack": "discuss_problems"},
+       "normie" : {"id": -1, "type": "normie", "happiness":3, "owner":-1, "attack": "encourage"}
+    }
+
+    res = units[type]
+    global id_counter
+    res['id'] = id_counter
+    id_counter += 1
+    res["owner"] = owner
+    return res
+
+    
