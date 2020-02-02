@@ -21,8 +21,22 @@ game = Game(map['board'])
 
 @app.route('/')
 def home():
+    return render_template("index.html")
+
+@app.route('/mapSelection')
+def mapSelection():
+    pass
+
+@app.route('/characterSelection')
+def characterSelection():
+    pass
+
+@app.route('/game')
+def gamePage():
     trav_config_str = open("./static/map/mapData.json").read()
-    return render_template("index.html", trav_config=trav_config_str)
+    return render_template("game.html", trav_config=trav_config_str)
+
+
 
 @socketio.on('connect')
 def join():
