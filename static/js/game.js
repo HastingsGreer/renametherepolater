@@ -23,6 +23,8 @@ container.appendChild(pixiRoot.view);
 
 let activeObjects = [];
 
+let healthObjects = [];
+
 let actions = {
     "normie" : "encourage",
     "bench_boi" : "place_bench",
@@ -102,7 +104,11 @@ var instanceConfig = {
         "/static/assets/ggj_attackline_diagonal_1.png",
         "/static/assets/ggj_attackline_diagonal_2.png",
         "/static/assets/ggj_attackline_horiz.png",
-        "/static/assets/ggj_attackline_vert.png"
+        "/static/assets/ggj_attackline_vert.png",
+        "/static/assets/ggj_barofhealth_offset.png",
+        "/static/assets/ggj_healthbar_01.png",
+        "/static/assets/ggj_healthbar_02.png",
+        "/static/assets/ggj_healthbar_03.png"
     ], 
     tileHeight: 33,
     isoAngle: 27.27676,
@@ -287,10 +293,11 @@ let removeOptionHighlightsAndConfirm = (obj, initX, initY, newX, newY,
         engine.createAndAddObjectToLocation( arrowObj, {'r': newX, 'c': newY}));
 }
 
-let highlightAttackTiles = (obj) => {
-    return;
+let resetStateMachine = () => {
+    window.selectMode = SELECT;
+    deselectUnit();
+    engine.setCurrentControllable(null);
 }
-
 
 function onObjectSelect(obj) {
     console.log("Selected obj", obj.type);
@@ -351,8 +358,12 @@ function onObjectSelect(obj) {
         engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
     } else if (window.selectMode === MOVE) {
         var currentUnit = engine.getCurrentControllable();
-        if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).type === "flower_girl") window.selectMode = SELECT;
-        else window.selectMode = ACTION;
+        if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) 
+        {
+            resetStateMachine();
+        } else {
+            window.selectMode = ACTION;
+        }
         updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
         // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", obj.mapPos.r, obj.mapPos.c);
@@ -401,8 +412,11 @@ function onTileSelect(x, y) {
         if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3) {
             console.log("TILE MOVE");
             var currentUnit = engine.getCurrentControllable();
-            if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) window.selectMode = SELECT;
-            else window.selectMode = ACTION;
+            if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) {
+                resetStateMachine();
+            }
+            else 
+                window.selectMode = ACTION;
             removeOptionHighlightsAndConfirm(currentUnit,
                 currentUnit.mapPos.r,
                 currentUnit.mapPos.c,
@@ -537,6 +551,13 @@ function renderServerReply(data) {
     });
     activeObjects.length = 0;
 
+    healthObjects.forEach((obj) => {
+        engine.removeObjectFromLocation(obj);
+    });
+    healthObjects.length = 0;
+
+    toAddHealth = [];
+
     console.log("trying to render to engine");
     console.log(data);
     for (var i = 0 ; i < data.map.board.length ; i++) {
@@ -560,9 +581,24 @@ function renderServerReply(data) {
                 console.log(unitObj);
                 activeObjects.push(engine.createAndAddObjectToLocation(unitObj,
                     {'r': i, 'c': j}));
+                toAddHealth.push({
+                    'r': i,
+                    'c': j,
+                    "happiness": cell.unit.happiness
+                });
             }
         }
     }
+
+    toAddHealth.forEach((unit) => {
+        healthObjects.push(engine.createAndAddObjectToLocation(revMapping["empty_healthbar"],
+            {'r': unit.r, 'c': unit.c}));
+        for(var k = 0; k < unit.happiness; k++) {
+            healthObjects.push(engine.createAndAddObjectToLocation(revMapping["health_segment_01"] + k,
+            {'r': unit.r, 'c': unit.c}));
+        }
+    });
+
     engine.objectSelectCallback = onObjectSelect;
     window.selectMode = SELECT;
 }

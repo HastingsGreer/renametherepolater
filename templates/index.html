@@ -2,14 +2,10 @@
     <head>
         <style>
             #container{
-                text-align: center;
-                display: block;
+                position: absolute;
+                left: 25%;
                 width:750px;
                 height:750px;
-/*                width:500px;
-                height:500px;
-                position:relative;*/
-
             }
 
             #start_screen{
@@ -48,14 +44,15 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/audioclasses.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
 
-
-        <div id="container">
+        <div id="big">
+        <div id="container" onmouseover="startTextRed()" onmouseout="startTextWhite()" onclick="mapSelection()">
           <div id="c3">
-            <img id="start_text" src="static/assets/ggj_start_white.png" onmouseover="startTextRed()" onmouseout="startTextWhite()" onclick="mapSelection()">
+            <img id="start_text" src="static/assets/ggj_start_white.png">
           </div>  
           <div id="c2">
             <img id="start_screen" src="static/assets/ggj_startscreen.png" alt="Start Screen" >
           </div>
+        </div>
         </div>
     </body>
 </html>
