@@ -27,7 +27,7 @@ function fill_table(some_json) {
             //Make text node the contents of <td> element
             // put <td> at end of the table row
             var cell = document.createElement("td");    
-            var cellText = document.createTextNode(JSON.stringify(some_json.map.board[i][j])); 
+            var cellText = document.createTextNode(JSON.stringify(some_json.map.board[i][j]).replace(/,/g, " ")); 
 
             cell.appendChild(cellText);
             if(Object.keys(get_unit(i, j)).length != 0){
