@@ -10,7 +10,7 @@ class SFX {
 	}
 
 	PreloadAllSFX() { 
-		var noVolume = 1;
+		var noVolume = 0;
 
 		console.log("music")
 	

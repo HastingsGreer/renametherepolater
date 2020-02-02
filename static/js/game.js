@@ -320,6 +320,8 @@ function onObjectSelect(obj) {
         selectMode = MOVE;
 
         if (!currentUnit) {
+
+
             engine.setCurrentControllable(obj);
             var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
             if (objIsNotEmpty(existingAction)) {
@@ -512,6 +514,12 @@ function updateUnitMove(unitX, unitY, moveX, moveY, instant) {
 }
 
 function updateUnitAction(unitX, unitY, actX, actY, instant) {
+
+    //sound effects block
+    sfx.Play(unit_attack_sound[get_unit(unitX, unitY).type], 1);
+
+    //
+
     var existingAction = unitActions[unitX][unitY];
     if (existingAction && objIsNotEmpty(existingAction)
         && objIsNotEmpty(existingAction.action)
