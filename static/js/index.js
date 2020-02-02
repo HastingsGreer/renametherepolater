@@ -25,34 +25,3 @@ function characterSelection() {
     container.innerHTML = html;
 }
 
-// function startingUnits() {
-//     var units = JSON.parse(document.getElementById('startUnits').value);
-//     // console.log(units);
-//     // var strJSON = JSON.stringify(units);
-//     // console.log(strJSON);
-
-//     // fetch('/loadUnits', {
-//     //     method: 'POST',
-//     //     mode: 'cors',
-//     //     cache: 'no-cache',
-//     //     credentials: 'same-origin',
-//     //     dataType: 'json',
-//     //     headers: {
-//     //       'Content-Type': 'application/json'
-//     //     },
-//     //     body: JSON.stringify(strJSON)
-//     //   }).then(function(response) {
-//     //     if (response.status !== 200) {
-//     //         console.log(`Looks like there was a problem. Status code: ${response.status}`);
-//     //         return;
-//     //     }
-//     //     response.json().then(function(data) {
-//     //         console.log(data);
-//     //     });
-//     // }).catch(function(error) {
-//     //     console.log("Fetch error: " + error);
-//     // });
-// }    
-
-
-
