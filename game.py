@@ -225,6 +225,8 @@ class Game(object):
                 if len(unit) == 0:
                     continue
                 owners.add(unit['owner'])
+        if -1 in owners:
+            owners.remove(-1)
         if len(owners) == 2:
             return None
         return list(owners)[0]
