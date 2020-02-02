@@ -170,11 +170,15 @@ clear_actions = function() {
 }
 
 add_move = function(id, start, end) {
+    window.action_ready_json.moves = window.action_ready_json.moves.filter(obj => {
+        obj.id !== id });
     window.action_ready_json.moves.push(
         {id: id, start:start, end:end});
     actions_changed();
 }
 add_attack = function(id, target, type) {
+    window.action_ready_json.attacks = window.action_ready_json.attacks.filter(obj => {
+        obj.id !== id });
     window.action_ready_json.attacks.push(
         {id: id, target, type});
     actions_changed();
