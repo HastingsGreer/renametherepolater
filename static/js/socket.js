@@ -17,6 +17,10 @@ socket.on('connect', function() {
     socket.emit('join');    
 });
 
+socket.on("client_disconnected", function(){
+	alert("Your opponent disconnected. You win I guess")
+})
+
 socket.on("connection_received", function(data) {
     console.log("Im in connection_received");
     console.log(data);
