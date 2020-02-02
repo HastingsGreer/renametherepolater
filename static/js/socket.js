@@ -1,5 +1,3 @@
-console.log("units");
-//console.log(window.MyLib.units);
 var jsonMapper = {
     "placeholder" : 0,
     "flower_girl" : 1,
