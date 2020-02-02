@@ -11,7 +11,9 @@ function mapSelection() {
 
 function characterSelection() {
     var html = '<textarea id="startUnits" rows="30" cols="50">' + 
-               '{"units": [{ "type": "flower_girl"}, { "type": "normie"}]}' + 
+               '{"units": [{ "type": "flower_girl"}, { "type": "normie"}' + 
+               ',{ "type": "bench_boi"} ' + 
+               ',{ "type": "therapist"}, { "type": "treebuchet"}]}' + 
                '</textarea>' + 
                '<button id="startingUnits" onclick="startingUnits()"> Starting Units </button>';
         

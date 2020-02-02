@@ -31,6 +31,9 @@ def apply_help(x, y, game, help):
     if len(game._map[x][y]['unit']) != 0:
         game._map[x][y]['unit']['happiness'] += help
 
+    if game._map[x][y]['background'] == 'dirt':
+        game._map[x][y]['background'] = 'grass'
+
 
 def rocket_attack(x, y, game, id):
     rocket_damage = 10
@@ -61,7 +64,6 @@ def bench_attack(x, y, game, id):
         print("illegal bench attempted")
         return
     unit['has_bench'] = 0
-    apply_help(x, y, game, 100)
 
     game._map[x][y]["background"] = 'bench'
     
@@ -95,7 +97,8 @@ def bench_dmg(x, y, game):
     unit = game._map[x][y]['unit']
     if len(unit) != 0:
         if unit['type'] != 'bench_boi':
-            unit['happiness'] += 100
+            unit['sitting_on_bench'] = "yes"
+            unit['owner'] = -1
 
 ENVIRONMENT_LOOKUP = {
     'tree' : (lambda x, y, game: None),
