@@ -1,16 +1,16 @@
-var SFXPath = "/static/sfx/";
-var BGMPath = "/static/music/";
+var SFXPath = "static/sfx/";
+var BGMPath = "static/music/";
 
 class SFX { 
 	
 	constructor(Audio) { this.Audio = Audio; }
 
 	Initialize() { 
-		this.PreloadAllSFX();
+		PreloadAllSFX();
 	}
 
 	PreloadAllSFX() { 
-		var noVolume = 0.5;
+		var noVolume = 0;
 	
 		//ADD ALL SFX HERE FROM FOLDER!
 		this.Play("SFX_Dodge.wav",noVolume)
