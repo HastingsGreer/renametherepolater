@@ -4,13 +4,18 @@ from game import Game
 from attacks import make_unit
 from map import generate_initial_map
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify, make_response
 from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_cors import CORS, cross_origin
 
 import json
+import os
+
+ASSETS_FOLDER = os.path.join('static', 'assets')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
+app.config['ASSETS_FOLDER'] = ASSETS_FOLDER
 socketio = SocketIO(app)
 server_logger = Logger("server.log", "")
 
@@ -19,26 +24,29 @@ playerId = 0
 activeRooms = {}
 roomId = 0
 
+cors = CORS(app, resources={r'/game': {"origins": "http://localhost:5000"}})
+
 map = example_json()
 game = Game(map['board'])
 
+units = {}
+
 @app.route('/')
 def home():
-    return render_template("index.html")
-
-@app.route('/mapSelection')
-def mapSelection():
-    pass
-
-@app.route('/characterSelection')
-def characterSelection():
-    pass
-
-@app.route('/game')
-def gamePage():
     trav_config_str = open("./static/map/mapData.json").read()
-    return render_template("game.html", trav_config=trav_config_str)
+    return render_template("index.html", trav_config=trav_config_str)
 
+# @app.route('/loadUnits', methods=['POST'])
+# @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
+# def loadUnits():
+#     units = request.get_json(force=True)
+#     res = make_response(jsonify({"message": "OK"}), 200)
+#     return res
+
+@app.route('/game', methods=['GET'])
+@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
+def gamePage():
+    return render_template("game.html")
 
 
 @socketio.on('connect')
@@ -53,7 +61,8 @@ def connect():
         'socketId' : request.sid,
         'roomId': roomId,
         'units' : [],
-        'currMove' : {}
+        'currMove' : {},
+        'ready' : False
     }
     room = players[request.sid]['roomId']
     join_room(room)
@@ -126,18 +135,19 @@ def startingUnit(data):
         units.append(make_unit(unit['type'], players[request.sid]['id']))
     print(units)
     players[request.sid]['units'] = units
+    players[request.sid]['ready'] = True
 
-    allSelected = True
+    bothReady = True
 
     player_units = []
     for socket in activeRooms[players[request.sid]['roomId']]['players']:
         player = players[socket]
-        if not player['units']:
-            allSelected = False
-            break
+        if not player['ready']:
+            bothReady = False
+            return
         player_units.append(player['units'])
 
-    if allSelected:
+    if bothReady:
         player1_units = player_units[0]
         player2_units = player_units[1]
         global map

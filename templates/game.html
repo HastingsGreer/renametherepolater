@@ -1,149 +1,109 @@
+<!-- <canvas width="800" height="600" id="canvas"></canvas> -->
+<!-- <script type="module" src="{{ url_for('static', filename='js/socket.js') }}"></script> -->
+<p id="tempMap"></p>
+<div> My Gamer ID is <div id=implayer></div></div>
+<p id="waitingIndicator"></p>
+<button onclick="clear_actions();" > clear actions </button>
+<button onclick="sendAction(); clear_actions();" > Execute </button>
+<br/>
+<textarea id="inputAction" rows="15" cols="50">
 
+</textarea>
 
-<html>
-    <head>
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <meta charset="UTF-8">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
-    </head>
-    <body>
-        <h1>ELLO</h1>
-         <div id="pixiContainer"> </div>
-        <!-- <canvas width="800" height="600" id="canvas"></canvas> -->
-        <script type="text/javascript" src="{{ url_for('static', filename='js/pixi.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/traviso.dev.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/debug_table.js') }}"></script>
-        <script type="text/javascript">
-            var travConfig = {{ trav_config|safe }}
-        </script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static',
-            filename='js/socket.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static',
-            filename='js/music.js') }}"></script>
-        <!-- <script type="module" src="{{ url_for('static', filename='js/socket.js') }}"></script> -->
-        
-        <p id="tempMap"></p>
-        <div> My Gamer ID is <div id=implayer></div></div>
-        <p id="waitingIndicator"></p>
-        <button onclick="clear_actions();" > clear actions </button>
-        <button onclick="sendAction(); clear_actions();" > Execute </button>
-        <br/>
-        <textarea id="inputAction" rows="15" cols="50">
+<!-- Audio for Happy and Sad Music -->
+<audio controls id="happy_music" hidden>
+    <source src="{{ url_for('static', filename='music/happy_song.mp3') }}" type="audio/mpeg">
+</audio>
 
-        </textarea>
+<audio controls="none" id="sad_music" hidden>
+    <source src="{{ url_for('static', filename='music/sad_song.mp3') }}" type="audio/mpeg">
+</audio>
 
-        
+<!-- SFX for actions and selections -->
+<audio controls id="sfx_dodge" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Dodge.wav') }}" type="audio/wav">
+</audio>
 
-        <br>
+<audio controls id="sfx_drop_long" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Drop_Long.wav') }}" type="audio/wav">
+</audio>
 
-        <textarea id="startUnits" rows="30" cols="50">
-{
-    "units": [
-        { "type": "flower_girl"},
-        { "type": "normie"}
-    ]
-}      
-        </textarea>
-        <button onclick="startingUnits()" > Starting Units </button>
+<audio controls id="sfx_drop_medium" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Drop_Medium.wav') }}" type="audio/wav">
+</audio>
 
-        <!-- Audio for Happy and Sad Music -->
-        <audio controls id="happy_music" hidden>
-            <source src="{{ url_for('static', filename='music/happy_song.mp3') }}" type="audio/mpeg">
-        </audio>
+<audio controls id="sfx_drop_short" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Drop_Short.wav') }}" type="audio/wav">
+</audio>
 
-        <audio controls="none" id="sad_music" hidden>
-            <source src="{{ url_for('static', filename='music/sad_song.mp3') }}" type="audio/mpeg">
-        </audio>
+<audio controls id="sfx_glissando" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Glissando.wav') }}" type="audio/wav">
+</audio>
 
-        <!-- SFX for actions and selections -->
-        <audio controls id="sfx_dodge" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Dodge.wav') }}" type="audio/wav">
-        </audio>
+<audio controls id="sfx_hit_long" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Hit_Long.wav') }}" type="audio/wav">
+</audio>
 
-        <audio controls id="sfx_drop_long" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Drop_Long.wav') }}" type="audio/wav">
-        </audio>
+<audio controls id="sfx_hit_short" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Hit_Long.wav') }}" type="audio/wav">
+</audio>
 
-        <audio controls id="sfx_drop_medium" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Drop_Medium.wav') }}" type="audio/wav">
-        </audio>
+<audio controls id="sfx_move_space" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Move_Space.wav') }}" type="audio/wav">
+</audio>
 
-        <audio controls id="sfx_drop_short" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Drop_Short.wav') }}" type="audio/wav">
-        </audio>
+<audio controls id="sfx_select_forward" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Select_Forward.wav') }}" type="audio/wav">
+</audio> 
 
-        <audio controls id="sfx_glissando" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Glissando.wav') }}" type="audio/wav">
-        </audio>
+<audio controls id="sfx_select_move" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Select_Move.wav') }}" type="audio/wav">
+</audio> 
 
-        <audio controls id="sfx_hit_long" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Hit_Long.wav') }}" type="audio/wav">
-        </audio>
+<audio controls id="sfx_thunder_bomb" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Thunder_Bomb.wav') }}" type="audio/wav">
+</audio> 
 
-        <audio controls id="sfx_hit_short" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Hit_Long.wav') }}" type="audio/wav">
-        </audio>
+<!--         <audio controls id="sfx_treebuchet_throw" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Treebuchet_Throw.wav') }}" type="audio/wav">
+</audio> -->
+<audio controls id="sfx_voices_catmeow" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Voices_CatMeow.wav') }}" type="audio/wav">
+</audio> 
+<audio controls id="sfx_voices_piratearg" hidden>
+    <source src="{{ url_for('static', filename='sfx/SFX_Voices_PirateArg.wav') }}" type="audio/wav">
+</audio> 
+<script>
+var happy= document.getElementById("happy_music");
+var sad = document.getElementById("sad_music");
 
-        <audio controls id="sfx_move_space" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Move_Space.wav') }}" type="audio/wav">
-        </audio>
+function isPlaying(audelem) {
+    return !audelem.paused;
+}
 
-        <audio controls id="sfx_select_forward" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Select_Forward.wav') }}" type="audio/wav">
-        </audio> 
+function playMusic(music){
+    if(isPlaying(!happy)){
+        happy.pause();
+        sad.pause();                
+    }
+    music.play();
+}
+</script>
 
-        <audio controls id="sfx_select_move" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Select_Move.wav') }}" type="audio/wav">
-        </audio> 
+<button onclick="playMusic(happy_music)" type="button">Happy</button>
+<button onclick="playMusic(sad_music)" type="button">Sad</button>
 
-        <audio controls id="sfx_thunder_bomb" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Thunder_Bomb.wav') }}" type="audio/wav">
-        </audio> 
-
-        <audio controls id="sfx_treebuchet_throw" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Treebuchet_Throw.wav') }}" type="audio/wav">
-        </audio>
-        <audio controls id="sfx_voices_catmeow" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Voices_CatMeow.wav') }}" type="audio/wav">
-        </audio> 
-        <audio controls id="sfx_voices_piratearg" hidden>
-            <source src="{{ url_for('static', filename='sfx/SFX_Voices_PirateArg.wav') }}" type="audio/wav">
-        </audio> 
-        <script>
-        var happy= document.getElementById("happy_music");
-        var sad = document.getElementById("sad_music");
-        
-        function isPlaying(audelem) {
-            return !audelem.paused;
-        }
-
-        function playMusic(music){
-            if(isPlaying(!happy)){
-                happy.pause();
-                sad.pause();                
-            }
-            music.play();
-        }
-        </script>
-
-        <button onclick="playMusic(happy_music)" type="button">Happy</button>
-        <button onclick="playMusic(sad_music)" type="button">Sad</button>
-
-        <button onclick="playMusic(sfx_dodge)" type="button">Dodge</button>
-        <button onclick="playMusic(sfx_drop_long)" type="button">Drop (Long)</button>
-        <button onclick="playMusic(sfx_drop_medium)" type="button">Drop (Medium)</button>
-        <button onclick="playMusic(sfx_drop_short)" type="button">Drop (Short)</button>
-        <button onclick="playMusic(sfx_glissando)" type="button">Glissando</button>
-        <button onclick="playMusic(sfx_hit_long)" type="button">Hit (Long)</button>
-        <button onclick="playMusic(sfx_hit_short)" type="button">Hit (Short)</button>
-        <button onclick="playMusic(sfx_move_space)" type="button">Move Space</button>
-        <button onclick="playMusic(sfx_select_forward)" type="button">Select Forward</button>
-        <button onclick="playMusic(sfx_select_move)" type="button">Select Move</button>
-        <button onclick="playMusic(sfx_thunder_bomb)" type="button">Thunder Bomb</button>
-        <button onclick="playMusic(sfx_treebuchet_throw)" type="button">Treebuchet Throw</button>
-        <button onclick="playMusic(sfx_voices_catmeow)" type="button">Cat Meow</button>  
-        <button onclick="playMusic(sfx_voices_piratearg)" type="button">Pirate Arg</button>         
-    </body>
-
-</html>
+<button onclick="playMusic(sfx_dodge)" type="button">Dodge</button>
+<button onclick="playMusic(sfx_drop_long)" type="button">Drop (Long)</button>
+<button onclick="playMusic(sfx_drop_medium)" type="button">Drop (Medium)</button>
+<button onclick="playMusic(sfx_drop_short)" type="button">Drop (Short)</button>
+<button onclick="playMusic(sfx_glissando)" type="button">Glissando</button>
+<button onclick="playMusic(sfx_hit_long)" type="button">Hit (Long)</button>
+<button onclick="playMusic(sfx_hit_short)" type="button">Hit (Short)</button>
+<button onclick="playMusic(sfx_move_space)" type="button">Move Space</button>
+<button onclick="playMusic(sfx_select_forward)" type="button">Select Forward</button>
+<button onclick="playMusic(sfx_select_move)" type="button">Select Move</button>
+<button onclick="playMusic(sfx_thunder_bomb)" type="button">Thunder Bomb</button>
+<button onclick="playMusic(sfx_treebuchet_throw)" type="button">Treebuchet Throw</button>
+<button onclick="playMusic(sfx_voices_catmeow)" type="button">Cat Meow</button>  
+<button onclick="playMusic(sfx_voices_piratearg)" type="button">Pirate Arg</button>         
