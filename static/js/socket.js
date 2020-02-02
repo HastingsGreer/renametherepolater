@@ -86,7 +86,7 @@ function goToCharSel() {
     ',{ "type": "bench_boi"} ' + 
     ',{ "type": "therapist"}, { "type": "treebuchet"}]}' + 
     '</textarea>' + 
-    '<br/>' + 
+    '<br>' + 
     '<button id="startingUnits" onclick="startingUnits()"> Starting Units </button>';
 
     var container = document.getElementById("container");
