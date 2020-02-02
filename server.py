@@ -61,7 +61,7 @@ def connect():
 
 @socketio.on('disconnect')
 def disconnect():
-    print('Player disconnected yeet')
+    print('Player ' + str(players[request.sid]['id']) + ' has disconnected from room ' + str(players[request.sid]['roomId']))
     room = players[request.sid]['roomId']
     activeRooms[players[request.sid]['roomId']]['players'] = []
     del players[request.sid]
