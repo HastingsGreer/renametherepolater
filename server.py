@@ -129,9 +129,7 @@ def execute(data):
         winner, resp = games[get_room_id(request)].execute(cmd)
         emit("exec_result", {'map': resp}, broadcast=True, room=get_room_id(request))
         if winner:
-            for sid in players:
-                if players[sid]['id'] == winner:
-                    emit("win", {"winner": sid}, broadcast=True)
+            emit("win", {"winner": winner}, broadcast=True)
 
 def get_room_id(request):
     return players[request.sid]['roomId']

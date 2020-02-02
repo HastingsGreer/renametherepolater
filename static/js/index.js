@@ -15,7 +15,7 @@ function mapSelection() {
     '<button id="characterSelection" onclick="goToCharSel()"> Select Characters </button>';
 
     var container = document.getElementById("container");
-    var startScreen = document.getElementById("c3");
+    var startScreen = document.getElementById("fauxContainer");
     startScreen.parentNode.removeChild(startScreen)
 
     container.innerHTML = html;
@@ -32,4 +32,21 @@ function startTextRed() {
 function startTextWhite() {
      var start_text = document.getElementById('start_text');
      start_text.setAttribute('src', 'static/assets/ggj_start_white.png');
+}
+
+
+var count = 1;
+function endScreen() {
+    var intervalID = window.setInterval(flash, 500);
+
+}
+
+function flash() {
+    var winText = document.getElementById("winText");
+    if (count == 1){
+        winText.setAttribute("src", "static/assets/ggj_wintext_white.png");
+    } else {
+        winText.setAttribute("src", "static/assets/ggj_wintext_green.png");
+    }
+    count++;
 }

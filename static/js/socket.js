@@ -27,13 +27,6 @@ socket.on("connection_received", function(data) {
     window.player_id = data.player_id;
 });
 
-socket.on("win", function(data) {
-    console.log("=".repeat(100));
-    console.log("WINNNN");
-    console.log(data);
-    console.log("=".repeat(100));
-})
-
 socket.on("exec_result", function(data) {
 
     document.getElementById("waitingIndicator").innerHTML = "";
@@ -43,8 +36,6 @@ socket.on("exec_result", function(data) {
     console.log(data);
     fill_table(data);
     renderServerReply(data);
-    // maps = parseGameData(data);
-    // console.log(maps);
 });
 
 socket.on("game_start", async function(data) {
@@ -71,6 +62,47 @@ socket.on("game_start", async function(data) {
     fill_table(data);
     renderServerReply(data);
     //serverGameState = data;
+});
+
+socket.on("win", function(data) {
+    console.log(window.player_id);
+    console.log(data['winner']);
+    if(window.player_id != data['winner']){
+        return
+    }
+    var container = document.getElementById("container");
+    var p = document.getElementById("pixiContainer");
+
+    container.innerHTML = "";
+    p.parentNode.removeChild(p);
+
+    var big = document.createElement("div");
+    big.appendChild(container);
+    container.style.position = "absolute";
+    container.style.left = "25%";
+    container.style.width = "750px";
+    container.style.height = "750px";
+    var c3 = document.createElement("c3");
+    c3.style.position = "absolute";
+    c3.style.top = "375px";
+    c3.style.left = "320px";
+    container.appendChild(c3);
+    var win_text = document.createElement("img");
+    win_text.style.width = "111px";
+    win_text.style.height = "21px";
+    win_text.setAttribute("src", "static/assets/ggj_wintext_white.png");
+    win_text.setAttribute("id", "winText");
+    c3.appendChild(win_text);
+    var c2 = document.createElement("div");
+    container.appendChild(c2);
+    var win_screen = document.createElement("img");
+    win_screen.style.width = "100%";
+    win_screen.style.height = "100%";
+    win_screen.setAttribute("src", "static/assets/ggj_winscreen.png");
+    c2.appendChild(win_screen);
+    document.body.appendChild(big);
+
+    endScreen();
 });
 
 function sendAction() {
@@ -113,40 +145,6 @@ function goToCharSel() {
     ambience.Play("AmbientSFX_Forest_1.mp3", 0.5, true);
 }
 
-// function parseGameData(gameData) {
-//     var board = gameData['map']['board']
-//     var map = {}
-//     map["groundMap"] = []
-//     map["objectsMap"] = []
-//     for(var i = 0; i < board.length; i++) {
-//         var groundRow = {};
-//         var objectRow = {};
-//         groundRow['row'] = "";
-//         objectRow['row'] = "";
-//         for(var j = 0; j < board[1].length; j++) {
-//             var curr = board[i][j];
-//             if(j == board[1].length - 1) {
-//                 groundRow['row'] += jsonMapper[curr["background"]];
-//                 if(jsonMapper[curr["unit"].type]) {
-//                     objectRow['row'] += jsonMapper[curr["unit"].type];
-//                 } else {
-//                     objectRow['row'] += "0";
-//                 }
-//             } else {
-//                 groundRow['row'] += jsonMapper[curr["background"]] + " ,";
-//                 if(jsonMapper[curr["unit"].type]) {
-//                     objectRow['row'] += jsonMapper[curr["unit"].type] + " ,";
-//                 } else {
-//                     objectRow['row'] += "0 ,";
-//                 }
-                
-//             }
-//         }
-//         map["groundMap"].push(groundRow);
-//         map["objectsMap"].push(objectRow);
-//     }
-//     return map;
-// } 
 
 
 window.onbeforeunload = function(e) {

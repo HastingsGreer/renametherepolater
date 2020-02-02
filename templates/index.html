@@ -43,13 +43,15 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
 
         <div id="big">
-        <div id="container" onmouseover="startTextRed()" onmouseout="startTextWhite()" onclick="mapSelection()">
+        <div id="container">
+        <div id="fauxContainer" onmouseover="startTextRed()" onmouseout="startTextWhite()" onclick="mapSelection()">
           <div id="c3">
             <img id="start_text" src="static/assets/ggj_start_white.png">
           </div>  
-          <div id="c2">
+          <div id="c2" >
             <img id="start_screen" src="static/assets/ggj_startscreen.png" alt="Start Screen" >
           </div>
+        </div>
         </div>
         </div>
     </body>
