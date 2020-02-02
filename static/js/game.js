@@ -600,7 +600,7 @@ function renderServerReply(data) {
     toAddHealth.forEach((unit) => {
         healthObjects.push(engine.createAndAddObjectToLocation(revMapping["empty_healthbar"],
             {'r': unit.r, 'c': unit.c}));
-        for(var k = 0; k < unit.happiness; k++) {
+        for(var k = 0; k < unit.happiness / 10; k++) {
             healthObjects.push(engine.createAndAddObjectToLocation(revMapping["health_segment_01"] + k,
             {'r': unit.r, 'c': unit.c}));
         }
