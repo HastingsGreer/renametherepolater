@@ -31,10 +31,13 @@ let actions = {
     "therapist" : "discuss_problems",
     "treebuchet" : "tree_rocket"
 }
+let immovableTiles = ["tree", "water"];
 let optionHighlightObjs = [];
 let confirmedMovesObjs = {};
 
 let serverGameState = undefined;
+
+let selectedUnit = undefined;
 
 ////// Here, we create our traviso instance and add on top of pixi
 
@@ -124,11 +127,13 @@ var instanceConfig = {
     isoAngle: 27.27676,
     maxScale : 4,
     engineInstanceReadyCallback : onEngineInstanceReady,
-    objectSelectCallback: onObjectSelect,
+    objectSelectCallback: dummyfunction,
     tileSelectCallback : onTileSelect,
     dontAutoMoveToTile : true,
     highlightTargetTile : false,
 };
+
+var dummyfunction = (obj) => {return;};
 
 var engine = TRAVISO.getEngineInstance(instanceConfig);
 
@@ -219,7 +224,6 @@ let highlightMovementTiles = (unit_x, unit_y, center_x, center_y, steps, isAttac
             confirmedMovesObjs[unit.id].length = 0;
         }
     }
-    console.log("Higlihging");
     let prefix = isAttacking ? "attack" : "move"
 
     let movementHighlight = revMapping[prefix + "_highlight"];
@@ -231,17 +235,45 @@ let highlightMovementTiles = (unit_x, unit_y, center_x, center_y, steps, isAttac
                 engine.createAndAddObjectToLocation(movementHighlight, {'r':
                     center_x + step * dx, 'c': center_y + step * dy}))
         }
-
     }
 
+    let canMoveOnto = (step, dx, dy) => {
+        if (isAttacking) {
+            return true;
+        }
+        let targetX = center_x + step * dx;
+        let targetY = center_y + step * dy;
+
+        if (!(center_x + step * dx >= 0 && center_x + step * dx < boardXMax &&
+            center_y + step * dy >= 0 && center_y + step * dy < boardYMax)) {
+            return false;
+        }
+
+        if (immovableTiles.includes(
+            serverGameState.map.board[targetX][targetY].background)) {
+            return false;
+        }
+        return true;
+    }
+
+
     addHighlighTile(0, 0, 0);
+    let badDirections = [];
+    let compressDirections = (dx, dy) => {
+        return (dx + 1) * 3 + (dy + 1);
+    }
 
     for (var i = 1 ; i <= steps ; i++) {
-        console.log(i);
         for (var dx = -1 ; dx <= 1 ; dx++) {
             for (var dy = -1 ; dy <= 1 ; dy++) {
-                if (!(dx === 0 && dy === 0))
-                    addHighlighTile(i, dx, dy);
+                if (dx === 0 && dy === 0)
+                    continue;
+                if (!canMoveOnto(i, dx, dy)) {
+                    badDirections.push(compressDirections(dx, dy));
+                }
+                if (badDirections.includes(compressDirections(dx, dy))) 
+                    continue;
+                addHighlighTile(i, dx, dy);
             }
         }
     }
@@ -251,67 +283,72 @@ let highlightMovementTiles = (unit_x, unit_y, center_x, center_y, steps, isAttac
 
 let removeOptionHighlightsAndConfirm = (obj, initX, initY, newX, newY,
     isAttacking) => {
-    console.log("Remove options");
-    console.log(optionHighlightObjs);
-    optionHighlightObjs.forEach((jkl) => {
-        engine.removeObjectFromLocation(jkl);
-    });
-    optionHighlightObjs.length = 0;
-    let unit = get_unit(obj.mapPos.r, obj.mapPos.c);
-    console.log(obj.mapPos.r);
-    console.log(obj.mapPos.c);
-    console.log(initX);
-    console.log(initY);
+        optionHighlightObjs.forEach((jkl) => {
+            engine.removeObjectFromLocation(jkl);
+        });
+        optionHighlightObjs.length = 0;
+        let unit = get_unit(obj.mapPos.r, obj.mapPos.c);
 
-    let dx = Math.sign(newX - initX);
-    let dy = Math.sign(newY - initY);
-    let arrowObj = undefined;
-    let lineObj = undefined;
-    let steps = Math.abs(newX - initX);
-    let prefix = isAttacking ? "attack" : "move" 
+        console.log("===");
+        console.log(initX);
+        console.log(initY);
+        console.log(newX);
+        console.log(newY);
+        console.log("===");
 
-    if (dx === -1 && dy === -1) {
-        arrowObj = revMapping[prefix + "arrow_W"];
-        lineObj = revMapping[prefix + "line_horiz"];
-    } else if (dx === -1 && dy === 0) {
-        arrowObj = revMapping[prefix + "arrow_NW"];
-        lineObj = revMapping[prefix + "line_diag_2"];
-    } else if (dx === -1 && dy === 1) {
-        arrowObj = revMapping[prefix + "arrow_N"];
-        lineObj = revMapping[prefix + "line_vert"];
-    } else if (dx === 0 && dy === -1) {
-        arrowObj = revMapping[prefix + "arrow_SW"];
-        lineObj = revMapping[prefix + "line_diag_1"];
-    } else if (dx === 0 && dy === 0) {
-        return;
-    } else if (dx === 0 && dy === 1) {
-        arrowObj = revMapping[prefix + "arrow_NE"];
-        lineObj = revMapping[prefix + "line_diag_1"];
-    } else if (dx === 1 && dy === -1) {
-        arrowObj = revMapping[prefix + "arrow_S"];
-        lineObj = revMapping[prefix + "line_vert"];
-    } else if (dx === 1 && dy === 0) {
-        arrowObj = revMapping[prefix + "arrow_SE"];
-        lineObj = revMapping[prefix + "line_diag_2"];
-    } else if (dx === 1 && dy === 1) {
-        arrowObj = revMapping[prefix + "arrow_E"];
-        lineObj = revMapping[prefix + "line_horiz"];
-    }
+        let dx = Math.sign(newX - initX);
+        let dy = Math.sign(newY - initY);
+        let arrowObj = undefined;
+        let lineObj = undefined;
+        let steps = Math.max(Math.abs(newX - initX), Math.abs(newY - initY));
+        let prefix = isAttacking ? "attack" : "move" 
 
-    if (confirmedMovesObjs[unit.id] === undefined)
-        confirmedMovesObjs[unit.id] = [];
-    for (var i = 1 ; i < steps ; i++) {
+        if (dx === -1 && dy === -1) {
+            arrowObj = revMapping[prefix + "arrow_W"];
+            lineObj = revMapping[prefix + "line_horiz"];
+        } else if (dx === -1 && dy === 0) {
+            arrowObj = revMapping[prefix + "arrow_NW"];
+            lineObj = revMapping[prefix + "line_diag_2"];
+        } else if (dx === -1 && dy === 1) {
+            arrowObj = revMapping[prefix + "arrow_N"];
+            lineObj = revMapping[prefix + "line_vert"];
+        } else if (dx === 0 && dy === -1) {
+            arrowObj = revMapping[prefix + "arrow_SW"];
+            lineObj = revMapping[prefix + "line_diag_1"];
+        } else if (dx === 0 && dy === 0) {
+            return;
+        } else if (dx === 0 && dy === 1) {
+            arrowObj = revMapping[prefix + "arrow_NE"];
+            lineObj = revMapping[prefix + "line_diag_1"];
+        } else if (dx === 1 && dy === -1) {
+            arrowObj = revMapping[prefix + "arrow_S"];
+            lineObj = revMapping[prefix + "line_vert"];
+        } else if (dx === 1 && dy === 0) {
+            arrowObj = revMapping[prefix + "arrow_SE"];
+            lineObj = revMapping[prefix + "line_diag_2"];
+        } else if (dx === 1 && dy === 1) {
+            arrowObj = revMapping[prefix + "arrow_E"];
+            lineObj = revMapping[prefix + "line_horiz"];
+        }
+
+        if (confirmedMovesObjs[unit.id] === undefined)
+            confirmedMovesObjs[unit.id] = [];
+        for (var i = 1 ; i < steps ; i++) {
+            console.log("Drawing line!");
+            console.log(initX + dx * i);
+            console.log(initY + dy * i);
+            console.log(lineObj);
+            confirmedMovesObjs[unit.id].push(
+                engine.createAndAddObjectToLocation(
+                    lineObj,
+                    {
+                        'r': initX + dx * i,
+                        'c': initY + dy * i
+                    }));
+        }
         confirmedMovesObjs[unit.id].push(
-            engine.createAndAddObjectToLocation(
-                lineObj,
-                {
-                    'r': initX + dx * i,
-                    'c': initY + dy * i
-                }));
+            engine.createAndAddObjectToLocation(arrowObj, {'r': newX, 'c': newY}));
     }
-    confirmedMovesObjs[unit.id].push(
-        engine.createAndAddObjectToLocation(arrowObj, {'r': newX, 'c': newY}));
-}
 
 let resetStateMachine = () => {
     window.selectMode = SELECT;
@@ -324,12 +361,10 @@ let resetStateMachine = () => {
 }
 
 function onObjectSelect(obj) {
-    console.log("Selected obj", obj.type);
     if (selectMode === SELECT && obj.type > 0 && obj.type < 6) {
         var currentUnit = engine.getCurrentControllable();
         // window.selected_cell = [obj.mapPos.r, obj.mapPos.c];
         let unitData = get_unit(obj.mapPos.r, obj.mapPos.c);
-        console.log(unitData);
 
         highlightMovementTiles(obj.mapPos.r, obj.mapPos.c,
             obj.mapPos.r, obj.mapPos.c, unitData.movement_range, false);
@@ -337,9 +372,6 @@ function onObjectSelect(obj) {
         selectMode = MOVE;
 
         if (!currentUnit) {
-
-
-            engine.setCurrentControllable(obj);
             var existingAction = unitActions[obj.mapPos.r][obj.mapPos.c];
             if (objIsNotEmpty(existingAction)) {
                 if(objIsNotEmpty(existingAction.move)) {
@@ -423,74 +455,82 @@ function deselectUnit() {
 }
 
 function onTileSelect(x, y) {
-    console.log("Selected tile", x, y);
-    console.log(yourObjects);
-    let objFound = false;
-    let clickedObstacle = false;
-    yourObjects.forEach(obj => {
-        if(obj.mapPos.r === x && obj.mapPos.c === y) {
-            if(obj.type > 0 && obj.type < 6) {
-                console.log(obj);
-                onObjectSelect(obj);
-                objFound = true;
-            }
-            if(obj.type === revMapping["water"] || obj.type === revMapping["tree"]) {
-                clickedObstacle = true;
-            }
-        };
-    });
-    if (!objFound) {
-        if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3 && !clickedObstacle) {
-            console.log("TILE MOVE");
-            let legalMove = false;
-            optionHighlightObjs.forEach(highlight => {
-                if (highlight.mapPos.r === x && highlight.mapPos.c === y) {
-                    legalMove = true;
+    if (window.selectMode === SELECT) {
+        console.log("Selected tile", x, y);
+        console.log(yourObjects);
+        let objFound = false;
+        let clickedObstacle = false;
+        yourObjects.forEach(obj => {
+            if(obj.mapPos.r === x && obj.mapPos.c === y) {
+                if(obj.type > 0 && obj.type < 6) {
+                    console.log(obj);
+                    onObjectSelect(obj);
+                    objFound = true;
+                    selectedUnit = obj;
+                    console.log("UNIT SELECTED");
+                    console.log(selectedUnit);
                 }
-            });
-            if (!legalMove) {
+                if(obj.type === revMapping["water"] || obj.type === revMapping["tree"]) {
+                    clickedObstacle = true;
+                }
+            };
+        });
+    }
+    else if (window.selectMode === MOVE) {
+        console.log("TILE MOVE");
+        let legalMove = false;
+        optionHighlightObjs.forEach(highlight => {
+            if (highlight.mapPos.r === x && highlight.mapPos.c === y) {
+                legalMove = true;
+            }
+        });
+        if (!legalMove) {
+            resetStateMachine();
+        }
+        else {
+            console.log("Moving selected unit");
+            console.log(selectedUnit);
+            var currentUnit = selectedUnit;
+            console.log(currentUnit.mapPos.r);
+            console.log(currentUnit.mapPos.c);
+            removeOptionHighlightsAndConfirm(currentUnit,
+                currentUnit.mapPos.r,
+                currentUnit.mapPos.c,
+                x, y, false);
+            updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+            updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+            // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", currentUnit.mapPos.r, currentUnit.mapPos.c);
+            updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+            if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) {
                 resetStateMachine();
             }
             else {
-                var currentUnit = engine.getCurrentControllable();
-                removeOptionHighlightsAndConfirm(currentUnit,
-                    currentUnit.mapPos.r,
-                    currentUnit.mapPos.c,
-                    x, y, false);
-                updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-                updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-                // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", currentUnit.mapPos.r, currentUnit.mapPos.c);
-                updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-                if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) {
-                    resetStateMachine();
-                }
-                else {
-                    window.selectMode = ACTION;
-                    let unitData = get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c);
-                    highlightMovementTiles(currentUnit.mapPos.r,
-                        currentUnit.mapPos.c, x, y, unitData.attack_range, true);
-                }
+                window.selectMode = ACTION;
+                let unitData = get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c);
+                highlightMovementTiles(currentUnit.mapPos.r,
+                    currentUnit.mapPos.c, x, y, unitData.attack_range, true);
             }
-
-        } else if (selectMode === ACTION) {
-            let legalMove = false;
-            optionHighlightObjs.forEach(highlight => {
-                if (highlight.mapPos.r === x && highlight.mapPos.c === y) {
-                    legalMove = true;
-                }
-            });
-            if (legalMove) {
-                console.log("TILE ACTION");
-                var currentUnit = engine.getCurrentControllable();
-                let cur_actions = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c].move;
-
-                removeOptionHighlightsAndConfirm(currentUnit, 
-                    cur_actions.x, cur_actions.y,
-                    x, y, true);
-                updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-            }
-            resetStateMachine();
         }
+
+    } else if (selectMode === ACTION) {
+        let legalMove = false;
+        optionHighlightObjs.forEach(highlight => {
+            if (highlight.mapPos.r === x && highlight.mapPos.c === y) {
+                legalMove = true;
+            }
+        });
+        if (legalMove) {
+            console.log("TILE ACTION");
+            var currentUnit = selectedUnit;
+            //engine.getCurrentControllable();
+            let cur_actions = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c].move;
+
+            removeOptionHighlightsAndConfirm(currentUnit, 
+                cur_actions.x, cur_actions.y,
+                x, y, true);
+            updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+        }
+        resetStateMachine();
     }
     // console.log(x, y);
 
@@ -669,10 +709,10 @@ function renderServerReply(data) {
             {'r': unit.r, 'c': unit.c}));
         for(var k = 0; k < unit.happiness / 10; k++) {
             healthObjects.push(engine.createAndAddObjectToLocation(revMapping["health_segment_01"] + k,
-            {'r': unit.r, 'c': unit.c}));
+                {'r': unit.r, 'c': unit.c}));
         }
     });
 
-    engine.objectSelectCallback = onObjectSelect;
+    //engine.objectSelectCallback = onObjectSelect;
     window.selectMode = SELECT;
 }
