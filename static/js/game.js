@@ -317,6 +317,10 @@ let resetStateMachine = () => {
     window.selectMode = SELECT;
     deselectUnit();
     engine.setCurrentControllable(null);
+    optionHighlightObjs.forEach((jkl) => {
+        engine.removeObjectFromLocation(jkl);
+    });
+    optionHighlightObjs.length = 0;
 }
 
 function onObjectSelect(obj) {
@@ -380,16 +384,16 @@ function onObjectSelect(obj) {
         // engine.getTileAtRowAndColumn(existingAction.move.x, existingAction.move.y).highlightedOverlay.currentPath.fillAlpha = 0.8;
     } else if (window.selectMode === MOVE) {
         var currentUnit = engine.getCurrentControllable();
+        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+        // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", obj.mapPos.r, obj.mapPos.c);
+        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
         if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) 
         {
             resetStateMachine();
         } else {
             window.selectMode = ACTION;
         }
-        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-        updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-        // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", obj.mapPos.r, obj.mapPos.c);
-        updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, obj.mapPos.r, obj.mapPos.c, false);
     } else if (window.selectMode === ACTION) {
         window.selectMode = DISABLED;
         var currentUnit = engine.getCurrentControllable();
@@ -438,36 +442,54 @@ function onTileSelect(x, y) {
     if (!objFound) {
         if (window.selectMode === MOVE && engine.getTileAtRowAndColumn(x, y).type !== 3 && !clickedObstacle) {
             console.log("TILE MOVE");
-            var currentUnit = engine.getCurrentControllable();
-            if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) {
+            let legalMove = false;
+            optionHighlightObjs.forEach(highlight => {
+                if (highlight.mapPos.r === x && highlight.mapPos.c === y) {
+                    legalMove = true;
+                }
+            });
+            if (!legalMove) {
                 resetStateMachine();
             }
-            else 
-                window.selectMode = ACTION;
-            removeOptionHighlightsAndConfirm(currentUnit,
-                currentUnit.mapPos.r,
-                currentUnit.mapPos.c,
-                x, y, false);
-            updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-            updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
-            // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", currentUnit.mapPos.r, currentUnit.mapPos.c);
-            updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-            let unitData = get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c);
-            highlightMovementTiles(currentUnit.mapPos.r,
-                currentUnit.mapPos.c, x, y, unitData.attack_range, true);
+            else {
+                var currentUnit = engine.getCurrentControllable();
+                removeOptionHighlightsAndConfirm(currentUnit,
+                    currentUnit.mapPos.r,
+                    currentUnit.mapPos.c,
+                    x, y, false);
+                updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+                updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, -1, -1, true);
+                // console.log("RIGHT BEFORE UPDATE UNIT MOVE: ", currentUnit.mapPos.r, currentUnit.mapPos.c);
+                updateUnitMove(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+                if (get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c).attack_range <= 0) {
+                    resetStateMachine();
+                }
+                else {
+                    window.selectMode = ACTION;
+                    let unitData = get_unit(currentUnit.mapPos.r, currentUnit.mapPos.c);
+                    highlightMovementTiles(currentUnit.mapPos.r,
+                        currentUnit.mapPos.c, x, y, unitData.attack_range, true);
+                }
+            }
 
         } else if (selectMode === ACTION) {
-            console.log("TILE ACTION");
-            var currentUnit = engine.getCurrentControllable();
-            let cur_actions = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c].move;
+            let legalMove = false;
+            optionHighlightObjs.forEach(highlight => {
+                if (highlight.mapPos.r === x && highlight.mapPos.c === y) {
+                    legalMove = true;
+                }
+            });
+            if (legalMove) {
+                console.log("TILE ACTION");
+                var currentUnit = engine.getCurrentControllable();
+                let cur_actions = unitActions[currentUnit.mapPos.r][currentUnit.mapPos.c].move;
 
-            removeOptionHighlightsAndConfirm(currentUnit, 
-                cur_actions.x, cur_actions.y,
-                x, y, true);
-            updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
-            deselectUnit();
-            engine.setCurrentControllable(null);
-            window.selectMode = SELECT;
+                removeOptionHighlightsAndConfirm(currentUnit, 
+                    cur_actions.x, cur_actions.y,
+                    x, y, true);
+                updateUnitAction(currentUnit.mapPos.r, currentUnit.mapPos.c, x, y, false);
+            }
+            resetStateMachine();
         }
     }
     // console.log(x, y);
