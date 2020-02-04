@@ -10,10 +10,8 @@ class SFX {
 	}
 
 	PreloadAllSFX() { 
-		var noVolume = 0;
+		var noVolume = 1;
 
-		console.log("music")
-	
 		//ADD ALL SFX HERE FROM FOLDER!
 		this.Play("SFX_Dodge.wav",noVolume)
 		this.Play("SFX_Extras_BigBomb.wav",noVolume)
@@ -50,8 +48,6 @@ class SFX {
 
 		this.filePath = SFXPath + _fileName;
 
-		console.log(this.filePath);
-
 		this.SFXAudio.src = SFXPath + _fileName;
 		this.SFXAudio.volume = _volume;		
 
@@ -62,15 +58,19 @@ class SFX {
 
 class BGM {
 
-	constructor(Audio) { this.Audio = Audio; }
+	constructor(Audio) { 
+		this.Audio = Audio; 
+	}
 
-	Initialize() { 
+	Initialize(newName) { 
+		//Problem, only one 'Audio' element per page is allowed.
 		Audio = document.createElement("Audio");
 		
 		//Auto play needs to be on for it to play, it's off by default...
 		Audio.setAttribute("preload", "auto");
 		Audio.setAttribute("controls", "none");
 		Audio.style.display = "none";
+		
 	}
 	
 	Play(_fileName,_doLoop) { 
