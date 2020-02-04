@@ -20,8 +20,8 @@ function mapSelection() {
 
     container.innerHTML = html;
 
-    // bgm.Play("sad_song.mp3", 0.5, true);
-    ambience.Play("AmbientSFX_Forest_1.mp3", 0.5, true);
+    bgm.Play("happy_song.mp3", 0.14, true);
+    ambience.Play("AmbientSFX_Forest_1.mp3", 0.11, true);
 }
 
 function startTextRed() {
