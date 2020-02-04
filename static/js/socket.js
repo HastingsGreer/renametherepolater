@@ -138,11 +138,18 @@ function goToCharSel() {
 
     container.innerHTML = html;
     // bgm.Play("sad_song.mp3", 0.5, true);
+	
     sfx.Initialize();
     bgm.Initialize();
+    
+    bgm.Play("happy_song.mp3",0.1,true);
+	
+	//bug right now, only one 'Audio' element is allowed on the page at a time, so i guess there's no ambience...
+		//at least I think that's the bug. I have no clue why sfx can play at the same time as bgm but ambience can't.
+	//Also, I don't think volume is working with the bgm.Play method right now.
+	//ambience.Initialize();
+	//ambience.Play("AmbientSFX_Forest_1.mp3", 0.1, true);
 
-    ambience.Initialize();
-    ambience.Play("AmbientSFX_Forest_1.mp3", 0.5, true);
 }
 
 
