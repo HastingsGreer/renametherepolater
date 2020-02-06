@@ -152,6 +152,9 @@ def startingUnit(data):
     players[request.sid]['ready'] = True
 
     player_units = []
+    # if there's only one player, wait for the 2nd to join
+    if len(activeRooms[get_room_id(request)]['players']) != 2:
+        return
     for socket in activeRooms[get_room_id(request)]['players']:
         player = players[socket]
         if not player['ready']:

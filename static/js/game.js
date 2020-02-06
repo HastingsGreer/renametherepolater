@@ -29,7 +29,8 @@ let actions = {
     "normie" : "encourage",
     "bench_boi" : "place_bench",
     "therapist" : "discuss_problems",
-    "treebuchet" : "tree_rocket"
+    "treebuchet" : "tree_rocket",
+    "deault": "encourage"
 }
 let immovableTiles = ["tree", "water"];
 let optionHighlightObjs = [];
@@ -613,7 +614,17 @@ function updateUnitAction(unitX, unitY, actX, actY, instant) {
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor = Math.floor(Math.random() * Math.floor(9999999999));
         // engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillAlpha = 0.5;
         // console.log(engine.getTileAtRowAndColumn(existingAction.action.x, existingAction.action.y).highlightedOverlay.currentPath.fillColor);
-        add_attack(get_unit(unitX, unitY).id, [actX, actY], actions[get_unit(unitX, unitY).type]);
+        let unit_action = undefined;
+        let unit_type = get_unit(unitX, unitY).type;
+
+        if (unit_type in actions) {
+            action = actions[unit_type];
+        }
+        else {
+            console.log("UNK UNIT TYPE! USING DEFAULT ATK");
+            action = actions['default'];
+        }
+        add_attack(get_unit(unitX, unitY).id, [actX, actY], action);
     } else {
         unitActions[unitX][unitY].action = {};
     }
